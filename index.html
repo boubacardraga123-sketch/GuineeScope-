@@ -337,6 +337,82 @@
   .tag-educ    { background: rgba(124,58,237,0.12); color: var(--purple); }
   .tag-culture { background: rgba(249,115,22,0.12);  color: var(--orange); }
   .tag-sport   { background: rgba(8,145,178,0.12);   color: var(--teal); }
+  .tag-video   { background: rgba(220,38,38,0.12);    color: #dc2626; }
+
+  /* GRILLE VIDÉOS */
+  .video-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    padding: 8px;
+  }
+
+  .video-card {
+    background: var(--white);
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    text-decoration: none;
+    color: inherit;
+    display: block;
+  }
+
+  .video-thumb {
+    width: 100%;
+    aspect-ratio: 16/9;
+    background: #111;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .video-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .video-play {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0,0,0,0.25);
+  }
+
+  .video-play-btn {
+    width: 36px;
+    height: 36px;
+    background: rgba(220,38,38,0.9);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    color: #fff;
+  }
+
+  .video-info {
+    padding: 8px;
+  }
+
+  .video-source {
+    font-size: 0.65rem;
+    color: var(--muted);
+    font-weight: 600;
+    margin-bottom: 3px;
+  }
+
+  .video-title {
+    font-size: 0.78rem;
+    font-weight: 600;
+    line-height: 1.35;
+    color: var(--text);
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
 
   .article-img {
     width: 90px;
@@ -571,6 +647,7 @@
     <button class="nav-btn" onclick="showSection('educ', this)">🎓 Éducation</button>
     <button class="nav-btn" onclick="showSection('culture', this)">🎭 Culture</button>
     <button class="nav-btn" onclick="showSection('sport', this)">⚽ Sport</button>
+    <button class="nav-btn" onclick="showSection('video', this)">▶ Vidéos</button>
   </div>
 </nav>
 
@@ -676,6 +753,12 @@
   <div class="refresh-row"><button class="refresh-btn" onclick="loadSection('sport')">↻ Actualiser</button></div>
 </div>
 
+<!-- VIDÉOS -->
+<div class="section" id="video">
+  <div id="videoContent"><div class="loading"><div class="spinner"></div> Chargement des vidéos...</div></div>
+  <div class="refresh-row"><button class="refresh-btn" onclick="loadVideos()">↻ Actualiser</button></div>
+</div>
+
 <!-- TOAST PWA -->
 <div id="pwaToast">
   📲 Installez GuinéeScope sur votre téléphone pour y accéder sans internet !
@@ -697,51 +780,49 @@ const PROXY = 'https://api.rss2json.com/v1/api.json?rss_url=';
 // Proxy de secours : allorigins
 const PROXY_FALLBACK = 'https://api.allorigins.win/get?url=';
 
+const GN = 'https://news.google.com/rss/search?hl=fr&gl=GN&ceid=GN:fr&q=';
+const GN_TOP = 'https://news.google.com/rss?hl=fr&gl=GN&ceid=GN:fr';
+
 const SOURCES = {
-  guinee: [
-    { name: 'AfricaGuinée', color: '#d4820a', url: 'https://www.africaguinee.com/rss.xml',  tag: 'tag-guinee', label: 'Guinée' },
-    { name: 'Guinéenews',   color: '#e03040', url: 'https://guineenews.org/feed/',           tag: 'tag-guinee', label: 'Guinée' },
-    { name: 'MediaGuinée',  color: '#2a7de1', url: 'https://mediaguinee.com/feed/',          tag: 'tag-guinee', label: 'Guinée' },
-    { name: 'GuinéeLive',   color: '#00956e', url: 'https://guineelive.com/feed/',           tag: 'tag-guinee', label: 'Guinée' },
-    { name: 'Google News',  color: '#4285F4', url: 'https://news.google.com/rss/search?q=guinee&hl=fr&gl=GN&ceid=GN:fr', tag: 'tag-guinee', label: 'Guinée' },
-  ],
-  afrique: [
-    { name: 'RFI Afrique',  color: '#e03040', url: 'https://www.rfi.fr/fr/rss/afrique',         tag: 'tag-afrique', label: 'Afrique' },
-    { name: 'BBC Afrique',  color: '#1a1a1a', url: 'https://feeds.bbci.co.uk/afrique/rss.xml',  tag: 'tag-afrique', label: 'Afrique' },
-    { name: 'Google News',  color: '#4285F4', url: 'https://news.google.com/rss/search?q=afrique&hl=fr&gl=GN&ceid=GN:fr', tag: 'tag-afrique', label: 'Afrique' },
-  ],
+  guinee:  [{ name: 'Google News', color: '#4285F4', url: GN + 'guinee+actualite',          tag: 'tag-guinee',  label: 'Guinée' }],
+  afrique: [{ name: 'Google News', color: '#4285F4', url: GN + 'afrique+actualite',         tag: 'tag-afrique', label: 'Afrique' }],
   monde: [
-    { name: 'France 24',    color: '#e03040', url: 'https://www.france24.com/fr/rss',            tag: 'tag-monde', label: 'Monde' },
-    { name: 'RFI Monde',    color: '#0066cc', url: 'https://www.rfi.fr/fr/rss/international',    tag: 'tag-monde', label: 'Monde' },
-    { name: 'Google News',  color: '#4285F4', url: 'https://news.google.com/rss?hl=fr&gl=GN&ceid=GN:fr', tag: 'tag-monde', label: 'Monde' },
+    { name: 'Google News', color: '#4285F4', url: GN_TOP,                                        tag: 'tag-monde', label: 'Monde' },
+    { name: 'Google News', color: '#4285F4', url: GN + 'politique+internationale+monde',         tag: 'tag-monde', label: 'Politique' },
+    { name: 'Google News', color: '#4285F4', url: GN + 'economie+mondiale+finance',              tag: 'tag-monde', label: 'Économie' },
+    { name: 'Google News', color: '#4285F4', url: GN + 'technologie+innovation+intelligence+artificielle', tag: 'tag-monde', label: 'Tech' },
+    { name: 'Google News', color: '#4285F4', url: GN + 'sante+medecine+epidemie',                tag: 'tag-monde', label: 'Santé' },
+    { name: 'Google News', color: '#4285F4', url: GN + 'conflit+guerre+crise+humanitaire',       tag: 'tag-monde', label: 'Conflits' },
+    { name: 'Google News', color: '#4285F4', url: GN + 'climat+environnement+energie',           tag: 'tag-monde', label: 'Climat' },
   ],
-  science: [
-    { name: 'NASA',         color: '#0b3d91', url: 'https://www.nasa.gov/rss/dyn/breaking_news.rss', tag: 'tag-science', label: 'Science' },
-    { name: 'Science&Vie',  color: '#e03040', url: 'https://www.science-et-vie.com/feed',             tag: 'tag-science', label: 'Science' },
-    { name: 'Google News',  color: '#4285F4', url: 'https://news.google.com/rss/search?q=science+technologie&hl=fr&gl=GN&ceid=GN:fr', tag: 'tag-science', label: 'Science' },
+  science: [{ name: 'Google News', color: '#4285F4', url: GN + 'science+technologie',       tag: 'tag-science', label: 'Science' }],
+  educ:    [{ name: 'Google News', color: '#4285F4', url: GN + 'education+afrique+guinee',  tag: 'tag-educ',    label: 'Éducation' }],
+  culture: [{ name: 'Google News', color: '#4285F4', url: GN + 'culture+musique+cinema',    tag: 'tag-culture', label: 'Culture' }],
+  sport:   [{ name: 'Google News', color: '#4285F4', url: GN + 'sport+football+guinee',     tag: 'tag-sport',   label: 'Sport' }],
+};
+
+// Chaînes YouTube (RSS)
+// Catégories vidéo
+const VIDEO_SOURCES = {
+  actualites: [
+    { name: 'RFI',           channelId: 'UCOqMSHhQpE7e1R6GDQTdwsQ', color: '#e03040' },
+    { name: 'France 24',     channelId: 'UCQfwfsi5VrQ8yKZ-UWmAEFg', color: '#e03040' },
+    { name: 'BBC Afrique',   channelId: 'UCVmHB3R8SCDzXtFDl_kDAnA', color: '#1a1a1a' },
+    { name: 'TV5 Monde',     channelId: 'UCuWNxQkfRq1GwFLfXjTD1cw', color: '#2a7de1' },
+    { name: 'Al Jazeera FR', channelId: 'UCtsJSXeOkOSMKKFkzlFdcqQ', color: '#00956e' },
+    { name: 'DW Français',   channelId: 'UCKaHABsFoRE2bUSaICBpjog', color: '#0b3d91' },
   ],
-  educ: [
-    { name: 'RFI Éducation',  color: '#e03040', url: 'https://www.rfi.fr/fr/rss/education',                    tag: 'tag-educ', label: 'Éducation' },
-    { name: 'TV5 Éducation',  color: '#2a7de1', url: 'https://information.tv5monde.com/rss/education',          tag: 'tag-educ', label: 'Éducation' },
-    { name: 'UNESCO UNEVOC',  color: '#7c3aed', url: 'https://unevoc.unesco.org/rss.php',                       tag: 'tag-educ', label: 'UNESCO' },
-    { name: 'Le Monde Éduc',  color: '#1a1a1a', url: 'https://www.lemonde.fr/education/rss_full.xml',           tag: 'tag-educ', label: 'Éducation' },
-    { name: 'GuinéeEduc',     color: '#00956e', url: 'https://guineenews.org/feed/?cat=education',              tag: 'tag-educ', label: 'Guinée-Éduc' },
-    { name: 'Google News',    color: '#4285F4', url: 'https://news.google.com/rss/search?q=education+afrique&hl=fr&gl=GN&ceid=GN:fr', tag: 'tag-educ', label: 'Éducation' },
-  ],
-  culture: [
-    { name: 'Google News', color: '#4285F4', url: 'https://news.google.com/rss/search?q=culture+art+musique+afrique&hl=fr&gl=GN&ceid=GN:fr', tag: 'tag-culture', label: 'Culture' },
-    { name: 'Google News', color: '#4285F4', url: 'https://news.google.com/rss/search?q=cinema+musique+guinee&hl=fr&gl=GN&ceid=GN:fr',        tag: 'tag-culture', label: 'Guinée-Culture' },
-    { name: 'RFI Culture', color: '#e03040', url: 'https://www.rfi.fr/fr/rss/culture',                                                         tag: 'tag-culture', label: 'Culture' },
-  ],
-  sport: [
-    { name: 'Google News', color: '#4285F4', url: 'https://news.google.com/rss/search?q=sport+football+guinee&hl=fr&gl=GN&ceid=GN:fr',                 tag: 'tag-sport', label: 'Guinée-Sport' },
-    { name: 'Google News', color: '#4285F4', url: 'https://news.google.com/rss/search?q=football+afrique+CAN&hl=fr&gl=GN&ceid=GN:fr',                  tag: 'tag-sport', label: 'Sport-Afrique' },
-    { name: 'Google News', color: '#4285F4', url: 'https://news.google.com/rss/search?q=football+NBA+tennis+sport+mondial&hl=fr&gl=GN&ceid=GN:fr',     tag: 'tag-sport', label: 'Sport-Monde' },
-    { name: 'Google News', color: '#4285F4', url: 'https://news.google.com/rss/search?q=ligue+des+champions+premier+league+liga&hl=fr&gl=GN&ceid=GN:fr', tag: 'tag-sport', label: 'Football-Monde' },
-    { name: 'RFI Sport',   color: '#e03040', url: 'https://www.rfi.fr/fr/rss/sport',                                                                   tag: 'tag-sport', label: 'Sport' },
-    { name: "L'Équipe",   color: "#f5a623", url: "https://dwh.lequipe.fr/api/edito/rss?path=/Toute-l-actualite/",                                     tag: "tag-sport", label: "Sport" },
+  documentaires: [
+    { name: 'ARTE',          channelId: 'UCwgyiXjA5x0ER9dAFTinglQ', color: '#cc0000' },
+    { name: 'National Geo',  channelId: 'UCpVm7bg6pXKo1Pr6k5kxG9A', color: '#ffcc00' },
+    { name: 'Nota Bene',     channelId: 'UCP46_MXP0EgaI6t1C9Sv9dw', color: '#7c3aed' },
+    { name: 'Afrique Doc',   channelId: 'UCBcRF18a7Qf58cCRy5xuWwQ', color: '#00956e' },
+    { name: 'TV5 Docs',      channelId: 'UCYqzEUfwYoFHWNVqrUvJoOQ', color: '#2a7de1' },
+    { name: 'GEO TV',        channelId: 'UCHDEPg5dpUmPlnFWS0M8T7w', color: '#d4820a' },
   ]
 };
+
+let allVideos = [];
 
 let allArticles = [];
 let loadedSections = new Set();
@@ -828,8 +909,8 @@ function sourceInitial(n) { return n.substring(0,2).toUpperCase(); }
 
 function renderArticle(a, big = false) {
   const imgHtml = a.img
-    ? `<img src="${a.img}" alt="" loading="lazy" onerror="this.parentElement.innerHTML='📰'">`
-    : '📰';
+    ? `<img src="${a.img}" alt="" loading="lazy" onerror="this.parentElement.innerHTML='\uD83D\uDCF0'">`
+    : '\uD83D\uDCF0';
 
   if (big) return `
     <a class="article-item big" href="${a.link}" target="_blank" rel="noopener">
@@ -876,13 +957,14 @@ function renderGroup(articles, label, barColor, emoji) {
 // CHARGER SECTION
 // ============================================================
 const CFG_SECTION = {
-  guinee:  { label:'Guinée',    color:'#d4820a', emoji:'🇬🇳' },
-  afrique: { label:'Afrique',   color:'#00956e', emoji:'🌍' },
-  monde:   { label:'Monde',     color:'#2a7de1', emoji:'🌐' },
-  science: { label:'Sciences',  color:'#e03040', emoji:'🔬' },
-  educ:    { label:'Éducation', color:'#7c3aed', emoji:'🎓' },
-  culture: { label:'Culture',    color:'#f97316', emoji:'🎭' },
-  sport:   { label:'Sport',      color:'#0891b2', emoji:'⚽' },
+  guinee:  { label:'Guinée',    color:'#d4820a', emoji:'\uD83C\uDDEC\uD83C\uDDF3' },
+  afrique: { label:'Afrique',   color:'#00956e', emoji:'\uD83C\uDF0D' },
+  monde:   { label:'Monde',     color:'#2a7de1', emoji:'\uD83C\uDF10' },
+  science: { label:'Sciences',  color:'#e03040', emoji:'\uD83D\uDD2C' },
+  educ:    { label:'Éducation', color:'#7c3aed', emoji:'\uD83C\uDF93' },
+  culture: { label:'Culture',    color:'#f97316', emoji:'\uD83C\uDFAD' },
+  sport:   { label:'Sport',      color:'#0891b2', emoji:'\u26BD' },
+  video:   { label:'Vidéos',    color:'#dc2626', emoji:'\u25B6' },
 };
 
 // ============================================================
@@ -910,13 +992,97 @@ function loadCache() {
 function updateTicker(articles) {
   if (!articles.length) return;
   const items = articles.slice(0, 12).map(a =>
-    '<span class="ticker-item">' + a.title + ' •</span>').join('');
+    '<span class="ticker-item">' + a.title + ' \u2022</span>').join('');
   document.getElementById('tickerContent').innerHTML = items + items;
 }
 
 // ============================================================
 // CHARGER SECTION (manuel via onglet)
 // ============================================================
+// ============================================================
+// VIDÉOS YOUTUBE RSS
+// ============================================================
+async function fetchYouTube(source) {
+  const url = 'https://www.youtube.com/feeds/videos.xml?channel_id=' + source.channelId;
+  try {
+    const ctrl = new AbortController();
+    const t = setTimeout(() => ctrl.abort(), 8000);
+    const res = await fetch(PROXY + encodeURIComponent(url), { signal: ctrl.signal });
+    clearTimeout(t);
+    const data = await res.json();
+    if (data.status === 'ok' && data.items) {
+      return data.items.slice(0, 4).map(item => ({
+        title:     item.title ? item.title.trim() : '',
+        link:      item.link || '#',
+        pubDate:   item.pubDate || '',
+        thumbnail: item.thumbnail || '',
+        source:    source.name,
+        color:     source.color,
+      })).filter(v => v.title);
+    }
+  } catch(e) {}
+  // Fallback allorigins XML
+  try {
+    const ctrl2 = new AbortController();
+    const t2 = setTimeout(() => ctrl2.abort(), 10000);
+    const res2 = await fetch(PROXY_FALLBACK + encodeURIComponent(url), { signal: ctrl2.signal });
+    clearTimeout(t2);
+    const data2 = await res2.json();
+    const xml = new DOMParser().parseFromString(data2.contents, 'text/xml');
+    const videos = [];
+    xml.querySelectorAll('entry').forEach(entry => {
+      const title = entry.querySelector('title') ? entry.querySelector('title').textContent.trim() : '';
+      const link  = entry.querySelector('link') ? entry.querySelector('link').getAttribute('href') : '#';
+      const videoId = entry.querySelector('videoId') ? entry.querySelector('videoId').textContent : '';
+      const thumb = videoId ? 'https://img.youtube.com/vi/' + videoId + '/mqdefault.jpg' : '';
+      const pubDate = entry.querySelector('published') ? entry.querySelector('published').textContent : '';
+      if (title) videos.push({ title, link, pubDate, thumbnail: thumb, source: source.name, color: source.color });
+    });
+    return videos.slice(0, 4);
+  } catch(e) { return []; }
+}
+
+function renderVideos(videos) {
+  if (!videos.length) return '<div class="error-box">\u26A0 Aucune vidéo disponible.</div>';
+  let html = '<div class="section-label"><div class="section-bar" style="background:#dc2626"></div>\u25B6 Vidéos</div>';
+  html += '<div class="video-grid">';
+  videos.forEach(v => {
+    const thumb = v.thumbnail
+      ? '<img src="' + v.thumbnail + '" alt="" loading="lazy" onerror="this.style.display=\'none\'">'
+      : '';
+    html += '<a class="video-card" href="' + v.link + '" target="_blank" rel="noopener">'
+      + '<div class="video-thumb">' + thumb
+      + '<div class="video-play"><div class="video-play-btn">\u25B6</div></div></div>'
+      + '<div class="video-info">'
+      + '<div class="video-source">' + v.source + '</div>'
+      + '<div class="video-title">' + v.title + '</div>'
+      + '</div></a>';
+  });
+  html += '</div>';
+  return html;
+}
+
+async function loadVideos(cat) {
+  cat = cat || 'actualites';
+  const el = document.getElementById('videoContent');
+  el.innerHTML = '<div class="loading"><div class="spinner"></div> Chargement des vid\u00E9os...</div>';
+  const sources = VIDEO_SOURCES[cat] || VIDEO_SOURCES.actualites;
+  const results = await Promise.all(sources.map(s => fetchYouTube(s)));
+  allVideos = results.flat().filter(v => v.title);
+  allVideos.sort((a, b) => new Date(b.pubDate) - new Date(a.pubDate));
+  el.innerHTML = renderVideosWithTabs(allVideos, cat);
+}
+
+function renderVideosWithTabs(videos, activeCat) {
+  const tabs = '<div style="display:flex;gap:8px;padding:8px 8px 0">'
+    + '<button onclick="loadVideos(\'actualites\')" style="flex:1;padding:7px;border-radius:8px;border:none;font-size:0.78rem;font-weight:700;cursor:pointer;background:' + (activeCat==='actualites'?'#dc2626':'#f2f2f2') + ';color:' + (activeCat==='actualites'?'#fff':'#555') + '">'
+    + '\u25B6 Actualit\u00E9s</button>'
+    + '<button onclick="loadVideos(\'documentaires\')" style="flex:1;padding:7px;border-radius:8px;border:none;font-size:0.78rem;font-weight:700;cursor:pointer;background:' + (activeCat==='documentaires'?'#dc2626':'#f2f2f2') + ';color:' + (activeCat==='documentaires'?'#fff':'#555') + '">'
+    + '\uD83C\uDFA5 Documentaires</button>'
+    + '</div>';
+  return tabs + renderVideos(videos);
+}
+
 async function loadSection(section) {
   const el = document.getElementById(section + 'Content');
   el.innerHTML = '<div class="loading"><div class="spinner"></div> Chargement...</div>';
@@ -930,7 +1096,7 @@ async function loadSection(section) {
   saveCache(allArticles);
 
   if (!articles.length) {
-    el.innerHTML = '<div class="error-box">⚠️ Impossible de charger. Vérifiez votre connexion.</div>';
+    el.innerHTML = '<div class="error-box">\u26A0 Impossible de charger. Vérifiez votre connexion.</div>';
     return;
   }
   const c = CFG_SECTION[section];
@@ -953,6 +1119,8 @@ async function fetchAllFromNetwork() {
 
   // 2. Reste des sections
   const ordre = ['afrique', 'monde', 'science', 'educ', 'culture', 'sport'];
+  // Charger vidéos en parallèle (sans bloquer)
+  loadVideos();
   for (const section of ordre) {
     const results = await Promise.all(SOURCES[section].map(s => fetchRSS(s, section)));
     let arts = results.flat().filter(a => a.title)
@@ -988,7 +1156,7 @@ async function loadAll() {
     await fetchAllFromNetwork();
     if (!allArticles.length) {
       document.getElementById('allContent').innerHTML =
-        '<div class="error-box">⚠️ Impossible de charger les articles.</div>';
+        '<div class="error-box">\u26A0 Impossible de charger les articles.</div>';
     }
   }
 }
@@ -1003,13 +1171,13 @@ function renderAllSections() {
   const sport   = allArticles.filter(a => a.category === 'sport').slice(0,3);
 
   document.getElementById('allContent').innerHTML =
-    renderGroup(guinee,  'Guinée',    '#d4820a', '🇬🇳') +
-    renderGroup(afrique, 'Afrique',   '#00956e', '🌍') +
-    renderGroup(monde,   'Monde',     '#2a7de1', '🌐') +
-    renderGroup(science, 'Sciences',  '#e03040', '🔬') +
-    renderGroup(educ,    'Éducation', '#7c3aed', '🎓') +
-    renderGroup(culture, 'Culture',   '#f97316', '🎭') +
-    renderGroup(sport,   'Sport',     '#0891b2', '⚽');
+    renderGroup(guinee,  'Guinée',    '#d4820a', '\uD83C\uDDEC\uD83C\uDDF3') +
+    renderGroup(afrique, 'Afrique',   '#00956e', '\uD83C\uDF0D') +
+    renderGroup(monde,   'Monde',     '#2a7de1', '\uD83C\uDF10') +
+    renderGroup(science, 'Sciences',  '#e03040', '\uD83D\uDD2C') +
+    renderGroup(educ,    'Éducation', '#7c3aed', '\uD83C\uDF93') +
+    renderGroup(culture, 'Culture',   '#f97316', '\uD83C\uDFAD') +
+    renderGroup(sport,   'Sport',     '#0891b2', '\u26BD');
 }
 
 // ============================================================
@@ -1020,6 +1188,7 @@ function showSection(id, btn) {
   document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
   document.getElementById(id).classList.add('active');
   btn.classList.add('active');
+  if (id === 'video') { if (!allVideos.length) loadVideos(); return; }
   if (id !== 'all' && !loadedSections.has(id)) loadSection(id);
 }
 
@@ -1055,8 +1224,8 @@ const manifest = {
   theme_color: "#d4820a",
   orientation: "portrait",
   icons: [
-    { src: "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23d4820a'/><text y='.9em' font-size='80'>🌍</text></svg>", sizes: "192x192", type: "image/svg+xml" },
-    { src: "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23d4820a'/><text y='.9em' font-size='80'>🌍</text></svg>", sizes: "512x512", type: "image/svg+xml" }
+    { src: "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23d4820a'/><text y='.9em' font-size='80'>\uD83C\uDF0D</text></svg>", sizes: "192x192", type: "image/svg+xml" },
+    { src: "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23d4820a'/><text y='.9em' font-size='80'>\uD83C\uDF0D</text></svg>", sizes: "512x512", type: "image/svg+xml" }
   ]
 };
 const manifestBlob = new Blob([JSON.stringify(manifest)], {type:'application/json'});
