@@ -885,6 +885,38 @@ const CFG_SECTION = {
   sport:   { label:'Sport',      color:'#0891b2', emoji:'⚽' },
 };
 
+// ============================================================
+// CACHE localStorage
+// ============================================================
+const CACHE_KEY = 'guineescope_cache';
+const CACHE_TTL = 10 * 60 * 1000; // 10 minutes
+
+function saveCache(articles) {
+  try {
+    localStorage.setItem(CACHE_KEY, JSON.stringify({ ts: Date.now(), articles }));
+  } catch(e) {}
+}
+
+function loadCache() {
+  try {
+    const raw = localStorage.getItem(CACHE_KEY);
+    if (!raw) return null;
+    const data = JSON.parse(raw);
+    if (Date.now() - data.ts > CACHE_TTL) return null; // expiré
+    return data.articles;
+  } catch(e) { return null; }
+}
+
+function updateTicker(articles) {
+  if (!articles.length) return;
+  const items = articles.slice(0, 12).map(a =>
+    '<span class="ticker-item">' + a.title + ' •</span>').join('');
+  document.getElementById('tickerContent').innerHTML = items + items;
+}
+
+// ============================================================
+// CHARGER SECTION (manuel via onglet)
+// ============================================================
 async function loadSection(section) {
   const el = document.getElementById(section + 'Content');
   el.innerHTML = '<div class="loading"><div class="spinner"></div> Chargement...</div>';
@@ -895,6 +927,7 @@ async function loadSection(section) {
   allArticles = allArticles.filter(a => a.category !== section);
   allArticles.push(...articles);
   loadedSections.add(section);
+  saveCache(allArticles);
 
   if (!articles.length) {
     el.innerHTML = '<div class="error-box">⚠️ Impossible de charger. Vérifiez votre connexion.</div>';
@@ -905,13 +938,10 @@ async function loadSection(section) {
 }
 
 // ============================================================
-// CHARGER TOUT — progressif (Guinée d'abord, reste en arrière-plan)
+// CHARGER TOUT EN RÉSEAU (arrière-plan)
 // ============================================================
-async function loadAll() {
-  document.getElementById('allContent').innerHTML =
-    '<div class="loading"><div class="spinner"></div> Chargement...</div>';
-
-  // 1. Charger Guinée EN PREMIER (visible immédiatement)
+async function fetchAllFromNetwork() {
+  // 1. Guinée en premier
   const guineeResults = await Promise.all(SOURCES.guinee.map(s => fetchRSS(s, 'guinee')));
   const guineeArts = guineeResults.flat().filter(a => a.title)
     .sort((a, b) => new Date(b.pubDate) - new Date(a.pubDate)).slice(0, 10);
@@ -919,8 +949,9 @@ async function loadAll() {
   allArticles.push(...guineeArts);
   loadedSections.add('guinee');
   renderAllSections();
+  updateTicker(allArticles);
 
-  // 2. Charger les autres sections une par une
+  // 2. Reste des sections
   const ordre = ['afrique', 'monde', 'science', 'educ', 'culture', 'sport'];
   for (const section of ordre) {
     const results = await Promise.all(SOURCES[section].map(s => fetchRSS(s, section)));
@@ -932,16 +963,33 @@ async function loadAll() {
     renderAllSections();
   }
 
-  // 3. Ticker mis à jour une fois tout chargé
-  if (allArticles.length > 0) {
-    const items = allArticles.slice(0, 12).map(a =>
-      '<span class="ticker-item">' + a.title + ' •</span>').join('');
-    document.getElementById('tickerContent').innerHTML = items + items;
-  }
+  updateTicker(allArticles);
+  if (allArticles.length) saveCache(allArticles);
+}
 
-  if (!allArticles.length) {
+// ============================================================
+// CHARGER TOUT — cache d'abord, réseau ensuite
+// ============================================================
+async function loadAll() {
+  const cached = loadCache();
+
+  if (cached && cached.length > 0) {
+    // Affichage INSTANTANÉ depuis le cache
+    allArticles = cached;
+    Object.keys(SOURCES).forEach(s => loadedSections.add(s));
+    renderAllSections();
+    updateTicker(allArticles);
+    // Mise à jour silencieuse en arrière-plan
+    setTimeout(fetchAllFromNetwork, 1500);
+  } else {
+    // Pas de cache : chargement normal avec spinner
     document.getElementById('allContent').innerHTML =
-      '<div class="error-box">⚠️ Impossible de charger les articles.</div>';
+      '<div class="loading"><div class="spinner"></div> Chargement...</div>';
+    await fetchAllFromNetwork();
+    if (!allArticles.length) {
+      document.getElementById('allContent').innerHTML =
+        '<div class="error-box">⚠️ Impossible de charger les articles.</div>';
+    }
   }
 }
 
@@ -1049,6 +1097,7 @@ window.addEventListener('appinstalled', () => {
 // INIT
 // ============================================================
 loadAll();
+// Rafraîchir toutes les 10 min (recharge réseau si cache expiré)
 setInterval(loadAll, 600000);
 </script>
 </body>
