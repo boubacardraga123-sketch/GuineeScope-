@@ -30,6 +30,8 @@
     --red: #e03040;
     --blue: #2a7de1;
     --purple: #7c3aed;
+    --orange: #f97316;
+    --teal: #0891b2;
     --text: #1a1a1a;
     --muted: #777777;
   }
@@ -333,6 +335,8 @@
   .tag-monde   { background: rgba(42,125,225,0.12); color: var(--blue); }
   .tag-science { background: rgba(224,48,64,0.12); color: var(--red); }
   .tag-educ    { background: rgba(124,58,237,0.12); color: var(--purple); }
+  .tag-culture { background: rgba(249,115,22,0.12);  color: var(--orange); }
+  .tag-sport   { background: rgba(8,145,178,0.12);   color: var(--teal); }
 
   .article-img {
     width: 90px;
@@ -565,6 +569,8 @@
     <button class="nav-btn" onclick="showSection('monde', this)">🌐 Monde</button>
     <button class="nav-btn" onclick="showSection('science', this)">🔬 Sciences</button>
     <button class="nav-btn" onclick="showSection('educ', this)">🎓 Éducation</button>
+    <button class="nav-btn" onclick="showSection('culture', this)">🎭 Culture</button>
+    <button class="nav-btn" onclick="showSection('sport', this)">⚽ Sport</button>
   </div>
 </nav>
 
@@ -658,6 +664,18 @@
   <div class="refresh-row"><button class="refresh-btn" onclick="loadSection('educ')">↻ Actualiser</button></div>
 </div>
 
+<!-- CULTURE -->
+<div class="section" id="culture">
+  <div id="cultureContent"><div class="loading"><div class="spinner"></div> Chargement...</div></div>
+  <div class="refresh-row"><button class="refresh-btn" onclick="loadSection('culture')">↻ Actualiser</button></div>
+</div>
+
+<!-- SPORT -->
+<div class="section" id="sport">
+  <div id="sportContent"><div class="loading"><div class="spinner"></div> Chargement...</div></div>
+  <div class="refresh-row"><button class="refresh-btn" onclick="loadSection('sport')">↻ Actualiser</button></div>
+</div>
+
 <!-- TOAST PWA -->
 <div id="pwaToast">
   📲 Installez GuinéeScope sur votre téléphone pour y accéder sans internet !
@@ -674,7 +692,10 @@
 // ============================================================
 // SOURCES
 // ============================================================
-const PROXY = 'https://api.allorigins.win/get?url=';
+// Proxy principal : rss2json (plus rapide depuis l'Afrique)
+const PROXY = 'https://api.rss2json.com/v1/api.json?rss_url=';
+// Proxy de secours : allorigins
+const PROXY_FALLBACK = 'https://api.allorigins.win/get?url=';
 
 const SOURCES = {
   guinee: [
@@ -682,18 +703,22 @@ const SOURCES = {
     { name: 'Guinéenews',   color: '#e03040', url: 'https://guineenews.org/feed/',           tag: 'tag-guinee', label: 'Guinée' },
     { name: 'MediaGuinée',  color: '#2a7de1', url: 'https://mediaguinee.com/feed/',          tag: 'tag-guinee', label: 'Guinée' },
     { name: 'GuinéeLive',   color: '#00956e', url: 'https://guineelive.com/feed/',           tag: 'tag-guinee', label: 'Guinée' },
+    { name: 'Google News',  color: '#4285F4', url: 'https://news.google.com/rss/search?q=guinee&hl=fr&gl=GN&ceid=GN:fr', tag: 'tag-guinee', label: 'Guinée' },
   ],
   afrique: [
     { name: 'RFI Afrique',  color: '#e03040', url: 'https://www.rfi.fr/fr/rss/afrique',         tag: 'tag-afrique', label: 'Afrique' },
     { name: 'BBC Afrique',  color: '#1a1a1a', url: 'https://feeds.bbci.co.uk/afrique/rss.xml',  tag: 'tag-afrique', label: 'Afrique' },
+    { name: 'Google News',  color: '#4285F4', url: 'https://news.google.com/rss/search?q=afrique&hl=fr&gl=GN&ceid=GN:fr', tag: 'tag-afrique', label: 'Afrique' },
   ],
   monde: [
     { name: 'France 24',    color: '#e03040', url: 'https://www.france24.com/fr/rss',            tag: 'tag-monde', label: 'Monde' },
     { name: 'RFI Monde',    color: '#0066cc', url: 'https://www.rfi.fr/fr/rss/international',    tag: 'tag-monde', label: 'Monde' },
+    { name: 'Google News',  color: '#4285F4', url: 'https://news.google.com/rss?hl=fr&gl=GN&ceid=GN:fr', tag: 'tag-monde', label: 'Monde' },
   ],
   science: [
     { name: 'NASA',         color: '#0b3d91', url: 'https://www.nasa.gov/rss/dyn/breaking_news.rss', tag: 'tag-science', label: 'Science' },
     { name: 'Science&Vie',  color: '#e03040', url: 'https://www.science-et-vie.com/feed',             tag: 'tag-science', label: 'Science' },
+    { name: 'Google News',  color: '#4285F4', url: 'https://news.google.com/rss/search?q=science+technologie&hl=fr&gl=GN&ceid=GN:fr', tag: 'tag-science', label: 'Science' },
   ],
   educ: [
     { name: 'RFI Éducation',  color: '#e03040', url: 'https://www.rfi.fr/fr/rss/education',                    tag: 'tag-educ', label: 'Éducation' },
@@ -701,6 +726,20 @@ const SOURCES = {
     { name: 'UNESCO UNEVOC',  color: '#7c3aed', url: 'https://unevoc.unesco.org/rss.php',                       tag: 'tag-educ', label: 'UNESCO' },
     { name: 'Le Monde Éduc',  color: '#1a1a1a', url: 'https://www.lemonde.fr/education/rss_full.xml',           tag: 'tag-educ', label: 'Éducation' },
     { name: 'GuinéeEduc',     color: '#00956e', url: 'https://guineenews.org/feed/?cat=education',              tag: 'tag-educ', label: 'Guinée-Éduc' },
+    { name: 'Google News',    color: '#4285F4', url: 'https://news.google.com/rss/search?q=education+afrique&hl=fr&gl=GN&ceid=GN:fr', tag: 'tag-educ', label: 'Éducation' },
+  ],
+  culture: [
+    { name: 'Google News', color: '#4285F4', url: 'https://news.google.com/rss/search?q=culture+art+musique+afrique&hl=fr&gl=GN&ceid=GN:fr', tag: 'tag-culture', label: 'Culture' },
+    { name: 'Google News', color: '#4285F4', url: 'https://news.google.com/rss/search?q=cinema+musique+guinee&hl=fr&gl=GN&ceid=GN:fr',        tag: 'tag-culture', label: 'Guinée-Culture' },
+    { name: 'RFI Culture', color: '#e03040', url: 'https://www.rfi.fr/fr/rss/culture',                                                         tag: 'tag-culture', label: 'Culture' },
+  ],
+  sport: [
+    { name: 'Google News', color: '#4285F4', url: 'https://news.google.com/rss/search?q=sport+football+guinee&hl=fr&gl=GN&ceid=GN:fr',                 tag: 'tag-sport', label: 'Guinée-Sport' },
+    { name: 'Google News', color: '#4285F4', url: 'https://news.google.com/rss/search?q=football+afrique+CAN&hl=fr&gl=GN&ceid=GN:fr',                  tag: 'tag-sport', label: 'Sport-Afrique' },
+    { name: 'Google News', color: '#4285F4', url: 'https://news.google.com/rss/search?q=football+NBA+tennis+sport+mondial&hl=fr&gl=GN&ceid=GN:fr',     tag: 'tag-sport', label: 'Sport-Monde' },
+    { name: 'Google News', color: '#4285F4', url: 'https://news.google.com/rss/search?q=ligue+des+champions+premier+league+liga&hl=fr&gl=GN&ceid=GN:fr', tag: 'tag-sport', label: 'Football-Monde' },
+    { name: 'RFI Sport',   color: '#e03040', url: 'https://www.rfi.fr/fr/rss/sport',                                                                   tag: 'tag-sport', label: 'Sport' },
+    { name: "L'Équipe",   color: "#f5a623", url: "https://dwh.lequipe.fr/api/edito/rss?path=/Toute-l-actualite/",                                     tag: "tag-sport", label: "Sport" },
   ]
 };
 
@@ -733,32 +772,52 @@ function formatDate(d) {
 }
 
 // ============================================================
-// FETCH RSS
+// FETCH RSS - rss2json (rapide) + allorigins (fallback)
 // ============================================================
 async function fetchRSS(source, category) {
+  // Methode 1 : rss2json (JSON direct, plus rapide)
   try {
-    const res = await fetch(PROXY + encodeURIComponent(source.url));
+    const ctrl = new AbortController();
+    const t = setTimeout(() => ctrl.abort(), 8000);
+    const res = await fetch(PROXY + encodeURIComponent(source.url), { signal: ctrl.signal });
+    clearTimeout(t);
     const data = await res.json();
-    const xml = new DOMParser().parseFromString(data.contents, 'text/xml');
+    if (data.status === 'ok' && data.items && data.items.length > 0) {
+      return data.items.slice(0, 8).map(item => ({
+        title:   item.title ? item.title.trim() : '',
+        link:    item.link || '#',
+        pubDate: item.pubDate || '',
+        img:     item.thumbnail || (item.enclosure && item.enclosure.link) || '',
+        source:  source.name, color: source.color,
+        tag:     source.tag, label: source.label, category
+      })).filter(a => a.title);
+    }
+  } catch(e) {}
+
+  // Methode 2 : allorigins (XML, fallback)
+  try {
+    const ctrl2 = new AbortController();
+    const t2 = setTimeout(() => ctrl2.abort(), 10000);
+    const res2 = await fetch(PROXY_FALLBACK + encodeURIComponent(source.url), { signal: ctrl2.signal });
+    clearTimeout(t2);
+    const data2 = await res2.json();
+    const xml = new DOMParser().parseFromString(data2.contents, 'text/xml');
     const articles = [];
     xml.querySelectorAll('item').forEach(item => {
-      const title = item.querySelector('title')?.textContent?.trim() || '';
-      const link  = item.querySelector('link')?.textContent?.trim() || '#';
-      const pubDate = item.querySelector('pubDate')?.textContent?.trim() || '';
-      let img = item.querySelector('enclosure[type^="image"]')?.getAttribute('url') || '';
+      const title = item.querySelector('title') ? item.querySelector('title').textContent.trim() : '';
+      const link  = item.querySelector('link') ? item.querySelector('link').textContent.trim() : '#';
+      const pubDate = item.querySelector('pubDate') ? item.querySelector('pubDate').textContent.trim() : '';
+      let img = item.querySelector('enclosure[type^="image"]') ? item.querySelector('enclosure[type^="image"]').getAttribute('url') : '';
       if (!img) {
-        const desc = item.querySelector('description')?.textContent || '';
+        const desc = item.querySelector('description') ? item.querySelector('description').textContent : '';
         const m = desc.match(/src=["']([^"']+\.(jpg|jpeg|png|webp))[^"']*/i);
         if (m) img = m[1];
       }
-      if (!img) img = item.querySelector('content')?.getAttribute('url') || '';
-      if (title && link) articles.push({
-        title, link, pubDate, img,
-        source: source.name, color: source.color,
-        tag: source.tag, label: source.label, category
-      });
+      if (!img) img = item.querySelector('content') ? item.querySelector('content').getAttribute('url') : '';
+      if (title && link) articles.push({ title, link, pubDate, img,
+        source: source.name, color: source.color, tag: source.tag, label: source.label, category });
     });
-    return articles;
+    return articles.slice(0, 8);
   } catch(e) { return []; }
 }
 
@@ -816,13 +875,23 @@ function renderGroup(articles, label, barColor, emoji) {
 // ============================================================
 // CHARGER SECTION
 // ============================================================
+const CFG_SECTION = {
+  guinee:  { label:'Guinée',    color:'#d4820a', emoji:'🇬🇳' },
+  afrique: { label:'Afrique',   color:'#00956e', emoji:'🌍' },
+  monde:   { label:'Monde',     color:'#2a7de1', emoji:'🌐' },
+  science: { label:'Sciences',  color:'#e03040', emoji:'🔬' },
+  educ:    { label:'Éducation', color:'#7c3aed', emoji:'🎓' },
+  culture: { label:'Culture',    color:'#f97316', emoji:'🎭' },
+  sport:   { label:'Sport',      color:'#0891b2', emoji:'⚽' },
+};
+
 async function loadSection(section) {
   const el = document.getElementById(section + 'Content');
   el.innerHTML = '<div class="loading"><div class="spinner"></div> Chargement...</div>';
   const results = await Promise.all(SOURCES[section].map(s => fetchRSS(s, section)));
   let articles = results.flat().filter(a => a.title);
   articles.sort((a, b) => new Date(b.pubDate) - new Date(a.pubDate));
-  articles = articles.slice(0, 20);
+  articles = articles.slice(0, 10);
   allArticles = allArticles.filter(a => a.category !== section);
   allArticles.push(...articles);
   loadedSections.add(section);
@@ -831,44 +900,49 @@ async function loadSection(section) {
     el.innerHTML = '<div class="error-box">⚠️ Impossible de charger. Vérifiez votre connexion.</div>';
     return;
   }
-
-  const cfg = {
-    guinee:  { label:'Guinée',    color:'#d4820a', emoji:'🇬🇳' },
-    afrique: { label:'Afrique',   color:'#00956e', emoji:'🌍' },
-    monde:   { label:'Monde',     color:'#2a7de1', emoji:'🌐' },
-    science: { label:'Sciences',  color:'#e03040', emoji:'🔬' },
-    educ:    { label:'Éducation', color:'#7c3aed', emoji:'🎓' },
-  };
-  const c = cfg[section];
+  const c = CFG_SECTION[section];
   el.innerHTML = renderGroup(articles, c.label, c.color, c.emoji);
 }
 
 // ============================================================
-// CHARGER TOUT
+// CHARGER TOUT — progressif (Guinée d'abord, reste en arrière-plan)
 // ============================================================
 async function loadAll() {
   document.getElementById('allContent').innerHTML =
-    '<div class="loading"><div class="spinner"></div> Chargement de toutes les sources...</div>';
+    '<div class="loading"><div class="spinner"></div> Chargement...</div>';
 
-  const allSources = Object.entries(SOURCES).flatMap(([cat, srcs]) =>
-    srcs.map(s => ({...s, category: cat})));
+  // 1. Charger Guinée EN PREMIER (visible immédiatement)
+  const guineeResults = await Promise.all(SOURCES.guinee.map(s => fetchRSS(s, 'guinee')));
+  const guineeArts = guineeResults.flat().filter(a => a.title)
+    .sort((a, b) => new Date(b.pubDate) - new Date(a.pubDate)).slice(0, 10);
+  allArticles = allArticles.filter(a => a.category !== 'guinee');
+  allArticles.push(...guineeArts);
+  loadedSections.add('guinee');
+  renderAllSections();
 
-  const results = await Promise.all(allSources.map(s => fetchRSS(s, s.category)));
-  allArticles = results.flat().filter(a => a.title);
-  allArticles.sort((a, b) => new Date(b.pubDate) - new Date(a.pubDate));
+  // 2. Charger les autres sections une par une
+  const ordre = ['afrique', 'monde', 'science', 'educ', 'culture', 'sport'];
+  for (const section of ordre) {
+    const results = await Promise.all(SOURCES[section].map(s => fetchRSS(s, section)));
+    let arts = results.flat().filter(a => a.title)
+      .sort((a, b) => new Date(b.pubDate) - new Date(a.pubDate)).slice(0, 10);
+    allArticles = allArticles.filter(a => a.category !== section);
+    allArticles.push(...arts);
+    loadedSections.add(section);
+    renderAllSections();
+  }
 
+  // 3. Ticker mis à jour une fois tout chargé
   if (allArticles.length > 0) {
     const items = allArticles.slice(0, 12).map(a =>
-      `<span class="ticker-item">${a.title} •</span>`).join('');
+      '<span class="ticker-item">' + a.title + ' •</span>').join('');
     document.getElementById('tickerContent').innerHTML = items + items;
   }
 
   if (!allArticles.length) {
     document.getElementById('allContent').innerHTML =
       '<div class="error-box">⚠️ Impossible de charger les articles.</div>';
-    return;
   }
-  renderAllSections();
 }
 
 function renderAllSections() {
@@ -877,13 +951,17 @@ function renderAllSections() {
   const monde   = allArticles.filter(a => a.category === 'monde').slice(0,4);
   const science = allArticles.filter(a => a.category === 'science').slice(0,4);
   const educ    = allArticles.filter(a => a.category === 'educ').slice(0,3);
+  const culture = allArticles.filter(a => a.category === 'culture').slice(0,3);
+  const sport   = allArticles.filter(a => a.category === 'sport').slice(0,3);
 
   document.getElementById('allContent').innerHTML =
     renderGroup(guinee,  'Guinée',    '#d4820a', '🇬🇳') +
     renderGroup(afrique, 'Afrique',   '#00956e', '🌍') +
     renderGroup(monde,   'Monde',     '#2a7de1', '🌐') +
     renderGroup(science, 'Sciences',  '#e03040', '🔬') +
-    renderGroup(educ,    'Éducation', '#7c3aed', '🎓');
+    renderGroup(educ,    'Éducation', '#7c3aed', '🎓') +
+    renderGroup(culture, 'Culture',   '#f97316', '🎭') +
+    renderGroup(sport,   'Sport',     '#0891b2', '⚽');
 }
 
 // ============================================================
