@@ -840,6 +840,15 @@ const VIDEO_SOURCES = {
   ]
 };
 
+// Version allégée pour le bloc vidéos de la page d'accueil :
+// seulement 3 chaînes/catégorie pour libérer du réseau pour les articles.
+// L'onglet "Vidéos" continue d'utiliser VIDEO_SOURCES (6 chaînes).
+const HOME_VIDEO_SOURCES = {
+  actualites: VIDEO_SOURCES.actualites.slice(0, 3),
+  documentaires: VIDEO_SOURCES.documentaires.slice(0, 3),
+  educatif: VIDEO_SOURCES.educatif.slice(0, 3),
+};
+
 let allVideos = [];
 
 let allArticles = [];
@@ -1224,7 +1233,7 @@ async function loadHomeVideos() {
 
 async function refreshHomeVideos(cat) {
   const el = document.getElementById('homeVideoContent');
-  const sources = VIDEO_SOURCES[cat] || VIDEO_SOURCES.actualites;
+  const sources = HOME_VIDEO_SOURCES[cat] || HOME_VIDEO_SOURCES.actualites;
   const collected = [];
   await Promise.all(sources.map(async (s) => {
     const videos = await fetchYouTube(s);
