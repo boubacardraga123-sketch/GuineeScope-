@@ -1,0 +1,977 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GuinéeScope – L'info guinéenne et mondiale</title>
+<meta name="description" content="Agrégateur d'actualités guinéennes, africaines, internationales, scientifiques et éducatives">
+
+<!-- PWA META -->
+<meta name="theme-color" content="#d4820a">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="GuinéeScope">
+<link rel="manifest" id="manifestLink">
+
+<!-- PWA ICONS (inline SVG converti en data URL) -->
+<link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23d4820a'/><text y='.9em' font-size='80'>🌍</text></svg>">
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+  :root {
+    --bg: #f2f2f2;
+    --white: #ffffff;
+    --border: #e0e0e0;
+    --gold: #d4820a;
+    --gold2: #f5a623;
+    --green: #00956e;
+    --red: #e03040;
+    --blue: #2a7de1;
+    --purple: #7c3aed;
+    --text: #1a1a1a;
+    --muted: #777777;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    max-width: 680px;
+    margin: 0 auto;
+  }
+
+  /* HEADER */
+  header {
+    background: var(--white);
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  .header-inner {
+    padding: 10px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+  }
+
+  .logo-icon {
+    width: 32px;
+    height: 32px;
+    background: linear-gradient(135deg, var(--gold), var(--gold2));
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+  }
+
+  .logo-text {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--text);
+  }
+
+  .logo-text span { color: var(--gold); }
+
+  .header-right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .live-badge {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    background: rgba(224,48,64,0.1);
+    padding: 3px 8px;
+    border-radius: 20px;
+    font-size: 0.68rem;
+    font-weight: 700;
+    color: var(--red);
+  }
+
+  .live-dot {
+    width: 5px;
+    height: 5px;
+    background: var(--red);
+    border-radius: 50%;
+    animation: pulse 1.5s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
+
+  /* BOUTON INSTALLER PWA */
+  #installBtn {
+    display: none;
+    align-items: center;
+    gap: 5px;
+    background: linear-gradient(135deg, var(--gold), var(--gold2));
+    color: #fff;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 16px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: 'Inter', sans-serif;
+  }
+
+  #installBtn.visible { display: flex; }
+
+  /* SEARCH */
+  .search-wrap {
+    padding: 8px 16px 10px;
+    background: var(--white);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .search-bar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--bg);
+    border-radius: 22px;
+    padding: 8px 14px;
+  }
+
+  .search-bar input {
+    background: none;
+    border: none;
+    outline: none;
+    color: var(--text);
+    font-size: 0.85rem;
+    width: 100%;
+    font-family: 'Inter', sans-serif;
+  }
+
+  .search-bar input::placeholder { color: var(--muted); }
+
+  /* NAV TABS */
+  nav {
+    background: var(--white);
+    border-bottom: 1px solid var(--border);
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  nav::-webkit-scrollbar { display: none; }
+
+  .nav-inner {
+    display: flex;
+    padding: 0 8px;
+    min-width: max-content;
+  }
+
+  .nav-btn {
+    padding: 10px 13px;
+    background: none;
+    border: none;
+    color: var(--muted);
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    transition: all 0.2s;
+    white-space: nowrap;
+    font-family: 'Inter', sans-serif;
+  }
+
+  .nav-btn:hover { color: var(--text); }
+  .nav-btn.active {
+    color: var(--blue);
+    border-bottom-color: var(--blue);
+  }
+
+  /* TICKER */
+  .ticker {
+    background: linear-gradient(90deg, var(--gold), var(--gold2));
+    padding: 6px 0;
+    overflow: hidden;
+  }
+
+  .ticker-inner {
+    display: flex;
+    animation: ticker 50s linear infinite;
+    white-space: nowrap;
+  }
+
+  .ticker-inner:hover { animation-play-state: paused; }
+
+  @keyframes ticker {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+
+  .ticker-item {
+    padding: 0 24px;
+    font-size: 0.74rem;
+    font-weight: 600;
+    color: #fff;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  /* SECTION LABEL */
+  .section-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 14px 16px 6px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    background: var(--bg);
+  }
+
+  .section-bar {
+    width: 3px;
+    height: 14px;
+    border-radius: 2px;
+  }
+
+  /* ARTICLE LIST */
+  .article-list {
+    background: var(--white);
+    border-radius: 12px;
+    margin: 0 8px 8px;
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+  }
+
+  .article-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 14px;
+    border-bottom: 1px solid var(--border);
+    text-decoration: none;
+    color: inherit;
+    transition: background 0.15s;
+    cursor: pointer;
+  }
+
+  .article-item:last-child { border-bottom: none; }
+  .article-item:hover { background: #fafafa; }
+  .article-content { flex: 1; min-width: 0; }
+
+  .article-source-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 5px;
+    flex-wrap: wrap;
+  }
+
+  .source-dot {
+    width: 16px;
+    height: 16px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 9px;
+    font-weight: 800;
+    color: #fff;
+    flex-shrink: 0;
+  }
+
+  .source-name {
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: var(--muted);
+  }
+
+  .source-sep { color: var(--border); font-size: 0.7rem; }
+
+  .article-time {
+    font-size: 0.68rem;
+    color: var(--muted);
+  }
+
+  .article-title {
+    font-size: 0.88rem;
+    font-weight: 600;
+    line-height: 1.4;
+    color: var(--text);
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    margin-bottom: 6px;
+  }
+
+  .article-tag {
+    font-size: 0.65rem;
+    font-weight: 600;
+    padding: 2px 7px;
+    border-radius: 10px;
+    display: inline-block;
+  }
+
+  .tag-guinee  { background: rgba(212,130,10,0.12); color: var(--gold); }
+  .tag-afrique { background: rgba(0,149,110,0.12); color: var(--green); }
+  .tag-monde   { background: rgba(42,125,225,0.12); color: var(--blue); }
+  .tag-science { background: rgba(224,48,64,0.12); color: var(--red); }
+  .tag-educ    { background: rgba(124,58,237,0.12); color: var(--purple); }
+
+  .article-img {
+    width: 90px;
+    height: 90px;
+    border-radius: 10px;
+    object-fit: cover;
+    flex-shrink: 0;
+    background: var(--bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.8rem;
+    overflow: hidden;
+  }
+
+  .article-img img {
+    width: 90px;
+    height: 90px;
+    object-fit: cover;
+    border-radius: 10px;
+  }
+
+  /* GRANDE CARTE */
+  .article-item.big {
+    flex-direction: column;
+    gap: 10px;
+    padding: 0 0 14px 0;
+  }
+
+  .article-item.big .article-img {
+    width: 100%;
+    height: 190px;
+    border-radius: 0;
+  }
+
+  .article-item.big .article-img img {
+    width: 100%;
+    height: 190px;
+    border-radius: 0;
+  }
+
+  .article-item.big .article-content { padding: 0 14px; }
+
+  .article-item.big .article-title {
+    font-size: 1rem;
+    font-weight: 700;
+    -webkit-line-clamp: 4;
+  }
+
+  /* BANNIERES OFFICIELLES */
+  .official-banner {
+    background: linear-gradient(135deg, #1a3a6b, #2a5298);
+    border-radius: 12px;
+    margin: 0 8px 8px;
+    padding: 14px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+    box-shadow: 0 2px 8px rgba(26,58,107,0.2);
+  }
+
+  .official-flag {
+    font-size: 2rem;
+    flex-shrink: 0;
+  }
+
+  .official-info { flex: 1; }
+
+  .official-title {
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 2px;
+  }
+
+  .official-subtitle {
+    font-size: 0.7rem;
+    color: rgba(255,255,255,0.7);
+  }
+
+  .official-arrow {
+    color: rgba(255,255,255,0.6);
+    font-size: 1rem;
+  }
+
+  /* LOADING */
+  .loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 32px;
+    color: var(--muted);
+    font-size: 0.82rem;
+    gap: 10px;
+    background: var(--white);
+    border-radius: 12px;
+    margin: 0 8px 8px;
+  }
+
+  .spinner {
+    width: 18px;
+    height: 18px;
+    border: 2px solid var(--border);
+    border-top-color: var(--gold);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    flex-shrink: 0;
+  }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .error-box {
+    background: var(--white);
+    border-radius: 12px;
+    margin: 0 8px 8px;
+    padding: 16px;
+    font-size: 0.8rem;
+    color: var(--red);
+    text-align: center;
+  }
+
+  /* SECTION */
+  .section { display: none; }
+  .section.active { display: block; }
+
+  /* TOAST PWA */
+  #pwaToast {
+    display: none;
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #1a1a1a;
+    color: #fff;
+    padding: 12px 20px;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    z-index: 999;
+    text-align: center;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    max-width: 300px;
+    width: 90%;
+  }
+
+  #pwaToast.show { display: block; }
+  #pwaToast button {
+    background: var(--gold);
+    border: none;
+    color: #fff;
+    padding: 6px 14px;
+    border-radius: 8px;
+    margin-top: 8px;
+    cursor: pointer;
+    font-size: 0.78rem;
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+    display: block;
+    width: 100%;
+  }
+
+  /* REFRESH */
+  .refresh-row {
+    display: flex;
+    justify-content: center;
+    padding: 10px;
+  }
+
+  .refresh-btn {
+    background: none;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    cursor: pointer;
+    font-family: 'Inter', sans-serif;
+    transition: all 0.2s;
+  }
+
+  .refresh-btn:hover { border-color: var(--gold); color: var(--gold); }
+
+  /* FOOTER */
+  footer {
+    background: var(--white);
+    border-top: 1px solid var(--border);
+    padding: 20px 16px;
+    text-align: center;
+    color: var(--muted);
+    font-size: 0.74rem;
+    margin-top: 8px;
+  }
+
+  footer strong { color: var(--gold); }
+
+  #clock {
+    font-size: 0.72rem;
+    color: var(--muted);
+    font-weight: 500;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <a class="logo" href="#">
+      <div class="logo-icon">🌍</div>
+      <span class="logo-text">Guinée<span>Scope</span></span>
+    </a>
+    <div class="header-right">
+      <span id="clock"></span>
+      <button id="installBtn" onclick="installPWA()">📲 Installer</button>
+      <div class="live-badge"><div class="live-dot"></div> DIRECT</div>
+    </div>
+  </div>
+  <div class="search-wrap">
+    <div class="search-bar">
+      <span style="color:var(--muted);font-size:0.9rem">🔍</span>
+      <input type="text" id="searchInput" placeholder="Rechercher dans les actualités..." oninput="filterArticles()">
+    </div>
+  </div>
+</header>
+
+<nav>
+  <div class="nav-inner">
+    <button class="nav-btn active" onclick="showSection('all', this)">Pour vous</button>
+    <button class="nav-btn" onclick="showSection('guinee', this)">🇬🇳 Guinée</button>
+    <button class="nav-btn" onclick="showSection('afrique', this)">🌍 Afrique</button>
+    <button class="nav-btn" onclick="showSection('monde', this)">🌐 Monde</button>
+    <button class="nav-btn" onclick="showSection('science', this)">🔬 Sciences</button>
+    <button class="nav-btn" onclick="showSection('educ', this)">🎓 Éducation</button>
+  </div>
+</nav>
+
+<div class="ticker">
+  <div class="ticker-inner" id="tickerContent">
+    <span class="ticker-item">🇬🇳 GuinéeScope — Toute l'info en un seul endroit •</span>
+    <span class="ticker-item">Guinée · Afrique · Monde · Sciences · Éducation •</span>
+    <span class="ticker-item">Chargement des dernières actualités... •</span>
+    <span class="ticker-item">🇬🇳 GuinéeScope — Toute l'info en un seul endroit •</span>
+    <span class="ticker-item">Guinée · Afrique · Monde · Sciences · Éducation •</span>
+    <span class="ticker-item">Chargement des dernières actualités... •</span>
+  </div>
+</div>
+
+<!-- TOUT -->
+<div class="section active" id="all">
+  <div id="allContent"><div class="loading"><div class="spinner"></div> Chargement des actualités...</div></div>
+</div>
+
+<!-- GUINÉE -->
+<div class="section" id="guinee">
+  <div id="guineeContent"><div class="loading"><div class="spinner"></div> Chargement...</div></div>
+  <div class="refresh-row"><button class="refresh-btn" onclick="loadSection('guinee')">↻ Actualiser</button></div>
+</div>
+
+<!-- AFRIQUE -->
+<div class="section" id="afrique">
+  <div id="afriqueContent"><div class="loading"><div class="spinner"></div> Chargement...</div></div>
+  <div class="refresh-row"><button class="refresh-btn" onclick="loadSection('afrique')">↻ Actualiser</button></div>
+</div>
+
+<!-- MONDE -->
+<div class="section" id="monde">
+  <div id="mondeContent"><div class="loading"><div class="spinner"></div> Chargement...</div></div>
+  <div class="refresh-row"><button class="refresh-btn" onclick="loadSection('monde')">↻ Actualiser</button></div>
+</div>
+
+<!-- SCIENCES -->
+<div class="section" id="science">
+  <div id="scienceContent"><div class="loading"><div class="spinner"></div> Chargement...</div></div>
+  <div class="refresh-row"><button class="refresh-btn" onclick="loadSection('science')">↻ Actualiser</button></div>
+</div>
+
+<!-- ÉDUCATION & ÉTAT -->
+<div class="section" id="educ">
+
+  <!-- Liens officiels guinéens -->
+  <div class="section-label"><div class="section-bar" style="background:#1a3a6b"></div>🏛️ SITES OFFICIELS GUINÉE</div>
+  <div style="display:flex;flex-direction:column;gap:8px;margin:0 8px 12px">
+
+    <a class="official-banner" href="https://presidence.gov.gn" target="_blank" rel="noopener">
+      <div class="official-flag">🇬🇳</div>
+      <div class="official-info">
+        <div class="official-title">Présidence de la République</div>
+        <div class="official-subtitle">presidence.gov.gn — Communiqués & discours officiels</div>
+      </div>
+      <div class="official-arrow">›</div>
+    </a>
+
+    <a class="official-banner" href="https://gouvernement.gov.gn" target="_blank" rel="noopener">
+      <div class="official-flag">🏛️</div>
+      <div class="official-info">
+        <div class="official-title">Gouvernement Guinéen</div>
+        <div class="official-subtitle">gouvernement.gov.gn — Actions des ministères</div>
+      </div>
+      <div class="official-arrow">›</div>
+    </a>
+
+    <a class="official-banner" href="https://www.sgg.gov.gn" target="_blank" rel="noopener">
+      <div class="official-flag">📋</div>
+      <div class="official-info">
+        <div class="official-title">Secrétariat Général du Gouvernement</div>
+        <div class="official-subtitle">sgg.gov.gn — Conseil des ministres & décrets</div>
+      </div>
+      <div class="official-arrow">›</div>
+    </a>
+
+    <a class="official-banner" href="https://www.stat-guinee.org" target="_blank" rel="noopener">
+      <div class="official-flag">📊</div>
+      <div class="official-info">
+        <div class="official-title">Institut National de la Statistique</div>
+        <div class="official-subtitle">stat-guinee.org — Données & rapports officiels</div>
+      </div>
+      <div class="official-arrow">›</div>
+    </a>
+
+  </div>
+
+  <!-- Actualités éducation -->
+  <div id="educContent"><div class="loading"><div class="spinner"></div> Chargement actualités éducation...</div></div>
+  <div class="refresh-row"><button class="refresh-btn" onclick="loadSection('educ')">↻ Actualiser</button></div>
+</div>
+
+<!-- TOAST PWA -->
+<div id="pwaToast">
+  📲 Installez GuinéeScope sur votre téléphone pour y accéder sans internet !
+  <button onclick="installPWA()">Installer maintenant</button>
+  <button onclick="document.getElementById('pwaToast').classList.remove('show')" style="background:#555;margin-top:4px">Plus tard</button>
+</div>
+
+<footer>
+  <strong>GuinéeScope</strong> · L'info guinéenne et mondiale<br>
+  <span style="margin-top:4px;display:block">AfricaGuinée · Guinéenews · RFI · France 24 · BBC · NASA · UNESCO · ETFP</span>
+</footer>
+
+<script>
+// ============================================================
+// SOURCES
+// ============================================================
+const PROXY = 'https://api.allorigins.win/get?url=';
+
+const SOURCES = {
+  guinee: [
+    { name: 'AfricaGuinée', color: '#d4820a', url: 'https://www.africaguinee.com/rss.xml',  tag: 'tag-guinee', label: 'Guinée' },
+    { name: 'Guinéenews',   color: '#e03040', url: 'https://guineenews.org/feed/',           tag: 'tag-guinee', label: 'Guinée' },
+    { name: 'MediaGuinée',  color: '#2a7de1', url: 'https://mediaguinee.com/feed/',          tag: 'tag-guinee', label: 'Guinée' },
+    { name: 'GuinéeLive',   color: '#00956e', url: 'https://guineelive.com/feed/',           tag: 'tag-guinee', label: 'Guinée' },
+  ],
+  afrique: [
+    { name: 'RFI Afrique',  color: '#e03040', url: 'https://www.rfi.fr/fr/rss/afrique',         tag: 'tag-afrique', label: 'Afrique' },
+    { name: 'BBC Afrique',  color: '#1a1a1a', url: 'https://feeds.bbci.co.uk/afrique/rss.xml',  tag: 'tag-afrique', label: 'Afrique' },
+  ],
+  monde: [
+    { name: 'France 24',    color: '#e03040', url: 'https://www.france24.com/fr/rss',            tag: 'tag-monde', label: 'Monde' },
+    { name: 'RFI Monde',    color: '#0066cc', url: 'https://www.rfi.fr/fr/rss/international',    tag: 'tag-monde', label: 'Monde' },
+  ],
+  science: [
+    { name: 'NASA',         color: '#0b3d91', url: 'https://www.nasa.gov/rss/dyn/breaking_news.rss', tag: 'tag-science', label: 'Science' },
+    { name: 'Science&Vie',  color: '#e03040', url: 'https://www.science-et-vie.com/feed',             tag: 'tag-science', label: 'Science' },
+  ],
+  educ: [
+    { name: 'RFI Éducation',  color: '#e03040', url: 'https://www.rfi.fr/fr/rss/education',                    tag: 'tag-educ', label: 'Éducation' },
+    { name: 'TV5 Éducation',  color: '#2a7de1', url: 'https://information.tv5monde.com/rss/education',          tag: 'tag-educ', label: 'Éducation' },
+    { name: 'UNESCO UNEVOC',  color: '#7c3aed', url: 'https://unevoc.unesco.org/rss.php',                       tag: 'tag-educ', label: 'UNESCO' },
+    { name: 'Le Monde Éduc',  color: '#1a1a1a', url: 'https://www.lemonde.fr/education/rss_full.xml',           tag: 'tag-educ', label: 'Éducation' },
+    { name: 'GuinéeEduc',     color: '#00956e', url: 'https://guineenews.org/feed/?cat=education',              tag: 'tag-educ', label: 'Guinée-Éduc' },
+  ]
+};
+
+let allArticles = [];
+let loadedSections = new Set();
+
+// ============================================================
+// HORLOGE
+// ============================================================
+function updateClock() {
+  document.getElementById('clock').textContent =
+    new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
+}
+setInterval(updateClock, 1000);
+updateClock();
+
+// ============================================================
+// FORMAT DATE
+// ============================================================
+function formatDate(d) {
+  if (!d) return '';
+  try {
+    const diff = Math.floor((Date.now() - new Date(d)) / 60000);
+    if (diff < 1) return 'À l\'instant';
+    if (diff < 60) return `Il y a ${diff} min`;
+    if (diff < 1440) return `Il y a ${Math.floor(diff/60)}h`;
+    if (diff < 2880) return 'Hier';
+    return `Il y a ${Math.floor(diff/1440)} j`;
+  } catch(e) { return ''; }
+}
+
+// ============================================================
+// FETCH RSS
+// ============================================================
+async function fetchRSS(source, category) {
+  try {
+    const res = await fetch(PROXY + encodeURIComponent(source.url));
+    const data = await res.json();
+    const xml = new DOMParser().parseFromString(data.contents, 'text/xml');
+    const articles = [];
+    xml.querySelectorAll('item').forEach(item => {
+      const title = item.querySelector('title')?.textContent?.trim() || '';
+      const link  = item.querySelector('link')?.textContent?.trim() || '#';
+      const pubDate = item.querySelector('pubDate')?.textContent?.trim() || '';
+      let img = item.querySelector('enclosure[type^="image"]')?.getAttribute('url') || '';
+      if (!img) {
+        const desc = item.querySelector('description')?.textContent || '';
+        const m = desc.match(/src=["']([^"']+\.(jpg|jpeg|png|webp))[^"']*/i);
+        if (m) img = m[1];
+      }
+      if (!img) img = item.querySelector('content')?.getAttribute('url') || '';
+      if (title && link) articles.push({
+        title, link, pubDate, img,
+        source: source.name, color: source.color,
+        tag: source.tag, label: source.label, category
+      });
+    });
+    return articles;
+  } catch(e) { return []; }
+}
+
+// ============================================================
+// RENDU ARTICLE
+// ============================================================
+function sourceInitial(n) { return n.substring(0,2).toUpperCase(); }
+
+function renderArticle(a, big = false) {
+  const imgHtml = a.img
+    ? `<img src="${a.img}" alt="" loading="lazy" onerror="this.parentElement.innerHTML='📰'">`
+    : '📰';
+
+  if (big) return `
+    <a class="article-item big" href="${a.link}" target="_blank" rel="noopener">
+      <div class="article-img">${imgHtml}</div>
+      <div class="article-content">
+        <div class="article-source-row">
+          <div class="source-dot" style="background:${a.color}">${sourceInitial(a.source)}</div>
+          <span class="source-name">${a.source}</span>
+          <span class="source-sep">·</span>
+          <span class="article-time">${formatDate(a.pubDate)}</span>
+        </div>
+        <div class="article-title">${a.title}</div>
+        <span class="article-tag ${a.tag}">${a.label}</span>
+      </div>
+    </a>`;
+
+  return `
+  <a class="article-item" href="${a.link}" target="_blank" rel="noopener">
+    <div class="article-content">
+      <div class="article-source-row">
+        <div class="source-dot" style="background:${a.color}">${sourceInitial(a.source)}</div>
+        <span class="source-name">${a.source}</span>
+        <span class="source-sep">·</span>
+        <span class="article-time">${formatDate(a.pubDate)}</span>
+      </div>
+      <div class="article-title">${a.title}</div>
+      <span class="article-tag ${a.tag}">${a.label}</span>
+    </div>
+    <div class="article-img">${imgHtml}</div>
+  </a>`;
+}
+
+function renderGroup(articles, label, barColor, emoji) {
+  if (!articles.length) return '';
+  let html = `<div class="section-label"><div class="section-bar" style="background:${barColor}"></div>${emoji} ${label}</div>`;
+  html += '<div class="article-list">';
+  html += renderArticle(articles[0], true);
+  articles.slice(1).forEach(a => { html += renderArticle(a); });
+  html += '</div>';
+  return html;
+}
+
+// ============================================================
+// CHARGER SECTION
+// ============================================================
+async function loadSection(section) {
+  const el = document.getElementById(section + 'Content');
+  el.innerHTML = '<div class="loading"><div class="spinner"></div> Chargement...</div>';
+  const results = await Promise.all(SOURCES[section].map(s => fetchRSS(s, section)));
+  let articles = results.flat().filter(a => a.title);
+  articles.sort((a, b) => new Date(b.pubDate) - new Date(a.pubDate));
+  articles = articles.slice(0, 20);
+  allArticles = allArticles.filter(a => a.category !== section);
+  allArticles.push(...articles);
+  loadedSections.add(section);
+
+  if (!articles.length) {
+    el.innerHTML = '<div class="error-box">⚠️ Impossible de charger. Vérifiez votre connexion.</div>';
+    return;
+  }
+
+  const cfg = {
+    guinee:  { label:'Guinée',    color:'#d4820a', emoji:'🇬🇳' },
+    afrique: { label:'Afrique',   color:'#00956e', emoji:'🌍' },
+    monde:   { label:'Monde',     color:'#2a7de1', emoji:'🌐' },
+    science: { label:'Sciences',  color:'#e03040', emoji:'🔬' },
+    educ:    { label:'Éducation', color:'#7c3aed', emoji:'🎓' },
+  };
+  const c = cfg[section];
+  el.innerHTML = renderGroup(articles, c.label, c.color, c.emoji);
+}
+
+// ============================================================
+// CHARGER TOUT
+// ============================================================
+async function loadAll() {
+  document.getElementById('allContent').innerHTML =
+    '<div class="loading"><div class="spinner"></div> Chargement de toutes les sources...</div>';
+
+  const allSources = Object.entries(SOURCES).flatMap(([cat, srcs]) =>
+    srcs.map(s => ({...s, category: cat})));
+
+  const results = await Promise.all(allSources.map(s => fetchRSS(s, s.category)));
+  allArticles = results.flat().filter(a => a.title);
+  allArticles.sort((a, b) => new Date(b.pubDate) - new Date(a.pubDate));
+
+  if (allArticles.length > 0) {
+    const items = allArticles.slice(0, 12).map(a =>
+      `<span class="ticker-item">${a.title} •</span>`).join('');
+    document.getElementById('tickerContent').innerHTML = items + items;
+  }
+
+  if (!allArticles.length) {
+    document.getElementById('allContent').innerHTML =
+      '<div class="error-box">⚠️ Impossible de charger les articles.</div>';
+    return;
+  }
+  renderAllSections();
+}
+
+function renderAllSections() {
+  const guinee  = allArticles.filter(a => a.category === 'guinee').slice(0,5);
+  const afrique = allArticles.filter(a => a.category === 'afrique').slice(0,4);
+  const monde   = allArticles.filter(a => a.category === 'monde').slice(0,4);
+  const science = allArticles.filter(a => a.category === 'science').slice(0,4);
+  const educ    = allArticles.filter(a => a.category === 'educ').slice(0,3);
+
+  document.getElementById('allContent').innerHTML =
+    renderGroup(guinee,  'Guinée',    '#d4820a', '🇬🇳') +
+    renderGroup(afrique, 'Afrique',   '#00956e', '🌍') +
+    renderGroup(monde,   'Monde',     '#2a7de1', '🌐') +
+    renderGroup(science, 'Sciences',  '#e03040', '🔬') +
+    renderGroup(educ,    'Éducation', '#7c3aed', '🎓');
+}
+
+// ============================================================
+// NAVIGATION
+// ============================================================
+function showSection(id, btn) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  btn.classList.add('active');
+  if (id !== 'all' && !loadedSections.has(id)) loadSection(id);
+}
+
+// ============================================================
+// RECHERCHE
+// ============================================================
+function filterArticles() {
+  const q = document.getElementById('searchInput').value.toLowerCase().trim();
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.getElementById('all').classList.add('active');
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.querySelector('.nav-btn').classList.add('active');
+  if (!q) { renderAllSections(); return; }
+  const filtered = allArticles.filter(a => a.title.toLowerCase().includes(q));
+  document.getElementById('allContent').innerHTML = filtered.length
+    ? '<div class="article-list">' + filtered.map(a => renderArticle(a)).join('') + '</div>'
+    : `<div class="error-box">Aucun résultat pour "${q}"</div>`;
+}
+
+// ============================================================
+// PWA
+// ============================================================
+let deferredPrompt = null;
+
+// Générer manifest dynamiquement
+const manifest = {
+  name: "GuinéeScope",
+  short_name: "GuinéeScope",
+  description: "L'info guinéenne et mondiale en un seul endroit",
+  start_url: "./",
+  display: "standalone",
+  background_color: "#ffffff",
+  theme_color: "#d4820a",
+  orientation: "portrait",
+  icons: [
+    { src: "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23d4820a'/><text y='.9em' font-size='80'>🌍</text></svg>", sizes: "192x192", type: "image/svg+xml" },
+    { src: "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23d4820a'/><text y='.9em' font-size='80'>🌍</text></svg>", sizes: "512x512", type: "image/svg+xml" }
+  ]
+};
+const manifestBlob = new Blob([JSON.stringify(manifest)], {type:'application/json'});
+document.getElementById('manifestLink').href = URL.createObjectURL(manifestBlob);
+
+// Écouter l'événement d'installation
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+  document.getElementById('installBtn').classList.add('visible');
+  // Montrer le toast après 3 secondes
+  setTimeout(() => {
+    document.getElementById('pwaToast').classList.add('show');
+  }, 3000);
+});
+
+function installPWA() {
+  document.getElementById('pwaToast').classList.remove('show');
+  if (deferredPrompt) {
+    deferredPrompt.prompt();
+    deferredPrompt.userChoice.then(result => {
+      if (result.outcome === 'accepted') {
+        document.getElementById('installBtn').classList.remove('visible');
+      }
+      deferredPrompt = null;
+    });
+  } else {
+    // iOS — montrer les instructions
+    alert('Pour installer sur iPhone/iPad :\n1. Appuyez sur le bouton Partager\n2. Sélectionnez "Sur l\'écran d\'accueil"\n3. Appuyez sur Ajouter');
+  }
+}
+
+window.addEventListener('appinstalled', () => {
+  document.getElementById('installBtn').classList.remove('visible');
+});
+
+// ============================================================
+// INIT
+// ============================================================
+loadAll();
+setInterval(loadAll, 600000);
+</script>
+</body>
+</html>
