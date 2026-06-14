@@ -1,16 +1,18 @@
 // ============================================================
 // SERVICE WORKER - GuinéeScope
-// Met en cache l'app shell (index.html) pour un chargement
-// INSTANTANÉ aux visites suivantes, même hors-ligne.
-// Les appels API/RSS (actualités, vidéos) ne sont PAS mis en
-// cache ici : ils restent toujours frais (gérés par le JS).
+// Stratégie "réseau d'abord" pour l'app shell (index.html) :
+// - En ligne : toujours la dernière version (évite tout décalage
+//   après une mise à jour du fichier sur le serveur).
+// - Hors-ligne : on retombe sur la dernière version mise en cache.
+// Les appels API/RSS (actualités, vidéos) ne sont pas concernés :
+// ils partent directement au réseau, gérés par le JS de la page.
 // ============================================================
-const CACHE_NAME = 'guineescope-shell-v1';
+const CACHE_NAME = 'guineescope-shell-v2';
 const SHELL_URL = './index.html';
 
 self.addEventListener('install', (event) => {
   event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => cache.add(SHELL_URL))
+    caches.open(CACHE_NAME).then((cache) => cache.add(SHELL_URL)).catch(() => {})
   );
   self.skipWaiting();
 });
@@ -27,23 +29,16 @@ self.addEventListener('activate', (event) => {
 self.addEventListener('fetch', (event) => {
   const req = event.request;
 
-  // On ne gère que la page principale (navigation). Tout le reste
-  // (proxies RSS, polices, images, YouTube...) part directement au réseau.
   if (req.mode === 'navigate' || req.destination === 'document') {
     event.respondWith(
-      caches.open(CACHE_NAME).then(async (cache) => {
-        const cached = await cache.match(SHELL_URL);
-        const networkFetch = fetch(req)
-          .then((res) => {
-            if (res && res.ok) cache.put(SHELL_URL, res.clone());
-            return res;
-          })
-          .catch(() => cached);
-
-        // Stale-while-revalidate : on affiche le cache instantanément
-        // si dispo, sinon on attend le réseau.
-        return cached || networkFetch;
-      })
+      fetch(req)
+        .then((res) => {
+          if (res && res.ok) {
+            caches.open(CACHE_NAME).then((cache) => cache.put(SHELL_URL, res.clone()));
+          }
+          return res;
+        })
+        .catch(() => caches.match(SHELL_URL))
     );
   }
 });
