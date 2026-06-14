@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://boubacardraga123-sketch.github.io/GuineeScope-/sitemap.xml
