@@ -74,6 +74,29 @@ body{font-family:'Inter',sans-serif;background:#f2f3f5;color:#111;min-height:100
 .spinner{width:24px;height:24px;border:3px solid #f2f3f5;border-top-color:#e63946;border-radius:50%;animation:spin .7s linear infinite;margin:0 auto 8px;}
 @keyframes spin{to{transform:rotate(360deg);}}
 
+/* EDITEUR DE CONTENU RICHE */
+.rich-editor{border:1.5px solid #e5e7eb;border-radius:8px;background:#f9fafb;overflow:hidden;}
+.rich-editor-toolbar{display:flex;gap:6px;padding:7px 10px;background:#fff;border-bottom:1px solid #e5e7eb;flex-wrap:wrap;}
+.re-btn{background:#f2f3f5;border:1.5px solid #e5e7eb;font-family:inherit;font-size:.72rem;font-weight:600;
+  padding:.3rem .65rem;border-radius:6px;cursor:pointer;color:#333;white-space:nowrap;}
+.re-btn:active{background:#e5e7eb;}
+.re-blocks{display:flex;flex-direction:column;gap:8px;padding:10px;}
+.re-block{background:#fff;border:1.5px solid #e5e7eb;border-radius:8px;overflow:hidden;position:relative;}
+.re-block-head{display:flex;align-items:center;gap:6px;padding:5px 8px;background:#f9fafb;border-bottom:1px solid #f0f0f0;}
+.re-block-type{font-size:.65rem;font-weight:700;color:#888;text-transform:uppercase;}
+.re-block-del{margin-left:auto;background:#fff0f0;border:1px solid #fca5a5;color:#ef4444;
+  font-size:.65rem;padding:2px 7px;border-radius:4px;cursor:pointer;font-family:inherit;}
+.re-block textarea{width:100%;border:none;background:#fff;font-family:inherit;font-size:.84rem;
+  padding:8px 10px;outline:none;color:#111;resize:vertical;min-height:70px;line-height:1.6;}
+.re-block input[type=text]{width:100%;border:none;background:#fff;font-family:inherit;font-size:.82rem;
+  padding:8px 10px;outline:none;color:#111;}
+.re-block-preview{max-width:100%;max-height:120px;object-fit:cover;display:block;margin:0 auto 6px;}
+.re-block-move{display:flex;gap:4px;}
+.re-move-btn{background:#f2f3f5;border:1px solid #e5e7eb;font-size:.7rem;padding:2px 6px;
+  border-radius:4px;cursor:pointer;font-family:inherit;color:#555;}
+.re-empty{text-align:center;color:#bbb;font-size:.78rem;padding:1.5rem;display:none;}
+.re-empty.visible{display:block;}
+
 /* BOTTOM NAV */
 .bottom-nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;background:#fff;border-top:1px solid #e5e7eb;display:flex;z-index:100;}
 .bnav-item{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:8px 0;font-size:.62rem;color:#aaa;cursor:pointer;gap:2px;}
@@ -130,6 +153,63 @@ body{font-family:'Inter',sans-serif;background:#f2f3f5;color:#111;min-height:100
 .btn-del-com{background:#fff0f0;border:1px solid #fca5a5;color:#ef4444;font-family:inherit;
   font-size:.7rem;padding:.28rem .65rem;border-radius:5px;cursor:pointer;}
 .no-comments{text-align:center;color:#bbb;padding:2rem;font-size:.85rem;}
+
+/* STATS VUES/LIKES */
+.stat-pill{display:inline-flex;align-items:center;gap:3px;font-size:.68rem;font-weight:600;
+  padding:2px 7px;border-radius:10px;margin-right:4px;}
+.stat-views{background:#e8f0fe;color:#1d3557;}
+.stat-likes{background:#fff0f0;color:#e63946;}
+.stats-tab-section{padding:10px;}
+.stats-card{background:#fff;border-radius:12px;padding:14px;margin-bottom:10px;box-shadow:0 1px 4px rgba(0,0,0,.05);}
+.stats-card h3{font-size:.82rem;font-weight:700;color:#555;margin-bottom:10px;display:flex;align-items:center;gap:5px;}
+.rank-item{display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid #f5f5f5;}
+.rank-item:last-child{border:none;}
+.rank-num{width:22px;height:22px;border-radius:50%;background:#f2f3f5;font-size:.7rem;font-weight:700;
+  color:#888;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.rank-num.gold{background:#ffd700;color:#7a5c00;}
+.rank-num.silver{background:#c0c0c0;color:#555;}
+.rank-num.bronze{background:#cd7f32;color:#fff;}
+.rank-info{flex:1;min-width:0;}
+.rank-title{font-size:.82rem;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.rank-meta{font-size:.68rem;color:#aaa;margin-top:1px;}
+.rank-stats{display:flex;gap:4px;flex-shrink:0;}
+.big-stats-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:10px;}
+.big-stat.blue{background:linear-gradient(135deg,#457b9d,#1d3557);}
+.reset-btn{background:#fff0f0;border:1px solid #fca5a5;color:#ef4444;font-family:inherit;
+  font-size:.72rem;font-weight:600;padding:.35rem .8rem;border-radius:6px;cursor:pointer;margin-top:8px;}
+
+/* ===== CHAT ADMIN ===== */
+.chat-admin-layout{display:flex;height:calc(100vh - 160px);min-height:300px;}
+.chat-sessions-panel{width:140px;border-right:1px solid #e5e7eb;overflow-y:auto;flex-shrink:0;background:#fafafa;}
+.chat-session-item{padding:9px 10px;cursor:pointer;border-bottom:1px solid #f0f0f0;position:relative;}
+.chat-session-item:active,.chat-session-item.selected{background:#fff0f0;}
+.csi-name{font-size:.8rem;font-weight:700;color:#111;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.csi-preview{font-size:.68rem;color:#aaa;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:1px;}
+.csi-badge{position:absolute;top:6px;right:6px;background:#e63946;color:#fff;font-size:.55rem;
+  font-weight:700;min-width:15px;height:15px;border-radius:8px;display:flex;align-items:center;justify-content:center;padding:0 3px;}
+.chat-conv-panel{flex:1;display:flex;flex-direction:column;min-width:0;}
+.conv-head{padding:8px 12px;border-bottom:1px solid #f0f0f0;background:#fff;display:flex;align-items:center;gap:8px;}
+.conv-head-name{font-size:.88rem;font-weight:700;color:#111;flex:1;}
+.conv-head-sub{font-size:.65rem;color:#aaa;}
+.conv-messages{flex:1;overflow-y:auto;padding:10px 12px;display:flex;flex-direction:column;gap:7px;background:#f9fafb;}
+.conv-msg{max-width:82%;padding:7px 10px;border-radius:12px;font-size:.82rem;line-height:1.4;word-break:break-word;}
+.conv-msg.visitor{background:#fff;color:#111;align-self:flex-start;border-bottom-left-radius:3px;
+  box-shadow:0 1px 3px rgba(0,0,0,.06);}
+.conv-msg.admin{background:#e63946;color:#fff;align-self:flex-end;border-bottom-right-radius:3px;}
+.conv-msg-time{font-size:.6rem;opacity:.55;margin-top:2px;}
+.conv-msg.admin .conv-msg-time{text-align:right;}
+.conv-msg-sender{font-size:.65rem;font-weight:700;opacity:.7;margin-bottom:2px;}
+.conv-empty{color:#bbb;font-size:.78rem;text-align:center;padding:2rem .5rem;align-self:center;}
+.conv-form{display:flex;gap:6px;padding:8px 10px;border-top:1px solid #e5e7eb;background:#fff;}
+.conv-form input{flex:1;border:1.5px solid #e5e7eb;background:#f9fafb;font-family:inherit;
+  font-size:.82rem;padding:.45rem .8rem;border-radius:20px;outline:none;color:#111;}
+.conv-form input:focus{border-color:#e63946;}
+.conv-send-btn{background:#e63946;border:none;color:#fff;width:34px;height:34px;border-radius:50%;
+  font-size:.95rem;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.chat-no-select{display:flex;align-items:center;justify-content:center;flex:1;color:#bbb;font-size:.82rem;flex-direction:column;gap:6px;}
+.chat-tab-badge{background:#e63946;color:#fff;font-size:.55rem;font-weight:700;
+  min-width:15px;height:15px;border-radius:8px;display:inline-flex;align-items:center;justify-content:center;
+  padding:0 3px;margin-left:3px;vertical-align:middle;}
 </style>
 </head>
 <body>
@@ -162,9 +242,11 @@ body{font-family:'Inter',sans-serif;background:#f2f3f5;color:#111;min-height:100
 
   <!-- ONGLETS ADMIN -->
   <div class="admin-tabs">
-    <button class="admin-tab active" onclick="showAdminTab('dashboard')">📊 Dashboard</button>
-    <button class="admin-tab" onclick="showAdminTab('ressources')">📚 Ressources</button>
-    <button class="admin-tab" onclick="showAdminTab('commentaires')">💬 Commentaires</button>
+    <button class="admin-tab active" onclick="showAdminTab('dashboard')">📊</button>
+    <button class="admin-tab" onclick="showAdminTab('ressources')">📚</button>
+    <button class="admin-tab" onclick="showAdminTab('commentaires')">💬</button>
+    <button class="admin-tab" onclick="showAdminTab('stats')">👁️</button>
+    <button class="admin-tab" id="chat-tab-btn" onclick="showAdminTab('chat')">✉️<span id="chat-admin-badge" class="chat-tab-badge" style="display:none">0</span></button>
   </div>
 
   <div class="pb60" id="admin-content">
@@ -211,7 +293,16 @@ body{font-family:'Inter',sans-serif;background:#f2f3f5;color:#111;min-height:100
       <div class="fg"><label>Description</label><input type="text" id="f-desc" placeholder="Brève description…"></div>
       <div class="fg" id="fcont" style="display:none">
         <label>Contenu complet</label>
-        <textarea id="f-cont" placeholder="Cours ou exercice complet ici…"></textarea>
+        <div class="rich-editor">
+          <div class="rich-editor-toolbar">
+            <button type="button" class="re-btn" onclick="addBlock('paragraph')">✏️ + Paragraphe</button>
+            <button type="button" class="re-btn" onclick="addBlock('image')">🖼️ + Image</button>
+            <button type="button" class="re-btn" onclick="addBlock('title')">🔠 + Titre</button>
+          </div>
+          <div class="re-blocks" id="re-blocks">
+            <div class="re-empty visible" id="re-empty">Cliquez sur un bouton ci-dessus pour ajouter du contenu</div>
+          </div>
+        </div>
       </div>
       <button class="btn-pub" id="btn-pub" onclick="addItem()">✅ Publier</button>
     </div>
@@ -271,6 +362,64 @@ body{font-family:'Inter',sans-serif;background:#f2f3f5;color:#111;min-height:100
       <div id="com-list"></div>
     </div>
 
+    <!-- CHAT ADMIN -->
+    <div id="tab-chat" style="display:none">
+      <div class="chat-admin-layout">
+        <!-- Liste des sessions -->
+        <div class="chat-sessions-panel" id="chat-sessions-list">
+          <div style="padding:8px 10px;font-size:.68rem;font-weight:700;color:#aaa;text-transform:uppercase;letter-spacing:.05em;border-bottom:1px solid #f0f0f0;">Visiteurs</div>
+          <div id="sessions-items"><div style="padding:1rem;color:#bbb;font-size:.75rem;text-align:center">Aucune session</div></div>
+        </div>
+        <!-- Conversation -->
+        <div class="chat-conv-panel" id="chat-conv-panel">
+          <div class="chat-no-select" id="chat-no-select">
+            <span style="font-size:2rem">💬</span>
+            <span>Sélectionnez un visiteur</span>
+          </div>
+          <div id="chat-conv-content" style="display:none;flex:1;display:none;flex-direction:column;">
+            <div class="conv-head">
+              <div>
+                <div class="conv-head-name" id="conv-visitor-name">—</div>
+                <div class="conv-head-sub" id="conv-visitor-sub"></div>
+              </div>
+            </div>
+            <div class="conv-messages" id="conv-messages"></div>
+            <div class="conv-form">
+              <input type="text" id="admin-chat-input" placeholder="Répondre…" maxlength="500" onkeydown="if(event.key==='Enter')sendAdminMsg()">
+              <button class="conv-send-btn" onclick="sendAdminMsg()">➤</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STATS VUES / LIKES -->
+    <div id="tab-stats" style="display:none">
+      <div class="stats-tab-section">
+        <div class="big-stats-3">
+          <div class="big-stat"><div class="bn" id="st-total-views">0</div><div class="bl">👁️ Vues totales</div></div>
+          <div class="big-stat red"><div class="bn" id="st-total-likes">0</div><div class="bl">❤️ Likes totaux</div></div>
+          <div class="big-stat blue"><div class="bn" id="st-total-res">0</div><div class="bl">📚 Ressources</div></div>
+        </div>
+
+        <div class="stats-card">
+          <h3>👁️ Top vues</h3>
+          <div id="rank-views"></div>
+        </div>
+
+        <div class="stats-card">
+          <h3>❤️ Top likes</h3>
+          <div id="rank-likes"></div>
+        </div>
+
+        <div class="stats-card">
+          <h3>⚙️ Gestion des stats</h3>
+          <p style="font-size:.78rem;color:#888;margin-bottom:8px;">Réinitialiser les vues ou likes d'une ressource spécifique depuis la liste ci-dessous.</p>
+          <div id="reset-list"></div>
+        </div>
+      </div>
+    </div>
+
   </div>
 
   <div class="bottom-nav">
@@ -284,7 +433,8 @@ body{font-family:'Inter',sans-serif;background:#f2f3f5;color:#111;min-height:100
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getFirestore, collection, addDoc, deleteDoc, doc, onSnapshot, orderBy, query }
+import { getFirestore, collection, addDoc, deleteDoc, doc, onSnapshot, orderBy, query,
+  serverTimestamp, setDoc, updateDoc, getDocs }
   from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
 const firebaseConfig = {
@@ -323,6 +473,8 @@ window.doLogin = function() {
 // ---- LOGOUT ----
 window.doLogout = function() {
   if (unsubscribe) { unsubscribe(); unsubscribe = null; }
+  if (typeof convUnsubscribe === 'function') { convUnsubscribe(); convUnsubscribe = null; }
+  if (typeof sessionsUnsubscribe === 'function') { sessionsUnsubscribe(); sessionsUnsubscribe = null; }
   document.getElementById('app').classList.remove('on');
   document.getElementById('gate').classList.remove('hidden');
   document.getElementById('f-pw').value = '';
@@ -338,6 +490,7 @@ function startListen() {
     renderList();
     updateStats();
   });
+  startChatAdminListen();
 }
 
 function updateStats() {
@@ -363,6 +516,82 @@ function ytId(url) {
   return m ? m[1] : url.trim();
 }
 
+// ---- EDITEUR DE CONTENU RICHE ----
+let richBlocks = [];
+
+window.addBlock = function(type) {
+  const id = 'blk_' + Date.now();
+  richBlocks.push({id, type, value: ''});
+  renderBlocks();
+};
+
+window.removeBlock = function(id) {
+  richBlocks = richBlocks.filter(b => b.id !== id);
+  renderBlocks();
+};
+
+window.moveBlock = function(id, dir) {
+  const idx = richBlocks.findIndex(b => b.id === id);
+  if (dir === -1 && idx > 0) [richBlocks[idx-1], richBlocks[idx]] = [richBlocks[idx], richBlocks[idx-1]];
+  if (dir === 1 && idx < richBlocks.length-1) [richBlocks[idx], richBlocks[idx+1]] = [richBlocks[idx+1], richBlocks[idx]];
+  renderBlocks();
+};
+
+window.updateBlock = function(id, value) {
+  const b = richBlocks.find(b => b.id === id);
+  if (b) b.value = value;
+  if (b && b.type === 'image') {
+    const prev = document.getElementById('prev_' + id);
+    if (prev) { prev.src = value; prev.style.display = value ? 'block' : 'none'; }
+  }
+};
+
+function renderBlocks() {
+  const cont = document.getElementById('re-blocks');
+  const empty = document.getElementById('re-empty');
+  if (!richBlocks.length) {
+    if (empty) empty.classList.add('visible');
+    // Remove all blocks except empty message
+    [...cont.children].forEach(c => { if (c !== empty) c.remove(); });
+    return;
+  }
+  if (empty) empty.classList.remove('visible');
+  // Clear and re-render
+  [...cont.children].forEach(c => { if (c !== empty) c.remove(); });
+  richBlocks.forEach((blk, idx) => {
+    const el = document.createElement('div');
+    el.className = 're-block';
+    el.id = 'block_' + blk.id;
+    const labels = {paragraph:'Paragraphe', image:'Image', title:'Titre'};
+    const icons  = {paragraph:'✏️', image:'🖼️', title:'🔠'};
+    let input = '';
+    if (blk.type === 'paragraph') {
+      input = `<textarea placeholder="Tapez votre paragraphe ici…" oninput="updateBlock('${blk.id}',this.value)">${blk.value}</textarea>`;
+    } else if (blk.type === 'title') {
+      input = `<input type="text" placeholder="Titre de section…" value="${blk.value}" oninput="updateBlock('${blk.id}',this.value)">`;
+    } else if (blk.type === 'image') {
+      input = `<input type="text" placeholder="URL de l'image (Postimage, etc.)…" value="${blk.value}" oninput="updateBlock('${blk.id}',this.value)">
+        <img id="prev_${blk.id}" class="re-block-preview" src="${blk.value}" alt="" style="display:${blk.value?'block':'none'}">`;
+    }
+    el.innerHTML = `
+      <div class="re-block-head">
+        <span class="re-block-type">${icons[blk.type]} ${labels[blk.type]}</span>
+        <div class="re-block-move">
+          ${idx > 0 ? `<button class="re-move-btn" onclick="moveBlock('${blk.id}',-1)">▲</button>` : ''}
+          ${idx < richBlocks.length-1 ? `<button class="re-move-btn" onclick="moveBlock('${blk.id}',1)">▼</button>` : ''}
+        </div>
+        <button class="re-block-del" onclick="removeBlock('${blk.id}')">✕ Supprimer</button>
+      </div>
+      ${input}`;
+    cont.appendChild(el);
+  });
+}
+
+function resetRichEditor() {
+  richBlocks = [];
+  renderBlocks();
+}
+
 window.addItem = async function() {
   const titre = document.getElementById('f-titre').value.trim();
   if (!titre) { toast('⚠️ Titre obligatoire !'); return; }
@@ -373,7 +602,12 @@ window.addItem = async function() {
   const cont  = document.getElementById('f-cont').value.trim();
   const thumb = document.getElementById('f-thumb').value.trim();
 
-  let data = {titre, type, matiere:mat, niveau:niv, desc, contenu:cont, date:Date.now()};
+  let data = {titre, type, matiere:mat, niveau:niv, desc, date:Date.now()};
+
+  // Contenu riche pour cours/exercice
+  if (type === 'cours' || type === 'exercice') {
+    data.contenu = JSON.stringify(richBlocks.filter(b => b.value.trim()));
+  }
 
   if (type==='video') {
     data.ytid = ytId(document.getElementById('f-yt').value.trim());
@@ -389,9 +623,10 @@ window.addItem = async function() {
   btn.disabled = true; btn.textContent = '⏳ Publication…';
   try {
     await addDoc(collection(db, 'ressources'), data);
-    ['f-titre','f-yt','f-img','f-thumb','f-mat','f-niv','f-desc','f-cont'].forEach(id => {
+    ['f-titre','f-yt','f-img','f-thumb','f-mat','f-niv','f-desc'].forEach(id => {
       const el = document.getElementById(id); if (el) el.value = '';
     });
+    resetRichEditor();
     toast('✅ Ressource publiée !');
   } catch(e) {
     toast('❌ Erreur : ' + e.message);
@@ -420,7 +655,10 @@ function renderList() {
     list.innerHTML = '<div class="empty">Aucune ressource. Ajoutez du contenu ! 📝</div>';
     return;
   }
-  list.innerHTML = items.map(item => `
+  list.innerHTML = items.map(item => {
+    const views = parseInt(localStorage.getItem('views_'+item.id)||'0');
+    const likes = parseInt(localStorage.getItem('likes_'+item.id)||'0');
+    return `
     <div class="item">
       <div class="item-icon">${icons[item.type]||'📄'}</div>
       <div class="item-info">
@@ -431,9 +669,13 @@ function renderList() {
           ${item.niveau?`<span>${item.niveau}</span>`:''}
           <span>${fmtDate(item.date)}</span>
         </div>
+        <div style="margin-top:4px;">
+          <span class="stat-pill stat-views">👁️ ${views}</span>
+          <span class="stat-pill stat-likes">❤️ ${likes}</span>
+        </div>
       </div>
       <button class="btn-del" onclick="delItem('${item.id}')">🗑️</button>
-    </div>`).join('');
+    </div>`}).join('');
 }
 
 function toast(msg) {
@@ -445,18 +687,98 @@ function toast(msg) {
 
 // ===== TABS ADMIN =====
 window.showAdminTab = function(tab) {
-  ['dashboard','ressources','commentaires'].forEach(t => {
+  ['dashboard','ressources','commentaires','stats','chat'].forEach(t => {
     const el = document.getElementById('tab-'+t);
     if(el) el.style.display = t===tab ? 'block' : 'none';
   });
   document.querySelectorAll('.admin-tab').forEach((b,i) => {
-    b.classList.toggle('active', ['dashboard','ressources','commentaires'][i]===tab);
+    b.classList.toggle('active', ['dashboard','ressources','commentaires','stats','chat'][i]===tab);
   });
   if(tab==='dashboard') updateDashboard();
   if(tab==='commentaires') renderComAdmin('tout');
+  if(tab==='stats') renderStats();
+  if(tab==='chat') { renderSessionsList(); }
 };
 
-// ===== DASHBOARD =====
+// ===== STATS VUES / LIKES =====
+function renderStats() {
+  const icons = {video:'🎬',cours:'📖',exercice:'✏️',image:'🖼️'};
+
+  // Récupérer vues et likes depuis localStorage
+  const data = items.map(item => ({
+    ...item,
+    views: parseInt(localStorage.getItem('views_'+item.id)||'0'),
+    likes: parseInt(localStorage.getItem('likes_'+item.id)||'0'),
+  }));
+
+  const totalViews = data.reduce((s,i)=>s+i.views,0);
+  const totalLikes = data.reduce((s,i)=>s+i.likes,0);
+  document.getElementById('st-total-views').textContent = totalViews;
+  document.getElementById('st-total-likes').textContent = totalLikes;
+  document.getElementById('st-total-res').textContent = items.length;
+
+  // Top vues
+  const byViews = [...data].sort((a,b)=>b.views-a.views).slice(0,5);
+  document.getElementById('rank-views').innerHTML = byViews.length
+    ? byViews.map((item,i)=>`
+      <div class="rank-item">
+        <div class="rank-num ${i===0?'gold':i===1?'silver':i===2?'bronze':''}">${i+1}</div>
+        <div class="rank-info">
+          <div class="rank-title">${icons[item.type]||''} ${item.titre}</div>
+          <div class="rank-meta">${item.matiere||''} ${item.niveau?'· '+item.niveau:''}</div>
+        </div>
+        <div class="rank-stats">
+          <span class="stat-pill stat-views">👁️ ${item.views}</span>
+        </div>
+      </div>`).join('')
+    : '<p style="color:#bbb;font-size:.8rem;text-align:center">Aucune vue enregistrée</p>';
+
+  // Top likes
+  const byLikes = [...data].sort((a,b)=>b.likes-a.likes).slice(0,5);
+  document.getElementById('rank-likes').innerHTML = byLikes.length
+    ? byLikes.map((item,i)=>`
+      <div class="rank-item">
+        <div class="rank-num ${i===0?'gold':i===1?'silver':i===2?'bronze':''}">${i+1}</div>
+        <div class="rank-info">
+          <div class="rank-title">${icons[item.type]||''} ${item.titre}</div>
+          <div class="rank-meta">${item.matiere||''} ${item.niveau?'· '+item.niveau:''}</div>
+        </div>
+        <div class="rank-stats">
+          <span class="stat-pill stat-likes">❤️ ${item.likes}</span>
+        </div>
+      </div>`).join('')
+    : '<p style="color:#bbb;font-size:.8rem;text-align:center">Aucun like enregistré</p>';
+
+  // Liste reset
+  document.getElementById('reset-list').innerHTML = data.map(item=>`
+    <div class="rank-item">
+      <div class="rank-info">
+        <div class="rank-title">${icons[item.type]||''} ${item.titre}</div>
+        <div class="rank-meta">
+          <span class="stat-pill stat-views">👁️ ${item.views}</span>
+          <span class="stat-pill stat-likes">❤️ ${item.likes}</span>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:4px;">
+        <button class="reset-btn" onclick="resetStat('${item.id}','views')">Reset vues</button>
+        <button class="reset-btn" onclick="resetStat('${item.id}','likes')">Reset likes</button>
+      </div>
+    </div>`).join('') || '<p style="color:#bbb;font-size:.8rem;text-align:center">Aucune ressource</p>';
+}
+
+window.resetStat = function(id, type) {
+  const label = type==='views' ? 'les vues' : 'les likes';
+  if(!confirm(`Réinitialiser ${label} de cette ressource ?`)) return;
+  if(type==='views') {
+    localStorage.removeItem('views_'+id);
+  } else {
+    localStorage.removeItem('likes_'+id);
+    localStorage.removeItem('liked_'+id);
+  }
+  toast(`✅ ${type==='views'?'Vues':'Likes'} réinitialisés.`);
+  renderStats();
+  renderList();
+};
 function updateDashboard() {
   const total = items.length;
   const v = items.filter(i=>i.type==='video').length;
@@ -546,6 +868,126 @@ window.deleteCom = function(itemId, ci) {
 
 toggleF();
 showAdminTab("dashboard");
+
+// ===== CHAT ADMIN =====
+let chatSessions = [];
+let selectedSessionId = null;
+let convUnsubscribe = null;
+let sessionsUnsubscribe = null;
+let totalUnread = 0;
+
+function startChatAdminListen() {
+  if (sessionsUnsubscribe) return;
+  const sessRef = collection(db, 'chats');
+  sessionsUnsubscribe = onSnapshot(sessRef, snap => {
+    chatSessions = snap.docs.map(d => ({id: d.id, ...d.data()}));
+    // Trier par lastActivity desc
+    chatSessions.sort((a,b) => {
+      const ta = a.lastActivity ? a.lastActivity.seconds : 0;
+      const tb = b.lastActivity ? b.lastActivity.seconds : 0;
+      return tb - ta;
+    });
+    totalUnread = chatSessions.reduce((s,sess) => s + (sess.unreadByAdmin||0), 0);
+    updateChatAdminBadge();
+    renderSessionsList();
+    // Si une session est déjà sélectionnée, rafraîchir son header
+    if (selectedSessionId) {
+      const sess = chatSessions.find(s => s.id === selectedSessionId);
+      if (sess) updateConvHead(sess);
+    }
+  });
+}
+
+function updateChatAdminBadge() {
+  const b = document.getElementById('chat-admin-badge');
+  if (!b) return;
+  if (totalUnread > 0) { b.textContent = totalUnread; b.style.display = 'inline-flex'; }
+  else { b.style.display = 'none'; }
+}
+
+function renderSessionsList() {
+  const container = document.getElementById('sessions-items');
+  if (!chatSessions.length) {
+    container.innerHTML = '<div style="padding:1rem;color:#bbb;font-size:.75rem;text-align:center">Aucune session</div>';
+    return;
+  }
+  container.innerHTML = chatSessions.map(sess => {
+    const unread = sess.unreadByAdmin || 0;
+    const isSelected = sess.id === selectedSessionId;
+    const preview = sess.lastMessage ? sess.lastMessage.substring(0,28)+(sess.lastMessage.length>28?'…':'') : '—';
+    return `<div class="chat-session-item ${isSelected?'selected':''}" onclick="selectSession('${sess.id}')">
+      <div class="csi-name">👤 ${sess.visitorName||'Visiteur'}</div>
+      <div class="csi-preview">${preview}</div>
+      ${unread > 0 ? `<div class="csi-badge">${unread}</div>` : ''}
+    </div>`;
+  }).join('');
+}
+
+window.selectSession = function(sessionId) {
+  selectedSessionId = sessionId;
+  const sess = chatSessions.find(s => s.id === sessionId);
+  // Afficher la conv
+  document.getElementById('chat-no-select').style.display = 'none';
+  const convContent = document.getElementById('chat-conv-content');
+  convContent.style.display = 'flex';
+  convContent.style.flexDirection = 'column';
+  convContent.style.flex = '1';
+  if (sess) updateConvHead(sess);
+  // Réinitialiser unread
+  setDoc(doc(db, 'chats', sessionId), {unreadByAdmin: 0}, {merge: true});
+  // Démarrer écoute messages
+  if (convUnsubscribe) convUnsubscribe();
+  const msgsRef = collection(db, 'chats', sessionId, 'messages');
+  const mq = query(msgsRef, orderBy('ts', 'asc'));
+  convUnsubscribe = onSnapshot(mq, snap => {
+    const msgs = snap.docs.map(d => ({id: d.id, ...d.data()}));
+    renderConvMessages(msgs);
+  });
+  renderSessionsList();
+};
+
+function updateConvHead(sess) {
+  document.getElementById('conv-visitor-name').textContent = '👤 ' + (sess.visitorName||'Visiteur');
+  const ts = sess.lastActivity ? new Date(sess.lastActivity.seconds*1000).toLocaleString('fr-FR',{hour:'2-digit',minute:'2-digit',day:'2-digit',month:'2-digit'}) : '';
+  document.getElementById('conv-visitor-sub').textContent = ts ? 'Dernière activité : ' + ts : '';
+}
+
+function renderConvMessages(msgs) {
+  const container = document.getElementById('conv-messages');
+  if (!msgs.length) {
+    container.innerHTML = '<div class="conv-empty">💬 Aucun message dans cette conversation.</div>';
+    return;
+  }
+  container.innerHTML = msgs.map(m => {
+    const isAdmin = m.sender === 'admin';
+    const time = m.ts ? new Date(m.ts.seconds*1000).toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'}) : '';
+    const senderLabel = isAdmin ? 'Vous (Admin)' : (m.visitorName||'Visiteur');
+    return `<div class="conv-msg ${isAdmin?'admin':'visitor'}">
+      <div class="conv-msg-sender">${senderLabel}</div>
+      ${m.text}
+      <div class="conv-msg-time">${time}</div>
+    </div>`;
+  }).join('');
+  container.scrollTop = container.scrollHeight;
+}
+
+window.sendAdminMsg = async function() {
+  if (!selectedSessionId) return;
+  const input = document.getElementById('admin-chat-input');
+  const text = input.value.trim();
+  if (!text) return;
+  input.value = '';
+  const msgsRef = collection(db, 'chats', selectedSessionId, 'messages');
+  await addDoc(msgsRef, {
+    text, sender: 'admin',
+    ts: serverTimestamp(), seenByVisitor: false
+  });
+  await setDoc(doc(db, 'chats', selectedSessionId), {
+    lastMessage: '(Admin) ' + text,
+    lastActivity: serverTimestamp()
+  }, {merge: true});
+  toast('✅ Message envoyé.');
+};
 </script>
 </body>
 </html>
