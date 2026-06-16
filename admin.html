@@ -67,6 +67,8 @@ body{font-family:'Inter',sans-serif;background:#f2f3f5;color:#111;min-height:100
 .ib-cours{background:#1d3557;color:#fff;}
 .ib-exercice{background:#e63946;color:#fff;}
 .ib-image{background:#457b9d;color:#fff;}
+.ib-evenement{background:#e67e22;color:#fff;}
+.ib-annale{background:#6c3483;color:#fff;}
 .btn-del{background:#fff0f0;border:1px solid #fca5a5;color:#ef4444;font-family:inherit;font-size:.72rem;font-weight:600;padding:.35rem .7rem;border-radius:6px;cursor:pointer;flex-shrink:0;}
 .btn-del:active{background:#fee2e2;}
 .empty{text-align:center;color:#bbb;padding:2.5rem 1rem;font-size:.85rem;}
@@ -257,6 +259,8 @@ body{font-family:'Inter',sans-serif;background:#f2f3f5;color:#111;min-height:100
       <div class="sc"><div class="n" id="s-c">–</div><div class="l">Cours</div></div>
       <div class="sc"><div class="n" id="s-e">–</div><div class="l">Exercices</div></div>
       <div class="sc"><div class="n" id="s-i">–</div><div class="l">Images</div></div>
+      <div class="sc"><div class="n" id="s-ev">–</div><div class="l">Événements</div></div>
+      <div class="sc"><div class="n" id="s-an">–</div><div class="l">Annales</div></div>
     </div>
 
     <div class="form-card">
@@ -269,6 +273,8 @@ body{font-family:'Inter',sans-serif;background:#f2f3f5;color:#111;min-height:100
             <option value="cours">📖 Cours</option>
             <option value="exercice">✏️ Exercice</option>
             <option value="image">🖼️ Image</option>
+            <option value="evenement">📅 Événement</option>
+            <option value="annale">📝 Examen & Annale</option>
           </select>
         </div>
       </div>
@@ -289,6 +295,37 @@ body{font-family:'Inter',sans-serif;background:#f2f3f5;color:#111;min-height:100
       <div class="fg" id="fthumb" style="display:none">
         <label>Image de couverture (URL)</label>
         <input type="text" id="f-thumb" placeholder="URL miniature optionnelle">
+      </div>
+      <div class="fg" id="fevt-date" style="display:none">
+        <label>Date de l'événement *</label>
+        <input type="date" id="f-evt-date">
+      </div>
+      <div class="fg" id="fevt-lieu" style="display:none">
+        <label>Lieu</label>
+        <input type="text" id="f-evt-lieu" placeholder="Conakry, Kindia…">
+      </div>
+      <div class="fg" id="fevt-thumb" style="display:none">
+        <label>Image de l'événement (URL)</label>
+        <input type="text" id="f-evt-thumb" placeholder="https://i.postimg.cc/…">
+      </div>
+      <div class="fg" id="fannale-annee" style="display:none">
+        <label>Année de l'examen *</label>
+        <input type="number" id="f-annale-annee" placeholder="2023" min="1990" max="2099">
+      </div>
+      <div class="fg" id="fannale-type" style="display:none">
+        <label>Type d'examen *</label>
+        <select id="f-annale-type">
+          <option value="BAC">BAC</option>
+          <option value="BEPC">BEPC</option>
+          <option value="BTS">BTS</option>
+          <option value="Concours">Concours</option>
+          <option value="Autre">Autre</option>
+        </select>
+      </div>
+      <div class="fg" id="fannale-doc" style="display:none">
+        <label>URL du document (PDF ou image) *</label>
+        <input type="text" id="f-annale-doc" placeholder="https://i.postimg.cc/… ou lien PDF">
+        <span class="hint">Image Postimage ou lien PDF direct.</span>
       </div>
       <div class="fg"><label>Description</label><input type="text" id="f-desc" placeholder="Brève description…"></div>
       <div class="fg" id="fcont" style="display:none">
@@ -499,6 +536,8 @@ function updateStats() {
   document.getElementById('s-c').textContent = items.filter(i=>i.type==='cours').length;
   document.getElementById('s-e').textContent = items.filter(i=>i.type==='exercice').length;
   document.getElementById('s-i').textContent = items.filter(i=>i.type==='image').length;
+  document.getElementById('s-ev').textContent = items.filter(i=>i.type==='evenement').length;
+  document.getElementById('s-an').textContent = items.filter(i=>i.type==='annale').length;
 }
 
 // ---- FORM ----
@@ -508,6 +547,12 @@ window.toggleF = function() {
   document.getElementById('fimg').style.display   = t==='image'                     ? 'flex' : 'none';
   document.getElementById('fthumb').style.display = (t==='cours'||t==='exercice')   ? 'flex' : 'none';
   document.getElementById('fcont').style.display  = (t==='cours'||t==='exercice')   ? 'flex' : 'none';
+  document.getElementById('fevt-date').style.display  = t==='evenement' ? 'flex' : 'none';
+  document.getElementById('fevt-lieu').style.display  = t==='evenement' ? 'flex' : 'none';
+  document.getElementById('fevt-thumb').style.display = t==='evenement' ? 'flex' : 'none';
+  document.getElementById('fannale-annee').style.display = t==='annale' ? 'flex' : 'none';
+  document.getElementById('fannale-type').style.display  = t==='annale' ? 'flex' : 'none';
+  document.getElementById('fannale-doc').style.display   = t==='annale' ? 'flex' : 'none';
 };
 
 function ytId(url) {
@@ -599,7 +644,6 @@ window.addItem = async function() {
   const mat   = document.getElementById('f-mat').value.trim();
   const niv   = document.getElementById('f-niv').value.trim();
   const desc  = document.getElementById('f-desc').value.trim();
-  const cont  = document.getElementById('f-cont').value.trim();
   const thumb = document.getElementById('f-thumb').value.trim();
 
   let data = {titre, type, matiere:mat, niveau:niv, desc, date:Date.now()};
@@ -617,13 +661,26 @@ window.addItem = async function() {
     data.imgurl = document.getElementById('f-img').value.trim();
     if (!data.imgurl) { toast('⚠️ URL image manquante !'); return; }
   }
+  if (type==='annale') {
+    data.annaleAnnee = document.getElementById('f-annale-annee').value;
+    data.annaleType  = document.getElementById('f-annale-type').value;
+    data.docurl      = document.getElementById('f-annale-doc').value.trim();
+    if (!data.annaleAnnee) { toast('⚠️ Année obligatoire !'); return; }
+    if (!data.docurl) { toast('⚠️ URL du document obligatoire !'); return; }
+  }
+  if (type==='evenement') {
+    data.evtDate = document.getElementById('f-evt-date').value;
+    data.evtLieu = document.getElementById('f-evt-lieu').value.trim();
+    data.imgurl  = document.getElementById('f-evt-thumb').value.trim();
+    if (!data.evtDate) { toast('⚠️ Date de l\'événement obligatoire !'); return; }
+  }
   if (thumb) data.thumb = thumb;
 
   const btn = document.getElementById('btn-pub');
   btn.disabled = true; btn.textContent = '⏳ Publication…';
   try {
     await addDoc(collection(db, 'ressources'), data);
-    ['f-titre','f-yt','f-img','f-thumb','f-mat','f-niv','f-desc'].forEach(id => {
+    ['f-titre','f-yt','f-img','f-thumb','f-mat','f-niv','f-desc','f-evt-date','f-evt-lieu','f-evt-thumb','f-annale-annee','f-annale-doc'].forEach(id => {
       const el = document.getElementById(id); if (el) el.value = '';
     });
     resetRichEditor();
@@ -647,9 +704,9 @@ window.delItem = async function(id) {
 function fmtDate(ts) { return new Date(ts).toLocaleDateString('fr-FR'); }
 
 function renderList() {
-  const icons = {video:'🎬',cours:'📖',exercice:'✏️',image:'🖼️'};
-  const bc    = {video:'ib-video',cours:'ib-cours',exercice:'ib-exercice',image:'ib-image'};
-  const lb    = {video:'Vidéo',cours:'Cours',exercice:'Exercice',image:'Image'};
+  const icons = {video:'🎬',cours:'📖',exercice:'✏️',image:'🖼️',evenement:'📅',annale:'📝'};
+  const bc    = {video:'ib-video',cours:'ib-cours',exercice:'ib-exercice',image:'ib-image',evenement:'ib-evenement',annale:'ib-annale'};
+  const lb    = {video:'Vidéo',cours:'Cours',exercice:'Exercice',image:'Image',evenement:'Événement',annale:'Annale'};
   const list  = document.getElementById('admin-list');
   if (!items.length) {
     list.innerHTML = '<div class="empty">Aucune ressource. Ajoutez du contenu ! 📝</div>';
@@ -702,7 +759,7 @@ window.showAdminTab = function(tab) {
 
 // ===== STATS VUES / LIKES =====
 function renderStats() {
-  const icons = {video:'🎬',cours:'📖',exercice:'✏️',image:'🖼️'};
+  const icons = {video:'🎬',cours:'📖',exercice:'✏️',image:'🖼️',evenement:'📅',annale:'📝'};
 
   // Récupérer vues et likes depuis localStorage
   const data = items.map(item => ({
@@ -808,7 +865,7 @@ function updateDashboard() {
   document.getElementById('cnt-image').textContent = im;
 
   // Récentes
-  const icons = {video:'🎬',cours:'📖',exercice:'✏️',image:'🖼️'};
+  const icons = {video:'🎬',cours:'📖',exercice:'✏️',image:'🖼️',evenement:'📅',annale:'📝'};
   const recent = [...items].slice(0,5);
   document.getElementById('recent-list').innerHTML = recent.length
     ? recent.map(item=>`<div class="recent-item">
@@ -844,7 +901,7 @@ function renderComAdmin(type) {
     list.innerHTML='<div class="no-comments">💬 Aucun commentaire pour le moment.</div>';
     return;
   }
-  const icons = {video:'🎬',cours:'📖',exercice:'✏️',image:'🖼️'};
+  const icons = {video:'🎬',cours:'📖',exercice:'✏️',image:'🖼️',evenement:'📅',annale:'📝'};
   list.innerHTML = allComs.map((c,i)=>`
     <div class="com-card" id="com-card-${c.itemId}-${c.ci}">
       <div class="com-resource">${icons[c.itemType]||''} ${c.itemTitle}</div>
