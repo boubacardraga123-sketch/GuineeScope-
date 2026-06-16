@@ -487,7 +487,7 @@ body{font-family:'Inter',sans-serif;background:#f2f3f5;color:#111;min-height:100
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getFirestore, collection, addDoc, deleteDoc, doc, onSnapshot, orderBy, query,
-  serverTimestamp, setDoc, updateDoc, getDocs }
+  serverTimestamp, setDoc, updateDoc, getDocs, increment }
   from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
 const firebaseConfig = {
@@ -729,8 +729,8 @@ function renderList() {
     return;
   }
   list.innerHTML = items.map(item => {
-    const views = parseInt(localStorage.getItem('views_'+item.id)||'0');
-    const likes = parseInt(localStorage.getItem('likes_'+item.id)||'0');
+    const views = item.views || 0;
+    const likes = item.likes || 0;
     return `
     <div class="item">
       <div class="item-icon">${icons[item.type]||'📄'}</div>
@@ -780,8 +780,8 @@ function renderStats() {
   // Récupérer vues et likes depuis localStorage
   const data = items.map(item => ({
     ...item,
-    views: parseInt(localStorage.getItem('views_'+item.id)||'0'),
-    likes: parseInt(localStorage.getItem('likes_'+item.id)||'0'),
+    views: item.views || 0,
+    likes: item.likes || 0,
   }));
 
   const totalViews = data.reduce((s,i)=>s+i.views,0);
@@ -839,18 +839,16 @@ function renderStats() {
     </div>`).join('') || '<p style="color:#bbb;font-size:.8rem;text-align:center">Aucune ressource</p>';
 }
 
-window.resetStat = function(id, type) {
+window.resetStat = async function(id, type) {
   const label = type==='views' ? 'les vues' : 'les likes';
   if(!confirm(`Réinitialiser ${label} de cette ressource ?`)) return;
-  if(type==='views') {
-    localStorage.removeItem('views_'+id);
-  } else {
-    localStorage.removeItem('likes_'+id);
-    localStorage.removeItem('liked_'+id);
+  try {
+    const field = type==='views' ? {views: 0} : {likes: 0};
+    await updateDoc(doc(db,'ressources',id), field);
+    toast(`✅ ${type==='views'?'Vues':'Likes'} réinitialisés.`);
+  } catch(e) {
+    toast('❌ Erreur : ' + e.message);
   }
-  toast(`✅ ${type==='views'?'Vues':'Likes'} réinitialisés.`);
-  renderStats();
-  renderList();
 };
 function updateDashboard() {
   const total = items.length;
