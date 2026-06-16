@@ -43,6 +43,19 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
 body{font-family:'Inter',sans-serif;background:#f2f3f5;color:#111;min-height:100vh;max-width:480px;margin:0 auto;}
+@media(min-width:768px){
+  body{max-width:100%;}
+  .topbar{max-width:900px;margin:0 auto;left:0;right:0;}
+  .tabs{max-width:900px;margin:0 auto;}
+  .feed{max-width:900px;margin:0 auto;padding-bottom:80px;}
+  .video-row{grid-template-columns:repeat(4,1fr);}
+  .bottom-nav{max-width:900px;}
+  #offline-bar{max-width:900px;}
+  .search-bar{max-width:900px;margin:0 auto;}
+  #matiere-bar{max-width:900px;margin:0 auto;}
+  #chat-box{max-width:400px;}
+  .modal{max-width:600px;margin:0 auto;}
+}
 .topbar{position:sticky;top:0;z-index:100;background:#fff;border-bottom:1px solid #e5e7eb;
   display:flex;align-items:center;justify-content:space-between;padding:0 12px;height:50px;}
 .logo{font-size:1.15rem;font-weight:700;}.logo span{color:#e63946;}

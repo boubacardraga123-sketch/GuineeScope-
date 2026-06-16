@@ -8,6 +8,22 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
 body{font-family:'Inter',sans-serif;background:#f2f3f5;color:#111;min-height:100vh;max-width:480px;margin:0 auto;}
+@media(min-width:768px){
+  body{max-width:100%;}
+  #gate .gate-card{max-width:420px;}
+  .topbar{max-width:960px;margin:0 auto;}
+  .admin-tabs{max-width:960px;margin:0 auto;}
+  #admin-content{max-width:960px;margin:0 auto;}
+  .stats-row{grid-template-columns:repeat(7,1fr);}
+  .frow{grid-template-columns:1fr 1fr 1fr;}
+  .big-stats{grid-template-columns:repeat(4,1fr);}
+  .big-stats-3{grid-template-columns:repeat(3,1fr);}
+  .chat-admin-layout{height:calc(100vh - 130px);}
+  .chat-sessions-panel{width:220px;}
+  .bottom-nav{max-width:960px;}
+  .dash-section{display:grid;grid-template-columns:1fr 1fr;gap:0 16px;}
+  .dash-section .big-stats{grid-column:1/-1;}
+}
 
 /* GATE */
 #gate{position:fixed;inset:0;z-index:999;background:#f2f3f5;display:flex;align-items:center;justify-content:center;padding:1.2rem;}
