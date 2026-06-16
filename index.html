@@ -272,6 +272,34 @@ body{font-family:'Inter',sans-serif;background:#f2f3f5;color:#111;min-height:100
 .matiere-chip.active{background:#1d3557;border-color:#1d3557;color:#fff;}
 #matiere-bar{display:none;}
 #matiere-bar.show{display:flex;}
+
+/* ===== CHAÎNES DOCUMENTAIRES ===== */
+#feed-chaines{display:none;padding:8px 0 68px;}
+#feed-chaines.show{display:block;}
+.chaine-card{background:#fff;margin:8px 8px 0;border-radius:14px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.07);border:1px solid #e5e7eb;}
+.chaine-header{display:flex;align-items:center;gap:10px;padding:12px 14px 10px;background:linear-gradient(135deg,#1d3557,#2a4a7f);color:#fff;cursor:pointer;}
+.chaine-logo{width:44px;height:44px;border-radius:10px;object-fit:cover;background:rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;font-size:1.4rem;flex-shrink:0;overflow:hidden;}
+.chaine-logo img{width:100%;height:100%;object-fit:cover;}
+.chaine-info{flex:1;min-width:0;}
+.chaine-name{font-size:.95rem;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.chaine-desc{font-size:.7rem;opacity:.8;margin-top:2px;display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;overflow:hidden;}
+.chaine-toggle{font-size:.9rem;opacity:.7;transition:.3s;flex-shrink:0;}
+.chaine-toggle.open{transform:rotate(180deg);}
+.chaine-videos{display:none;padding:10px;}
+.chaine-videos.open{display:block;}
+.chaine-player{aspect-ratio:16/9;border-radius:10px;overflow:hidden;margin-bottom:10px;background:#000;}
+.chaine-player iframe{width:100%;height:100%;border:none;}
+.chaine-playlist{display:flex;flex-direction:column;gap:6px;max-height:220px;overflow-y:auto;}
+.chaine-vid-item{display:flex;align-items:center;gap:8px;padding:7px 8px;border-radius:8px;cursor:pointer;transition:.15s;border:1.5px solid transparent;}
+.chaine-vid-item:active{background:#f2f3f5;}
+.chaine-vid-item.active{background:#fff0f0;border-color:#e63946;}
+.chaine-vid-thumb{width:64px;height:42px;border-radius:6px;object-fit:cover;flex-shrink:0;background:#f2f3f5;}
+.chaine-vid-title{font-size:.78rem;font-weight:600;line-height:1.3;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;color:#111;}
+.chaine-vid-dur{font-size:.65rem;color:#aaa;margin-top:2px;}
+.chaine-loading{text-align:center;padding:1.5rem;color:#aaa;font-size:.78rem;}
+.chaine-err{text-align:center;padding:1rem;color:#e63946;font-size:.75rem;}
+.chaine-meta{display:flex;align-items:center;gap:10px;padding:6px 14px 10px;font-size:.7rem;color:#aaa;}
+.chaine-meta span{display:flex;align-items:center;gap:3px;}
 </style>
 </head>
 <body>
@@ -306,6 +334,7 @@ body{font-family:'Inter',sans-serif;background:#f2f3f5;color:#111;min-height:100
   <button class="tab" data-cat="image" onclick="setTab(this)">🖼️ Images</button>
   <button class="tab" data-cat="evenement" onclick="setTab(this)">📅 Événements</button>
   <button class="tab" data-cat="annale" onclick="setTab(this)">📝 Annales</button>
+  <button class="tab" data-cat="chaine" onclick="setTabChaine(this)">📺 Chaînes</button>
 </div>
 
 <div class="search-bar">
@@ -318,6 +347,7 @@ body{font-family:'Inter',sans-serif;background:#f2f3f5;color:#111;min-height:100
 <div class="feed" id="feed">
   <div class="loading"><div class="spinner"></div>Chargement…</div>
 </div>
+<div id="feed-chaines"></div>
 
 <div class="modal-bg" id="modal-bg" onclick="closeMBg(event)">
   <div class="modal">
@@ -853,6 +883,135 @@ window.sendVisitorMsg = async function() {
 
 // Démarrer l'écoute chat si nom déjà connu
 if (visitorName) startChatListen();
+</script>
+
+<script>
+// ===== CHAÎNES DOCUMENTAIRES =====
+// ➕ Ajoutez vos chaînes ici — chaque entrée = une chaîne agrégateur
+const CHAINES = [
+  {
+    id: 'c1',
+    nom: 'Sciences & Nature',
+    desc: 'Documentaires scientifiques et découvertes naturelles',
+    emoji: '🔬',
+    // Remplacez par vos vrais IDs de playlist YouTube (PLxxxxxxxxxx)
+    playlistId: 'PLbpi6ZahtOH6Ar_3GPy3workbR3IZnq2z'
+  },
+  {
+    id: 'c2',
+    nom: 'Histoire & Civilisations',
+    desc: 'Grandes civilisations et faits historiques',
+    emoji: '🏛️',
+    playlistId: 'PLbpi6ZahtOH6Ar_3GPy3workbR3IZnq2z'
+  },
+  {
+    id: 'c3',
+    nom: 'Technologies & Avenir',
+    desc: 'Innovation, numérique et intelligence artificielle',
+    emoji: '💡',
+    playlistId: 'PLbpi6ZahtOH6Ar_3GPy3workbR3IZnq2z'
+  }
+];
+
+// Cache des vidéos déjà chargées (évite les appels répétés)
+const chaineCache = {};
+// Vidéo en cours de lecture par chaîne
+const chaineActiveVid = {};
+
+window.setTabChaine = function(btn) {
+  // Désactiver tous les onglets normaux
+  document.querySelectorAll('.tab').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  currentCat = 'chaine';
+  // Masquer le feed normal, afficher le feed chaînes
+  document.getElementById('feed').style.display = 'none';
+  document.getElementById('matiere-bar').classList.remove('show');
+  document.getElementById('search-bar') && (document.querySelector('.search-bar').style.display = 'none');
+  const fc = document.getElementById('feed-chaines');
+  fc.classList.add('show');
+  renderChaines();
+};
+
+// Quand on revient sur un onglet normal, remettre le feed
+const _origSetTab = window.setTab;
+window.setTab = function(btn) {
+  document.getElementById('feed').style.display = '';
+  document.querySelector('.search-bar').style.display = '';
+  document.getElementById('feed-chaines').classList.remove('show');
+  _origSetTab(btn);
+};
+
+function renderChaines() {
+  const fc = document.getElementById('feed-chaines');
+  if (!CHAINES.length) {
+    fc.innerHTML = '<div style="text-align:center;padding:3rem 1rem;color:#aaa;font-size:.85rem;">📺 Aucune chaîne configurée.</div>';
+    return;
+  }
+  fc.innerHTML = CHAINES.map(ch => `
+    <div class="chaine-card" id="chaine-${ch.id}">
+      <div class="chaine-header" onclick="toggleChaine('${ch.id}')">
+        <div class="chaine-logo">${ch.emoji}</div>
+        <div class="chaine-info">
+          <div class="chaine-name">${ch.nom}</div>
+          <div class="chaine-desc">${ch.desc}</div>
+        </div>
+        <div class="chaine-toggle" id="toggle-arrow-${ch.id}">▼</div>
+      </div>
+      <div class="chaine-meta">
+        <span>📺 Playlist auto</span>
+        <span>🔄 Mise à jour automatique</span>
+      </div>
+      <div class="chaine-videos" id="chaine-videos-${ch.id}">
+        <div class="chaine-loading">⏳ Chargement des vidéos…</div>
+      </div>
+    </div>
+  `).join('');
+}
+
+window.toggleChaine = function(id) {
+  const panel = document.getElementById('chaine-videos-' + id);
+  const arrow = document.getElementById('toggle-arrow-' + id);
+  const isOpen = panel.classList.contains('open');
+  if (isOpen) {
+    panel.classList.remove('open');
+    arrow.classList.remove('open');
+  } else {
+    panel.classList.add('open');
+    arrow.classList.add('open');
+    loadChaineVideos(id);
+  }
+};
+
+function loadChaineVideos(id) {
+  if (chaineCache[id]) {
+    renderChaineVideos(id, chaineCache[id]);
+    return;
+  }
+  const chaine = CHAINES.find(c => c.id === id);
+  if (!chaine) return;
+
+  // Charger via l'embed playlist YouTube (pas d'API key nécessaire)
+  // On affiche directement le lecteur playlist YouTube en iframe
+  const panel = document.getElementById('chaine-videos-' + id);
+
+  // Premier lecteur : la playlist complète en autoplay
+  const firstVidId = ''; // YouTube gère l'ordre via la playlist
+  panel.innerHTML = `
+    <div class="chaine-player">
+      <iframe
+        src="https://www.youtube.com/embed/videoseries?list=${chaine.playlistId}&autoplay=0&rel=0&modestbranding=1&hl=fr"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowfullscreen
+        loading="lazy"
+      ></iframe>
+    </div>
+    <div style="font-size:.72rem;color:#aaa;text-align:center;padding:4px 0 8px;">
+      📺 La chaîne diffuse automatiquement toutes les vidéos de la playlist
+    </div>
+  `;
+  chaineCache[id] = true; // marquer comme chargé
+}
+
 </script>
 
 <script>
