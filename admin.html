@@ -70,6 +70,8 @@ body{font-family:'Inter',sans-serif;background:#f2f3f5;color:#111;min-height:100
 .fg .hint{font-size:.68rem;color:#aaa;}
 .btn-pub{background:#e63946;color:#fff;border:none;font-family:inherit;font-size:.88rem;font-weight:700;padding:.65rem 1.4rem;border-radius:8px;cursor:pointer;width:100%;margin-top:4px;}
 .btn-pub:disabled{opacity:.5;cursor:not-allowed;}
+.btn-fb{background:#1877f2;color:#fff;border:none;font-family:inherit;font-size:.85rem;font-weight:700;padding:.6rem 1.2rem;border-radius:8px;cursor:pointer;width:100%;margin-top:6px;display:none;}
+.btn-fb:active{background:#1558b0;}
 
 /* LIST */
 .list-head{font-size:.72rem;font-weight:700;color:#aaa;text-transform:uppercase;letter-spacing:.06em;padding:10px 12px 4px;}
@@ -358,6 +360,7 @@ body{font-family:'Inter',sans-serif;background:#f2f3f5;color:#111;min-height:100
         </div>
       </div>
       <button class="btn-pub" id="btn-pub" onclick="addItem()">✅ Publier</button>
+      <button class="btn-fb" id="btn-fb" onclick="shareFacebook()">📘 Partager sur Facebook</button>
     </div>
 
     <div class="list-head">Ressources publiées</div>
@@ -701,10 +704,26 @@ window.addItem = async function() {
     });
     resetRichEditor();
     toast('✅ Ressource publiée !');
+    // Afficher bouton Facebook
+    const fbBtn = document.getElementById('btn-fb');
+    fbBtn.style.display = 'block';
+    fbBtn._lastTitre = titre;
+    fbBtn._lastDesc = desc;
   } catch(e) {
     toast('❌ Erreur : ' + e.message);
   }
   btn.disabled = false; btn.textContent = '✅ Publier';
+};
+
+window.shareFacebook = function() {
+  const fbBtn = document.getElementById('btn-fb');
+  const titre = fbBtn._lastTitre || '';
+  const desc = fbBtn._lastDesc || '';
+  const siteUrl = 'https://boubacardraga123-sketch.github.io/GuineeScope-/';
+  const texte = encodeURIComponent(`📚 ${titre}\n\n${desc}\n\n🎓 Découvrez plus de ressources sur EtudierGN :\n${siteUrl}`);
+  const fbPageUrl = 'https://www.facebook.com/Etudiergn.';
+  // Ouvre le partage Facebook pré-rempli
+  window.open(`https://www.facebook.com/dialog/share?app_id=&display=popup&href=${encodeURIComponent(siteUrl)}&quote=${texte}&redirect_uri=${encodeURIComponent(fbPageUrl)}`, '_blank', 'width=600,height=500');
 };
 
 window.delItem = async function(id) {

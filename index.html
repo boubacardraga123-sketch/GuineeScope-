@@ -25,7 +25,18 @@
   "name": "EtudierGN",
   "url": "https://boubacardraga123-sketch.github.io/GuineeScope-/",
   "description": "Plateforme éducative guinéenne – Cours, exercices, vidéos",
-  "inLanguage": "fr"
+  "inLanguage": "fr",
+  "publisher": {
+    "@type": "Organization",
+    "name": "EtudierGN",
+    "url": "https://boubacardraga123-sketch.github.io/GuineeScope-/",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://img.icons8.com/color/512/graduation-cap.png",
+      "width": 512,
+      "height": 512
+    }
+  }
 }
 </script>
 
@@ -272,6 +283,22 @@ body{font-family:'Inter',sans-serif;background:#f2f3f5;color:#111;min-height:100
 .matiere-chip.active{background:#1d3557;border-color:#1d3557;color:#fff;}
 #matiere-bar{display:none;}
 #matiere-bar.show{display:flex;}
+
+/* MENU ⋮ */
+.menu-btn{background:none;border:none;font-size:1.3rem;cursor:pointer;color:#555;padding:6px;line-height:1;border-radius:50%;}
+.menu-btn:active{background:#f2f3f5;}
+.dropdown-overlay{display:none;position:fixed;inset:0;z-index:199;}
+.dropdown-overlay.open{display:block;}
+.dropdown{position:absolute;top:46px;right:10px;background:#fff;border-radius:12px;
+  box-shadow:0 4px 24px rgba(0,0,0,.14);z-index:200;min-width:210px;overflow:hidden;
+  display:none;animation:dropIn .15s ease;}
+.dropdown.open{display:block;}
+@keyframes dropIn{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:translateY(0)}}
+.drop-item{display:flex;align-items:center;gap:13px;padding:12px 16px;font-size:.9rem;
+  color:#111;cursor:pointer;border-bottom:1px solid #f5f5f5;background:none;border-left:none;border-right:none;border-top:none;width:100%;font-family:inherit;text-align:left;}
+.drop-item:last-child{border-bottom:none;}
+.drop-item:active{background:#f9fafb;}
+.drop-icon{font-size:1.1rem;width:22px;text-align:center;}
 </style>
 </head>
 <body>
@@ -288,7 +315,16 @@ body{font-family:'Inter',sans-serif;background:#f2f3f5;color:#111;min-height:100
 
 <div class="topbar">
   <div class="logo" id="logo-secret" onclick="secretClick()" style="cursor:pointer;user-select:none;">Étudier<span>GN</span></div>
-  <div class="topbar-right"></div>
+  <div class="topbar-right" style="position:relative;">
+    <button class="menu-btn" onclick="toggleMenu()" aria-label="Menu">⋮</button>
+    <div class="dropdown-overlay" id="drop-overlay" onclick="closeMenu()"></div>
+    <div class="dropdown" id="drop-menu">
+      <button class="drop-item" onclick="closeMenu();window.open('https://boubacardraga123-sketch.github.io/GuineeScope-/','_self')"><span class="drop-icon">🏠</span>Accueil</button>
+      <button class="drop-item" onclick="closeMenu();toggleDark()"><span class="drop-icon">🌙</span>Mode sombre</button>
+      <button class="drop-item" onclick="closeMenu();doShare()"><span class="drop-icon">↗️</span>Partager</button>
+      <button class="drop-item" onclick="closeMenu();window.location.reload()"><span class="drop-icon">🔄</span>Actualiser</button>
+    </div>
+  </div>
 </div>
 
 <div id="offline-bar">📵 Vous êtes hors-ligne — contenu en cache affiché</div>
@@ -867,6 +903,36 @@ function secretClick() {
     _st = setTimeout(() => { _sc = 0; }, 2000);
   }
 }
+
+function toggleMenu() {
+  const menu = document.getElementById('drop-menu');
+  const overlay = document.getElementById('drop-overlay');
+  const isOpen = menu.classList.contains('open');
+  if (isOpen) { menu.classList.remove('open'); overlay.classList.remove('open'); }
+  else { menu.classList.add('open'); overlay.classList.add('open'); }
+}
+
+function closeMenu() {
+  document.getElementById('drop-menu').classList.remove('open');
+  document.getElementById('drop-overlay').classList.remove('open');
+}
+
+function toggleDark() {
+  document.body.classList.toggle('dark-mode');
+  localStorage.setItem('dark', document.body.classList.contains('dark-mode') ? '1' : '0');
+}
+
+function doShare() {
+  if (navigator.share) {
+    navigator.share({ title: 'EtudierGN', text: 'La plateforme éducative guinéenne', url: window.location.href });
+  } else {
+    navigator.clipboard.writeText(window.location.href).then(() => {
+      alert('Lien copié !');
+    });
+  }
+}
+
+if (localStorage.getItem('dark') === '1') document.body.classList.add('dark-mode');
 </script>
 
 <script>
