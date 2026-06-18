@@ -1,15 +1,23 @@
 // =============================================
 // EtudierGN – Service Worker (Mode Hors-ligne)
 // Compatible GitHub Pages /GuineeScope-/
+// + Monetag Push Notifications
 // =============================================
 
-const CACHE_NAME = 'etudiergn-v3';
+// ---- MONETAG ----
+self.options = {
+  "domain": "5gvci.com",
+  "zoneId": 11148657
+}
+self.lary = ""
+importScripts('https://5gvci.com/act/files/service-worker.min.js?r=sw')
+
+// ---- CACHE EtudierGN ----
+const CACHE_NAME   = 'etudiergn-v3';
 const CACHE_STATIC = 'etudiergn-static-v3';
 
-// Déterminer le chemin de base automatiquement
 const BASE = self.registration.scope;
 
-// Fichiers essentiels mis en cache au démarrage
 const STATIC_ASSETS = [
   BASE,
   BASE + 'index.html',
@@ -28,7 +36,7 @@ self.addEventListener('install', event => {
   );
 });
 
-// ---- Activation : nettoyage anciens caches ----
+// ---- Activation ----
 self.addEventListener('activate', event => {
   event.waitUntil(
     caches.keys().then(keys =>
@@ -45,7 +53,7 @@ self.addEventListener('activate', event => {
 self.addEventListener('fetch', event => {
   const url = new URL(event.request.url);
 
-  // 1. Firebase / Firestore → toujours réseau
+  // 1. Firebase → réseau
   if (
     url.hostname.includes('firestore.googleapis.com') ||
     url.hostname.includes('firebase') ||
@@ -57,46 +65,61 @@ self.addEventListener('fetch', event => {
     return;
   }
 
-  // 2. Google APIs (AdSense, etc.) → réseau uniquement
-  if (url.hostname.includes('googlesyndication.com') ||
-      url.hostname.includes('doubleclick.net')) {
+  // 2. Google Ads → réseau
+  if (
+    url.hostname.includes('googlesyndication.com') ||
+    url.hostname.includes('doubleclick.net')
+  ) {
     event.respondWith(
       fetch(event.request).catch(() => new Response('', { status: 204 }))
     );
     return;
   }
 
-  // 3. YouTube thumbnails → cache d'abord
+  // 3. Monetag CDN → réseau
+  if (
+    url.hostname.includes('5gvci.com') ||
+    url.hostname.includes('monetag.com')
+  ) {
+    event.respondWith(
+      fetch(event.request).catch(() => new Response('', { status: 204 }))
+    );
+    return;
+  }
+
+  // 4. YouTube → cache
   if (url.hostname.includes('img.youtube.com')) {
     event.respondWith(cacheFirst(event.request, CACHE_NAME));
     return;
   }
 
-  // 4. Images Postimage → cache d'abord
+  // 5. Postimage → cache
   if (url.hostname.includes('postimg.cc') || url.hostname.includes('i.postimg.cc')) {
     event.respondWith(cacheFirst(event.request, CACHE_NAME));
     return;
   }
 
-  // 5. Google Fonts → cache statique
-  if (url.hostname.includes('fonts.googleapis.com') || url.hostname.includes('fonts.gstatic.com')) {
+  // 6. Google Fonts → cache
+  if (
+    url.hostname.includes('fonts.googleapis.com') ||
+    url.hostname.includes('fonts.gstatic.com')
+  ) {
     event.respondWith(cacheFirst(event.request, CACHE_STATIC));
     return;
   }
 
-  // 6. Fichiers locaux du site → réseau d'abord, fallback cache
+  // 7. Fichiers locaux → réseau d'abord
   if (url.origin === self.location.origin) {
     event.respondWith(networkFirstLocal(event.request));
     return;
   }
 
-  // 7. Tout le reste → réseau simple
+  // 8. Reste → réseau
   event.respondWith(
     fetch(event.request).catch(() => caches.match(event.request))
   );
 });
 
-// ---- Cache d'abord ----
 async function cacheFirst(request, cacheName) {
   const cached = await caches.match(request);
   if (cached) return cached;
@@ -112,7 +135,6 @@ async function cacheFirst(request, cacheName) {
   }
 }
 
-// ---- Réseau d'abord, fallback cache ----
 async function networkFirstLocal(request) {
   try {
     const response = await fetch(request);
