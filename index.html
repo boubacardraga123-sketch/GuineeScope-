@@ -1,0 +1,2157 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="monetag" content="31d608fb4f172d53b3b68f0f9068298e">
+
+<!-- SEO -->
+<meta name="description" content="EtudierGN – Plateforme éducative guinéenne. Cours, exercices, vidéos pour lycéens et étudiants de Guinée.">
+<meta name="keywords" content="cours Guinée, exercices lycée Guinée, EtudierGN, éducation guinéenne, ETFP">
+<meta name="author" content="EtudierGN">
+<link rel="canonical" href="https://boubacardraga123-sketch.github.io/GuineeScope-/">
+
+<!-- Open Graph -->
+<meta property="og:title" content="EtudierGN – Plateforme éducative guinéenne">
+<meta property="og:description" content="Cours, exercices et vidéos pour les lycéens et étudiants de Guinée.">
+<meta property="og:url" content="https://boubacardraga123-sketch.github.io/GuineeScope-/">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://boubacardraga123-sketch.github.io/GuineeScope-/og-image.svg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:locale" content="fr_GN">
+<meta property="og:site_name" content="EtudierGN">
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="EtudierGN – Plateforme éducative guinéenne">
+<meta name="twitter:description" content="Cours, exercices et vidéos pour les lycéens et étudiants de Guinée.">
+<meta name="twitter:image" content="https://boubacardraga123-sketch.github.io/GuineeScope-/og-image.svg">
+
+<!-- JSON-LD : WebSite + SearchAction + Organization -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "EtudierGN",
+  "url": "https://boubacardraga123-sketch.github.io/GuineeScope-/",
+  "description": "Plateforme éducative guinéenne – Cours, exercices, vidéos pour lycéens et étudiants de Guinée",
+  "inLanguage": "fr",
+  "potentialAction": {
+    "@type": "SearchAction",
+    "target": {
+      "@type": "EntryPoint",
+      "urlTemplate": "https://boubacardraga123-sketch.github.io/GuineeScope-/?q={search_term_string}"
+    },
+    "query-input": "required name=search_term_string"
+  },
+  "publisher": {
+    "@type": "EducationalOrganization",
+    "name": "EtudierGN",
+    "url": "https://boubacardraga123-sketch.github.io/GuineeScope-/",
+    "description": "Plateforme éducative guinéenne proposant cours, exercices, vidéos et annales pour les élèves de Guinée.",
+    "address": {
+      "@type": "PostalAddress",
+      "addressCountry": "GN"
+    },
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://boubacardraga123-sketch.github.io/GuineeScope-/icon-512.png",
+      "width": 512,
+      "height": 512
+    },
+    "sameAs": []
+  }
+}
+</script>
+<!-- JSON-LD dynamique : mis à jour par updateDynamicSEO() selon le contenu ouvert -->
+<script type="application/ld+json" id="jsonld-dynamic"></script>
+
+<meta name="theme-color" content="#e63946">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="EtudierGN">
+<link rel="manifest" href="manifest.json">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EtudierGN</title>
+
+<!-- OneSignal Push Notifications -->
+<script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
+
+<!-- Google AdSense -->
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9367856999469399" crossorigin="anonymous"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+body{font-family:'Inter',sans-serif;background:#f2f3f5;color:#111;min-height:100vh;max-width:480px;margin:0 auto;}
+@media(min-width:768px){
+  body{max-width:100%;}
+  .topbar{max-width:900px;margin:0 auto;left:0;right:0;}
+  .tabs{max-width:900px;margin:0 auto;}
+  .feed{max-width:900px;margin:0 auto;padding-bottom:80px;}
+  .video-row{grid-template-columns:repeat(4,1fr);}
+  .bottom-nav{max-width:900px;}
+  #offline-bar{max-width:900px;}
+  .search-bar{max-width:900px;margin:0 auto;}
+  #matiere-bar{max-width:900px;margin:0 auto;}
+  #chat-box{max-width:400px;}
+  .modal{max-width:600px;margin:0 auto;}
+}
+.topbar{position:sticky;top:0;z-index:100;background:#fff;border-bottom:1px solid #e5e7eb;
+  display:flex;align-items:center;justify-content:space-between;padding:0 12px;height:50px;}
+.logo{font-size:1.15rem;font-weight:700;}.logo span{color:#e63946;}
+.topbar-right a{font-size:.78rem;color:#555;text-decoration:none;background:#f2f3f5;padding:.35rem .75rem;border-radius:20px;}
+.tabs{position:sticky;top:50px;z-index:99;background:#fff;border-bottom:2px solid #e5e7eb;
+  display:flex;overflow-x:auto;scrollbar-width:none;padding:0 4px;}
+.tabs::-webkit-scrollbar{display:none;}
+.tab{flex-shrink:0;font-size:.82rem;font-weight:500;color:#888;padding:.65rem .95rem;
+  border:none;background:none;cursor:pointer;position:relative;white-space:nowrap;}
+.tab.active{color:#e63946;font-weight:700;}
+.tab.active::after{content:'';position:absolute;bottom:-2px;left:0;right:0;height:2px;background:#e63946;}
+/* ===== PUB LOCALE ===== */
+.local-ad-wrap{margin:8px 10px;}
+.local-ad-banner{display:block;border-radius:12px;overflow:hidden;text-decoration:none;border:1px solid #e5e7eb;background:#fff;box-shadow:0 1px 4px rgba(0,0,0,.06);transition:transform .15s;}
+.local-ad-banner:active{transform:scale(.98);}
+.local-ad-banner img{width:100%;height:auto;display:block;max-height:120px;object-fit:cover;}
+.local-ad-meta{display:flex;align-items:center;justify-content:space-between;padding:5px 10px;}
+.local-ad-label{font-size:.6rem;color:#bbb;letter-spacing:.04em;text-transform:uppercase;}
+.local-ad-title{font-size:.72rem;color:#555;font-weight:600;max-width:70%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.feed{padding:8px 0 68px;}
+.video-row{display:grid;grid-template-columns:1fr 1fr;gap:6px;padding:4px 8px;}
+.vid-card{background:#000;border-radius:8px;overflow:hidden;position:relative;aspect-ratio:9/13;cursor:pointer;}
+.vid-card img{width:100%;height:100%;object-fit:cover;opacity:.85;}
+.vid-card .play{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  width:36px;height:36px;background:rgba(255,255,255,.85);border-radius:50%;
+  display:flex;align-items:center;justify-content:center;}
+.vid-card .play::after{content:'▶';font-size:.8rem;color:#111;margin-left:2px;}
+.vid-card .badge{position:absolute;top:7px;left:7px;font-size:.6rem;font-weight:700;padding:2px 6px;border-radius:3px;text-transform:uppercase;}
+.badge-video{background:#1d3557;color:#fff;}.badge-image{background:#457b9d;color:#000;}
+.badge-evenement{background:#e67e22;color:#fff;}
+.cours-card{background:#fff;margin:4px 8px;border-radius:10px;overflow:hidden;cursor:pointer;border:1px solid #e5e7eb;}
+.cours-card-top{height:110px;display:flex;align-items:center;justify-content:center;font-size:2.5rem;}
+.cours-card-top img{width:100%;height:100%;object-fit:cover;}
+.cours-card-body{padding:10px 12px;}
+.cours-badge{display:inline-block;font-size:.65rem;font-weight:700;padding:2px 7px;border-radius:3px;text-transform:uppercase;margin-bottom:5px;}
+.badge-cours{background:#1d3557;color:#fff;}.badge-exercice{background:#e63946;color:#fff;}.cours-card-title{font-size:.9rem;font-weight:600;line-height:1.4;margin-bottom:4px;}
+.cours-card-desc{font-size:.76rem;color:#888;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+.cours-card-meta{font-size:.7rem;color:#aaa;margin-top:6px;display:flex;gap:10px;}
+.section-div{padding:10px 12px 4px;font-size:.78rem;font-weight:700;color:#aaa;text-transform:uppercase;letter-spacing:.06em;background:#f2f3f5;}
+.modal-bg{display:none;position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.85);align-items:flex-end;justify-content:center;}
+.modal-bg.open{display:flex;}
+.modal{background:#fff;border-radius:16px 16px 0 0;width:100%;max-width:480px;max-height:92vh;overflow-y:auto;}
+.modal-handle{width:36px;height:4px;background:#ddd;border-radius:2px;margin:10px auto 0;}
+.modal-head{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-bottom:1px solid #f0f0f0;}
+.modal-head h2{font-size:.95rem;font-weight:700;flex:1;padding-right:8px;line-height:1.3;}
+.modal-close{background:#f2f3f5;border:none;border-radius:50%;width:30px;height:30px;font-size:1rem;cursor:pointer;flex-shrink:0;}
+.modal-body{padding:14px;}
+.yt-wrap{aspect-ratio:16/9;border-radius:10px;overflow:hidden;margin-bottom:12px;}
+.yt-wrap iframe{width:100%;height:100%;border:none;}
+.modal-img{width:100%;border-radius:10px;margin-bottom:12px;}
+.modal-meta-tags{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px;}
+.mtag{background:#f2f3f5;font-size:.72rem;padding:3px 8px;border-radius:4px;color:#555;}
+.modal-text{font-size:.88rem;line-height:1.8;color:#222;white-space:pre-wrap;}
+.modal-desc{font-size:.82rem;color:#888;margin-bottom:10px;}
+.empty-feed{text-align:center;padding:3rem 1rem;color:#aaa;font-size:.88rem;}
+.empty-feed .ei{font-size:2rem;margin-bottom:.5rem;}
+.loading{text-align:center;padding:3rem 1rem;color:#aaa;font-size:.85rem;}
+.loading .spinner{width:28px;height:28px;border:3px solid #f2f3f5;border-top-color:#e63946;
+  border-radius:50%;animation:spin .7s linear infinite;margin:0 auto 10px;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.bottom-nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);
+  width:100%;max-width:480px;background:#fff;border-top:1px solid #e5e7eb;display:flex;z-index:100;}
+.bnav-item{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:8px 0;font-size:.62rem;color:#aaa;cursor:pointer;gap:2px;}
+.bnav-item.active{color:#e63946;}
+.bnav-icon{font-size:1.2rem;}
+#toast{position:fixed;bottom:70px;left:50%;transform:translateX(-50%) translateY(20px);
+  background:#333;color:#fff;font-size:.82rem;padding:.55rem 1.2rem;border-radius:20px;
+  opacity:0;transition:.3s;z-index:999;white-space:nowrap;}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+.search-bar{padding:8px 10px;background:#fff;border-bottom:1px solid #e5e7eb;}
+.search-input{width:100%;border:1.5px solid #e5e7eb;background:#f9fafb;font-family:inherit;
+  font-size:.88rem;padding:.6rem 1rem .6rem 2.2rem;border-radius:20px;outline:none;color:#111;}
+.search-input:focus{border-color:#e63946;}
+.search-wrap{position:relative;}
+.search-wrap::before{content:'🔍';position:absolute;left:.7rem;top:50%;transform:translateY(-50%);font-size:.85rem;}
+.vid-title{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent,rgba(0,0,0,.75));
+  color:#fff;font-size:.72rem;font-weight:600;padding:18px 7px 7px;line-height:1.3;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+.share-btn{position:absolute;bottom:10px;right:10px;background:#25D366;border:none;
+  border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;
+  cursor:pointer;font-size:.9rem;box-shadow:0 2px 8px rgba(0,0,0,.2);}
+.modal-actions{display:flex;gap:8px;margin-bottom:12px;}
+.btn-share{background:#25D366;color:#fff;border:none;font-family:inherit;font-size:.82rem;
+  font-weight:600;padding:.5rem 1rem;border-radius:20px;cursor:pointer;display:flex;
+  align-items:center;gap:5px;flex:1;justify-content:center;}
+.btn-share:active{background:#1da851;}
+
+/* LIKES */
+.like-row{display:flex;gap:8px;margin-bottom:12px;}
+.like-btn{display:flex;align-items:center;gap:5px;background:#f9fafb;border:1.5px solid #e5e7eb;
+  font-family:inherit;font-size:.82rem;font-weight:600;padding:.45rem .9rem;border-radius:20px;cursor:pointer;}
+.like-btn.liked{background:#fff0f0;border-color:#e63946;color:#e63946;}
+.like-btn.liked .licon{animation:pop .3s ease;}
+@keyframes pop{0%{transform:scale(1)}50%{transform:scale(1.4)}100%{transform:scale(1)}}
+
+/* COMMENTAIRES */
+.comments-section{margin-top:14px;border-top:1px solid #f0f0f0;padding-top:12px;}
+.comments-title{font-size:.8rem;font-weight:700;color:#555;margin-bottom:8px;}
+.comment-item{background:#f9fafb;border-radius:8px;padding:8px 10px;margin-bottom:6px;}
+.comment-name{font-size:.72rem;font-weight:700;color:#e63946;margin-bottom:2px;}
+.comment-text{font-size:.8rem;color:#333;line-height:1.4;}
+.comment-date{font-size:.65rem;color:#aaa;margin-top:2px;}
+.comment-form{display:flex;flex-direction:column;gap:6px;margin-top:8px;}
+.comment-form input,.comment-form textarea{border:1.5px solid #e5e7eb;background:#f9fafb;
+  font-family:inherit;font-size:.82rem;padding:.5rem .8rem;border-radius:8px;outline:none;color:#111;}
+.comment-form input:focus,.comment-form textarea:focus{border-color:#e63946;}
+.comment-form textarea{resize:none;height:60px;}
+.btn-comment{background:#e63946;color:#fff;border:none;font-family:inherit;font-size:.82rem;
+  font-weight:700;padding:.5rem 1rem;border-radius:8px;cursor:pointer;align-self:flex-end;}
+
+/* CONTENU RICHE */
+.rich-content{margin-top:10px;}
+.rich-block-title{font-size:1rem;font-weight:700;color:#1d3557;margin:14px 0 6px;line-height:1.4;}
+.rich-block-para{font-size:.88rem;line-height:1.9;color:#222;white-space:pre-wrap;margin-bottom:8px;}
+.rich-block-img{width:100%;border-radius:10px;margin:8px 0;display:block;}
+
+/* ÉVÉNEMENTS */
+.evt-card{background:#fff;margin:4px 8px;border-radius:10px;overflow:hidden;cursor:pointer;border:1px solid #e5e7eb;}
+.evt-card-top{height:110px;display:flex;align-items:center;justify-content:center;font-size:2.5rem;background:linear-gradient(135deg,#fff3e0,#ffe0b2);}
+.evt-card-top img{width:100%;height:100%;object-fit:cover;}
+.evt-card-body{padding:10px 12px;}
+.evt-card-title{font-size:.9rem;font-weight:600;line-height:1.4;margin-bottom:4px;}
+.evt-card-meta{font-size:.7rem;color:#aaa;margin-top:6px;display:flex;gap:10px;flex-wrap:wrap;}
+.evt-date-badge{background:#e67e22;color:#fff;font-size:.7rem;font-weight:700;padding:3px 8px;border-radius:6px;display:inline-block;margin-bottom:5px;}
+
+/* ANNALES */
+.annale-card{background:#fff;margin:4px 8px;border-radius:10px;overflow:hidden;cursor:pointer;border:1px solid #e5e7eb;display:flex;align-items:stretch;}
+.annale-card-side{width:56px;background:linear-gradient(135deg,#6c3483,#9b59b6);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;flex-shrink:0;}
+.annale-card-side .ac-icon{font-size:1.4rem;}
+.annale-card-side .ac-year{font-size:.65rem;font-weight:700;color:#fff;}
+.annale-card-body{flex:1;padding:10px 12px;min-width:0;}
+.annale-type-badge{background:#6c3483;color:#fff;font-size:.65rem;font-weight:700;padding:2px 7px;border-radius:3px;text-transform:uppercase;display:inline-block;margin-bottom:4px;}
+.annale-card-title{font-size:.9rem;font-weight:600;line-height:1.4;margin-bottom:4px;}
+.annale-card-meta{font-size:.7rem;color:#aaa;display:flex;gap:10px;flex-wrap:wrap;}
+.annale-dl-btn{background:#6c3483;color:#fff;border:none;font-family:inherit;font-size:.78rem;font-weight:700;padding:.4rem .9rem;border-radius:8px;cursor:pointer;display:inline-flex;align-items:center;gap:5px;margin-top:8px;}
+/* ===== LIVRES ===== */
+.livre-card{background:#fff;margin:6px 10px;border-radius:12px;display:flex;gap:0;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.07);cursor:pointer;transition:.15s;}
+.livre-card:active{transform:scale(.98);}
+.livre-card-cover{width:72px;min-height:100px;flex-shrink:0;background:linear-gradient(135deg,#f3e9d2,#e8d5b0);display:flex;align-items:center;justify-content:center;font-size:2rem;overflow:hidden;}
+.livre-card-cover img{width:100%;height:100%;object-fit:cover;}
+.livre-card-body{flex:1;padding:10px 12px;min-width:0;}
+.livre-badge{background:#b5451b;color:#fff;font-size:.62rem;font-weight:700;padding:2px 7px;border-radius:3px;text-transform:uppercase;display:inline-block;margin-bottom:4px;}
+.livre-card-title{font-size:.9rem;font-weight:600;line-height:1.4;margin-bottom:3px;}
+.livre-card-auteur{font-size:.72rem;color:#888;margin-bottom:4px;}
+.livre-card-meta{font-size:.7rem;color:#aaa;display:flex;gap:8px;flex-wrap:wrap;}
+.badge-livre{background:#b5451b;}
+
+/* NOTIF BANNER */
+.notif-bar{background:linear-gradient(90deg,#1d3557,#e63946);color:#fff;
+  padding:8px 12px;font-size:.78rem;display:flex;align-items:center;justify-content:space-between;gap:8px;}
+.notif-bar button{background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.4);
+  color:#fff;font-family:inherit;font-size:.72rem;padding:.3rem .7rem;border-radius:12px;cursor:pointer;white-space:nowrap;}
+#notif-bar{display:none;}
+
+/* ===== CHAT WIDGET ===== */
+#chat-fab{position:fixed;bottom:72px;right:14px;width:50px;height:50px;background:#e63946;
+  border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.4rem;
+  box-shadow:0 3px 12px rgba(230,57,70,.45);cursor:pointer;z-index:300;border:none;transition:.2s;}
+#chat-fab:active{transform:scale(.93);}
+#chat-badge{position:absolute;top:-3px;right:-3px;background:#1d3557;color:#fff;
+  font-size:.55rem;font-weight:700;min-width:16px;height:16px;border-radius:8px;
+  display:none;align-items:center;justify-content:center;padding:0 3px;}
+#chat-box{position:fixed;bottom:130px;right:10px;width:calc(100% - 20px);max-width:360px;
+  background:#fff;border-radius:16px;box-shadow:0 8px 32px rgba(0,0,0,.18);z-index:301;
+  display:none;flex-direction:column;max-height:420px;}
+#chat-box.open{display:flex;}
+.chat-head{background:#e63946;color:#fff;border-radius:16px 16px 0 0;padding:10px 14px;
+  display:flex;align-items:center;justify-content:space-between;}
+.chat-head-info{display:flex;align-items:center;gap:8px;}
+.chat-head-avatar{width:30px;height:30px;background:rgba(255,255,255,.25);border-radius:50%;
+  display:flex;align-items:center;justify-content:center;font-size:.95rem;}
+.chat-head-title{font-size:.88rem;font-weight:700;}
+.chat-head-sub{font-size:.65rem;opacity:.85;}
+.chat-close-btn{background:rgba(255,255,255,.2);border:none;color:#fff;width:26px;height:26px;
+  border-radius:50%;font-size:.85rem;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+.chat-messages{flex:1;overflow-y:auto;padding:10px 12px;display:flex;flex-direction:column;gap:7px;min-height:120px;}
+.chat-msg{max-width:80%;padding:7px 10px;border-radius:12px;font-size:.82rem;line-height:1.4;word-break:break-word;}
+.chat-msg.visitor{background:#f2f3f5;color:#111;align-self:flex-start;border-bottom-left-radius:3px;}
+.chat-msg.admin{background:#e63946;color:#fff;align-self:flex-end;border-bottom-right-radius:3px;}
+.chat-msg-time{font-size:.6rem;opacity:.55;margin-top:2px;}
+.chat-msg.admin .chat-msg-time{text-align:right;}
+.chat-empty{color:#bbb;font-size:.78rem;text-align:center;padding:1.5rem .5rem;align-self:center;}
+.chat-form{display:flex;gap:6px;padding:8px 10px;border-top:1px solid #f0f0f0;}
+.chat-form input{flex:1;border:1.5px solid #e5e7eb;background:#f9fafb;font-family:inherit;
+  font-size:.82rem;padding:.45rem .8rem;border-radius:20px;outline:none;color:#111;}
+.chat-form input:focus{border-color:#e63946;}
+.chat-send-btn{background:#e63946;border:none;color:#fff;width:34px;height:34px;border-radius:50%;
+  font-size:.95rem;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.chat-name-prompt{padding:10px 12px;border-bottom:1px solid #f0f0f0;}
+.chat-img-btn{background:#f2f3f5;border:1.5px solid #e5e7eb;color:#555;width:34px;height:34px;border-radius:50%;font-size:1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.chat-img-btn:active{background:#e5e7eb;}
+.chat-msg img{max-width:100%;border-radius:8px;margin-top:4px;display:block;cursor:pointer;}
+.chat-name-prompt p{font-size:.78rem;color:#888;margin-bottom:6px;}
+.chat-name-prompt input{width:100%;border:1.5px solid #e5e7eb;background:#f9fafb;font-family:inherit;
+  font-size:.85rem;padding:.5rem .8rem;border-radius:8px;outline:none;color:#111;margin-bottom:6px;}
+.chat-name-prompt button{background:#e63946;color:#fff;border:none;font-family:inherit;
+  font-size:.82rem;font-weight:700;padding:.45rem 1.2rem;border-radius:8px;cursor:pointer;width:100%;}
+
+/* ===== PUB INTERSTITIELLE AVANT TÉLÉCHARGEMENT ===== */
+#dl-interstitial{display:none;position:fixed;inset:0;z-index:9998;background:rgba(0,0,0,.88);
+  align-items:center;justify-content:center;}
+#dl-interstitial.open{display:flex;}
+.dl-int-box{background:#fff;border-radius:16px;width:calc(100% - 32px);max-width:420px;
+  overflow:hidden;box-shadow:0 8px 40px rgba(0,0,0,.4);}
+.dl-int-head{background:linear-gradient(90deg,#1d3557,#e63946);color:#fff;
+  padding:12px 16px;font-size:.88rem;font-weight:700;display:flex;align-items:center;gap:8px;}
+.dl-int-body{padding:16px;}
+.dl-int-title{font-size:.95rem;font-weight:700;margin-bottom:6px;color:#111;line-height:1.4;}
+.dl-int-sub{font-size:.78rem;color:#888;margin-bottom:14px;}
+.dl-int-ad-zone{background:#f9fafb;border:2px dashed #e5e7eb;border-radius:10px;
+  min-height:120px;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:12px;margin-bottom:14px;text-align:center;cursor:pointer;transition:.2s;}
+.dl-int-ad-zone:active{background:#f0f0f0;}
+.dl-int-ad-label{font-size:.65rem;color:#bbb;font-weight:700;text-transform:uppercase;
+  letter-spacing:.05em;margin-bottom:6px;}
+.dl-int-countdown{font-size:.8rem;color:#e63946;font-weight:700;margin-top:8px;}
+.dl-int-btn{width:100%;background:#e63946;color:#fff;border:none;font-family:inherit;
+  font-size:.9rem;font-weight:700;padding:.7rem;border-radius:10px;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;gap:6px;transition:.2s;}
+.dl-int-btn:disabled{background:#ccc;cursor:not-allowed;}
+.dl-int-btn:not(:disabled):active{background:#c0303b;}
+.dl-int-close{background:none;border:none;color:#aaa;font-size:.78rem;margin-top:10px;
+  cursor:pointer;width:100%;text-align:center;padding:.4rem;font-family:inherit;}
+
+/* HORS-LIGNE */
+#offline-bar{display:none;position:fixed;top:0;left:50%;transform:translateX(-50%);
+  width:100%;max-width:480px;background:#1d3557;color:#fff;font-size:.78rem;
+  padding:7px 14px;text-align:center;z-index:500;gap:8px;align-items:center;justify-content:center;}
+#offline-bar.show{display:flex;}
+
+/* SPLASH SCREEN */
+#splash{position:fixed;inset:0;z-index:9999;background:linear-gradient(160deg,#1d3557 0%,#e63946 100%);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  transition:opacity .5s ease,visibility .5s ease;}
+#splash.hidden{opacity:0;visibility:hidden;pointer-events:none;}
+.splash-logo{font-size:2.6rem;font-weight:800;color:#fff;letter-spacing:-1px;margin-bottom:.3rem;}
+.splash-logo span{color:#ffd166;}
+.splash-tag{font-size:.88rem;color:rgba(255,255,255,.8);margin-bottom:2.5rem;text-align:center;line-height:1.5;}
+.splash-icon{font-size:4rem;margin-bottom:1.2rem;animation:splash-bounce .8s ease infinite alternate;}
+@keyframes splash-bounce{from{transform:translateY(0)}to{transform:translateY(-10px)}}
+.splash-bar-wrap{width:160px;height:4px;background:rgba(255,255,255,.25);border-radius:2px;overflow:hidden;}
+.splash-bar{height:100%;background:#ffd166;border-radius:2px;animation:splash-load 1.8s ease forwards;}
+@keyframes splash-load{from{width:0%}to{width:100%}}
+.splash-version{position:absolute;bottom:24px;font-size:.7rem;color:rgba(255,255,255,.4);}
+.splash-made{position:absolute;bottom:40px;font-size:.72rem;color:rgba(255,255,255,.6);font-weight:600;}
+
+/* PARTAGE — bouton copier lien */
+.btn-copy-link{background:#f2f3f5;color:#333;border:1.5px solid #e5e7eb;font-family:inherit;
+  font-size:.82rem;font-weight:600;padding:.5rem 1rem;border-radius:20px;cursor:pointer;
+  display:flex;align-items:center;gap:5px;flex:1;justify-content:center;}
+.btn-copy-link:active{background:#e5e7eb;}
+.btn-copy-link.copied{background:#d1fae5;border-color:#6ee7b7;color:#065f46;}
+
+/* GROUPES MATIÈRE */
+.matiere-tabs{display:flex;gap:6px;padding:8px 10px;overflow-x:auto;scrollbar-width:none;background:#fff;border-bottom:1px solid #f0f0f0;}
+.matiere-tabs::-webkit-scrollbar{display:none;}
+.matiere-chip{flex-shrink:0;background:#f2f3f5;border:1.5px solid #e5e7eb;color:#555;
+  font-family:inherit;font-size:.75rem;font-weight:600;padding:.3rem .85rem;
+  border-radius:20px;cursor:pointer;white-space:nowrap;}
+.matiere-chip.active{background:#1d3557;border-color:#1d3557;color:#fff;}
+#matiere-bar{display:none;}
+#matiere-bar.show{display:flex;}
+
+/* MENU ⋮ */
+.menu-btn{background:none;border:none;font-size:1.3rem;cursor:pointer;color:#555;padding:6px;line-height:1;border-radius:50%;}
+.menu-btn:active{background:#f2f3f5;}
+.dropdown-overlay{display:none;position:fixed;inset:0;z-index:199;}
+.dropdown-overlay.open{display:block;}
+.dropdown{position:absolute;top:46px;right:10px;background:#fff;border-radius:12px;
+  box-shadow:0 4px 24px rgba(0,0,0,.14);z-index:200;min-width:210px;overflow:hidden;
+  display:none;animation:dropIn .15s ease;}
+.dropdown.open{display:block;}
+@keyframes dropIn{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:translateY(0)}}
+.drop-item{display:flex;align-items:center;gap:13px;padding:12px 16px;font-size:.9rem;
+  color:#111;cursor:pointer;border-bottom:1px solid #f5f5f5;background:none;border-left:none;border-right:none;border-top:none;width:100%;font-family:inherit;text-align:left;}
+.drop-item:last-child{border-bottom:none;}
+.drop-item:active{background:#f9fafb;}
+.drop-icon{font-size:1.1rem;width:22px;text-align:center;}
+
+/* ===== MODE SOMBRE ===== */
+body.dark-mode{background:#121212;color:#e0e0e0;}
+body.dark-mode .topbar{background:#1e1e1e;border-bottom-color:#333;}
+body.dark-mode .tabs{background:#1e1e1e;border-bottom-color:#333;}
+body.dark-mode .tab{color:#888;}
+body.dark-mode .tab.active{color:#e63946;}
+body.dark-mode .search-bar{background:#1e1e1e;border-bottom-color:#333;}
+body.dark-mode .search-input{background:#2a2a2a;border-color:#444;color:#e0e0e0;}
+body.dark-mode .section-div{background:#121212;color:#666;}
+body.dark-mode .cours-card{background:#1e1e1e;border-color:#333;}
+body.dark-mode .cours-card-title{color:#e0e0e0;}
+body.dark-mode .cours-card-desc{color:#888;}
+body.dark-mode .modal{background:#1e1e1e;}
+body.dark-mode .modal-head{border-bottom-color:#333;}
+body.dark-mode .modal-close{background:#2a2a2a;color:#e0e0e0;}
+body.dark-mode .modal-title{color:#e0e0e0;}
+body.dark-mode .modal-text{color:#ccc;}
+body.dark-mode .modal-desc{color:#888;}
+body.dark-mode .mtag{background:#2a2a2a;color:#aaa;}
+body.dark-mode .bottom-nav{background:#1e1e1e;border-top-color:#333;}
+body.dark-mode .like-btn{background:#2a2a2a;border-color:#444;color:#e0e0e0;}
+body.dark-mode .like-btn.liked{background:#3a1a1a;border-color:#e63946;color:#e63946;}
+body.dark-mode .comment-item{background:#2a2a2a;}
+body.dark-mode .comment-text{color:#ccc;}
+body.dark-mode .comment-form input,body.dark-mode .comment-form textarea{background:#2a2a2a;border-color:#444;color:#e0e0e0;}
+body.dark-mode .rich-block-title{color:#90b4d4;}
+body.dark-mode .drop-menu{background:#1e1e1e;border-color:#333;}
+body.dark-mode .drop-item{color:#e0e0e0;}
+body.dark-mode .drop-item:active{background:#2a2a2a;}
+
+/* ===== ÉVALUATION PUBLIQUE ===== */
+#eval-public-overlay{position:fixed;inset:0;z-index:9999;background:#f0fdf4;display:none;overflow-y:auto;font-family:'Inter',sans-serif;}
+#eval-public-overlay.open{display:block;}
+.eval-pub-header{position:sticky;top:0;background:#004d2e;color:#FCD116;padding:12px 16px;display:flex;align-items:center;justify-content:space-between;z-index:10;box-shadow:0 2px 8px rgba(0,0,0,.15);}
+.eval-pub-header h1{font-size:1rem;font-weight:700;margin:0;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.eval-pub-body{padding:14px;max-width:600px;margin:0 auto;}
+.eval-pub-card{background:#fff;border-radius:14px;padding:14px;margin-bottom:12px;box-shadow:0 1px 4px rgba(0,0,0,.06);border:1px solid #e5e7eb;}
+.eval-pub-input{width:100%;border:1.5px solid #e2e8f0;border-radius:10px;padding:10px 12px;font-family:'Inter',sans-serif;font-size:.95rem;outline:none;resize:vertical;min-height:44px;box-sizing:border-box;color:#111827;background:#fff;}
+.eval-pub-input:focus{border-color:#004d2e;background:#f0fdf4;}
+.eval-pub-opt{display:flex;align-items:center;gap:10px;padding:10px 12px;border:1.5px solid #e2e8f0;border-radius:10px;cursor:pointer;font-size:.9rem;margin-bottom:6px;}
+.eval-pub-opt input[type=radio]:checked ~ *,.eval-pub-opt.checked{border-color:#004d2e;background:#f0fdf4;}
+.eval-pub-submit{width:100%;background:#004d2e;color:#FCD116;border:none;border-radius:12px;padding:14px;font-size:1rem;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;margin-top:8px;}
+.eval-pub-submit:active{opacity:.85;}
+
+/* ===== DEVOIR PUBLIC ===== */
+#devoir-public-overlay{position:fixed;inset:0;z-index:9999;background:#f0fdf4;display:none;overflow-y:auto;font-family:'Inter',sans-serif;}
+#devoir-public-overlay.open{display:block;}
+.dv-pub-img{width:100%;border-radius:14px;display:block;margin-bottom:12px;box-shadow:0 1px 6px rgba(0,0,0,.1);}
+.dv-pub-photobtn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;border:2px dashed #004d2e;background:#f0fdf4;color:#004d2e;border-radius:12px;padding:16px;font-size:.92rem;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;}
+</style>
+</head>
+<body>
+
+<!-- ===== ÉVALUATION PUBLIQUE (accès via lien ?eval=CODE) ===== -->
+<div id="eval-public-overlay">
+  <div class="eval-pub-header">
+    <h1 id="eval-pub-title">📝 Évaluation</h1>
+    <div id="eval-pub-timer-display" style="font-family:'Space Mono',monospace;font-size:1.3rem;font-weight:800;color:#FCD116;white-space:nowrap;margin-left:12px;"></div>
+  </div>
+  <div class="eval-pub-body" id="eval-pub-body">
+    <!-- Contenu injecté dynamiquement -->
+  </div>
+</div>
+
+<!-- ===== DEVOIR PUBLIC (accès via lien ?devoir=CODE) ===== -->
+<div id="devoir-public-overlay">
+  <div class="eval-pub-header">
+    <h1 id="dv-pub-title">📒 Devoir</h1>
+  </div>
+  <div class="eval-pub-body" id="dv-pub-body">
+    <!-- Contenu injecté dynamiquement -->
+  </div>
+</div>
+
+<!-- SPLASH SCREEN -->
+<div id="splash">
+  <div class="splash-icon">🎓</div>
+  <div class="splash-logo">Étudier<span>GN</span></div>
+  <div class="splash-tag">La plateforme éducative guinéenne<br>Cours · Vidéos · Exercices · Annales</div>
+  <div class="splash-bar-wrap"><div class="splash-bar"></div></div>
+  <div class="splash-made">Collection BHDS</div>
+  <div class="splash-version">v2.0</div>
+</div>
+
+<div class="topbar">
+  <div class="logo" id="logo-secret" onclick="secretClick()" style="cursor:pointer;user-select:none;">Étudier<span>GN</span></div>
+  <div class="topbar-right" style="position:relative;">
+    <button class="menu-btn" onclick="toggleMenu()" aria-label="Menu">⋮</button>
+    <div class="dropdown-overlay" id="drop-overlay" onclick="closeMenu()"></div>
+    <div class="dropdown" id="drop-menu">
+      <button class="drop-item" onclick="closeMenu();window.open('https://boubacardraga123-sketch.github.io/GuineeScope-/','_self')"><span class="drop-icon">🏠</span>Accueil</button>
+      <button class="drop-item" onclick="closeMenu();toggleDark()"><span class="drop-icon">🌙</span>Mode sombre</button>
+      <button class="drop-item" onclick="closeMenu();doShare()"><span class="drop-icon">↗️</span>Partager</button>
+      <button class="drop-item" onclick="closeMenu();window.location.reload()"><span class="drop-icon">🔄</span>Actualiser</button>
+    </div>
+  </div>
+</div>
+
+<div id="offline-bar">📵 Vous êtes hors-ligne — contenu en cache affiché</div>
+
+<div id="notif-bar" class="notif-bar">
+  <span>🔔 Activez les notifications pour ne rien manquer !</span>
+  <button onclick="askNotif()">Activer</button>
+  <button onclick="dismissNotifBar()">✕</button>
+</div>
+<div class="tabs">
+  <button class="tab active" data-cat="tout" onclick="setTab(this)">Pour vous</button>
+  <button class="tab" data-cat="video" onclick="setTab(this)">🎬 Vidéos</button>
+  <button class="tab" data-cat="cours" onclick="setTab(this)">📖 Cours</button>
+  <button class="tab" data-cat="exercice" onclick="setTab(this)">✏️ Exercices</button>
+  <button class="tab" data-cat="image" onclick="setTab(this)">🖼️ Images</button>
+  <button class="tab" data-cat="evenement" onclick="setTab(this)">📅 Événements</button>
+  <button class="tab" data-cat="annale" onclick="setTab(this)">📝 Annales</button>
+  <button class="tab" data-cat="livre" onclick="setTab(this)">📗 Livres</button>
+</div>
+
+<div class="search-bar">
+  <div class="search-wrap">
+    <input class="search-input" id="search-input" type="text" placeholder="Rechercher une ressource…" oninput="onSearchInput()">
+  </div>
+</div>
+<div id="matiere-bar" class="matiere-tabs"></div>
+
+<div class="feed" id="feed">
+  <div class="loading"><div class="spinner"></div>Chargement…</div>
+</div>
+
+<div class="modal-bg" id="modal-bg" onclick="closeMBg(event)">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-head">
+      <h2 id="modal-title"></h2>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body" id="modal-body"></div>
+  </div>
+</div>
+
+<div class="bottom-nav">
+  <div class="bnav-item active" id="bnav-home" onclick="goHome()"><div class="bnav-icon">🏠</div>Accueil</div>
+  <div class="bnav-item" id="bnav-fav" onclick="showFavorites()"><div class="bnav-icon">❤️</div>Favoris</div>
+  <div style="flex:2;display:flex;align-items:center;justify-content:center;font-size:.65rem;color:#bbb;text-align:center;line-height:1.3;">© EtudierGN<br><span style="color:#e63946;font-weight:600;">Collection BHDS</span><br><a href="privacy.html" style="color:#aaa;text-decoration:none;font-size:.6rem;">🔒 Confidentialité</a></div>
+</div>
+<div id="toast"></div>
+
+<!-- PUB INTERSTITIELLE AVANT TÉLÉCHARGEMENT -->
+<div id="dl-interstitial">
+  <div class="dl-int-box">
+    <div class="dl-int-head">📢 Message du partenaire</div>
+    <div class="dl-int-body">
+      <div class="dl-int-title" id="dl-int-filename">Votre fichier est prêt !</div>
+      <div class="dl-int-sub">Cliquez sur la publicité ci-dessous pour débloquer le téléchargement.</div>
+      <!-- Zone publicitaire : Google AdSense ou autre -->
+      <div class="dl-int-ad-zone" id="dl-ad-click-zone" onclick="onAdClicked()">
+        <div class="dl-int-ad-label">Publicité</div>
+        <!-- Bloc AdSense injecté dynamiquement à l'ouverture (lazy-load) -->
+        <div id="dl-ad-slot" style="min-height:100px;"></div>
+        <div style="font-size:.85rem;color:#555;margin-top:8px;">👆 Cliquez ici pour continuer</div>
+        <div class="dl-int-countdown" id="dl-countdown"></div>
+      </div>
+      <button class="dl-int-btn" id="dl-confirm-btn" disabled onclick="confirmDownload()">
+        📥 Télécharger maintenant
+      </button>
+      <button class="dl-int-close" onclick="closeDlInterstitial()">✕ Annuler</button>
+    </div>
+  </div>
+</div>
+
+<!-- CHAT WIDGET -->
+<button id="chat-fab" onclick="toggleChat()">💬<span id="chat-badge"></span></button>
+<div id="chat-box">
+  <div class="chat-head">
+    <div class="chat-head-info">
+      <div class="chat-head-avatar">🎓</div>
+      <div>
+        <div class="chat-head-title">Support EtudierGN</div>
+        <div class="chat-head-sub" id="chat-status">En ligne • Réponse rapide</div>
+      </div>
+    </div>
+    <button class="chat-close-btn" onclick="toggleChat()">✕</button>
+  </div>
+  <div id="chat-name-section" class="chat-name-prompt" style="display:none">
+    <p>👋 Bienvenue ! Comment vous appelez-vous ?</p>
+    <input type="text" id="chat-visitor-name" placeholder="Votre prénom…" maxlength="30" onkeydown="if(event.key==='Enter')saveVisitorName()">
+    <button onclick="saveVisitorName()">Commencer le chat →</button>
+  </div>
+  <div class="chat-messages" id="chat-messages">
+    <div class="chat-empty" id="chat-empty">👋 Posez votre question, l'équipe EtudierGN vous répond !</div>
+  </div>
+  <div class="chat-form" id="chat-form" style="display:none">
+    <input type="text" id="chat-input" placeholder="Votre message…" maxlength="500" onkeydown="if(event.key==='Enter')sendVisitorMsg()">
+    <button class="chat-img-btn" onclick="triggerPhotoUpload()" title="Envoyer une photo">📷</button>
+    <input type="file" id="chat-photo-input" accept="image/*" capture="environment" style="display:none" onchange="sendVisitorPhoto(this)">
+    <button class="chat-send-btn" onclick="sendVisitorMsg()">➤</button>
+  </div>
+</div>
+
+<!-- Firebase SDK -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getFirestore, collection, onSnapshot, orderBy, query, limit,
+  addDoc, serverTimestamp, doc, updateDoc, setDoc, getDoc, getDocs, increment, where }
+  from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+// ======================================================
+// 🔧 REMPLACEZ CES VALEURS PAR VOTRE CONFIG FIREBASE
+// ======================================================
+const firebaseConfig = {
+  apiKey: "AIzaSyAUFd6H0y--K090_lau3sr6H0lGxmfgB9M",
+  authDomain: "etudier-gn.firebaseapp.com",
+  projectId: "etudier-gn",
+  storageBucket: "etudier-gn.firebasestorage.app",
+  messagingSenderId: "197482090989",
+  appId: "1:197482090989:web:f82716bc4fe080017357e4"
+};
+// ======================================================
+
+const app = initializeApp(firebaseConfig);
+const db  = getFirestore(app);
+
+let items = [];
+let currentCat = 'tout';
+let currentMatiere = 'tout';
+let localAds = []; // bannières pub locales actives
+let loadLimit = 30;       // nombre de ressources chargées initialement
+const LOAD_STEP = 30;     // nombre ajouté à chaque clic "Charger plus"
+let hasMore = true;       // s'il reste potentiellement plus de ressources
+let resourcesUnsub = null; // référence au listener Firestore actif
+let favoritesMode = false; // true = vue "Mes favoris" active
+
+function renderAdBanner(){
+  if(!localAds.length) return '';
+  // Rotation aléatoire parmi les pubs actives
+  const ad = localAds[Math.floor(Math.random()*localAds.length)];
+  return `<div class="local-ad-wrap">
+    <a class="local-ad-banner" href="${ad.lienUrl||'#'}" target="_blank" rel="noopener sponsored">
+      ${ad.imageUrl ? `<img src="${ad.imageUrl}" alt="${ad.titre||'Publicité'}" loading="lazy">` : ''}
+      <div class="local-ad-meta">
+        <span class="local-ad-title">${ad.titre||''}</span>
+        <span class="local-ad-label">Publicité</span>
+      </div>
+    </a>
+  </div>`;
+}
+
+function gdrivePreview(url){
+  if(!url) return url;
+  // Extraire l'ID Google Drive et utiliser Google Docs Viewer
+  const m = url.match(/\/d\/([a-zA-Z0-9_-]+)/);
+  if(m) return 'https://docs.google.com/viewer?url=https://drive.google.com/uc?export=download%26id=' + m[1] + '&embedded=true';
+  return url.replace(/\/view(\?.*)?$/, '/preview');
+}
+
+function ytId(url) {
+  if (!url) return '';
+  const m = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|embed\/)([a-zA-Z0-9_-]{11})/);
+  return m ? m[1] : url.trim();
+}
+function ytThumb(id){ return `https://img.youtube.com/vi/${id}/hqdefault.jpg`; }
+function fmtDate(ts){
+  const diff=(Date.now()-ts)/1000;
+  if(diff<3600) return `Il y a ${Math.floor(diff/60)} min`;
+  if(diff<86400) return `Il y a ${Math.floor(diff/3600)} h`;
+  return `Il y a ${Math.floor(diff/86400)} j`;
+}
+
+window.setTab = function(btn){
+  document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  currentCat = btn.dataset.cat;
+  currentMatiere = 'tout';
+  renderMatiereBar();
+  render();
+};
+
+window.goHome = function(){
+  favoritesMode = false;
+  document.getElementById('bnav-home').classList.add('active');
+  document.getElementById('bnav-fav').classList.remove('active');
+  render();
+};
+
+window.showFavorites = function(){
+  favoritesMode = true;
+  document.getElementById('bnav-fav').classList.add('active');
+  document.getElementById('bnav-home').classList.remove('active');
+  render();
+};
+
+let _searchDebounce = null;
+window.onSearchInput = function(){
+  clearTimeout(_searchDebounce);
+  _searchDebounce = setTimeout(render, 220); // attend une pause de frappe avant de re-rendre
+};
+
+function render(){
+  const q = (document.getElementById('search-input')||{value:''}).value.toLowerCase();
+  let filtered = currentCat==='tout' ? [...items] : items.filter(i=>i.type===currentCat);
+  if(favoritesMode) filtered = filtered.filter(i=>isLiked(i.id));
+  if(currentMatiere!=='tout') filtered = filtered.filter(i=>(i.matiere||'').toLowerCase()===currentMatiere.toLowerCase());
+  if(q) filtered = filtered.filter(i=>
+    (i.titre||'').toLowerCase().includes(q) ||
+    (i.matiere||'').toLowerCase().includes(q) ||
+    (i.desc||'').toLowerCase().includes(q) ||
+    (i.niveau||'').toLowerCase().includes(q)
+  );
+  const feed = document.getElementById('feed');
+  if(!filtered.length){
+    feed.innerHTML = favoritesMode
+      ? `<div class="empty-feed"><div class="ei">💔</div>Aucun favori pour l'instant.<br>Appuyez sur ❤️ sur une ressource pour l'ajouter.</div>`
+      : `<div class="empty-feed"><div class="ei">📭</div>Aucune ressource disponible.<br>Revenez bientôt !</div>`;
+    return;
+  }
+  let html='';
+  const media    = filtered.filter(i=>i.type==='video'||i.type==='image');
+  const others   = filtered.filter(i=>i.type==='cours'||i.type==='exercice');
+  const evts     = filtered.filter(i=>i.type==='evenement');
+  const annales  = filtered.filter(i=>i.type==='annale');
+  const livres   = filtered.filter(i=>i.type==='livre');
+
+  if((currentCat==='tout'||currentCat==='video'||currentCat==='image') && media.length){
+    html+=`<div class="section-div">Médias</div>`;
+    for(let i=0;i<media.length;i+=2){
+      html+=`<div class="video-row">`;
+      html+=renderMedia(media[i]);
+      if(media[i+1]) html+=renderMedia(media[i+1]);
+      html+=`</div>`;
+    }
+    html+=renderAdBanner();
+  }
+  if((currentCat==='tout'||currentCat==='cours'||currentCat==='exercice') && others.length){
+    html+=`<div class="section-div">Cours & Exercices</div>`;
+    others.forEach((item,idx)=>{
+      html+=renderCours(item);
+      // Bannière pub après la 3e carte de cours
+      if(idx===2) html+=renderAdBanner();
+    });
+  }
+  if(currentCat==='cours')    filtered.filter(i=>i.type==='cours').forEach(i=>{html+=renderCours(i);});
+  if(currentCat==='exercice') filtered.filter(i=>i.type==='exercice').forEach(i=>{html+=renderCours(i);});
+  if((currentCat==='tout'||currentCat==='evenement') && evts.length){
+    html+=`<div class="section-div">Événements</div>`;
+    evts.forEach(item=>{ html+=renderEvenement(item); });
+  }
+  if(currentCat==='evenement') filtered.filter(i=>i.type==='evenement').forEach(i=>{html+=renderEvenement(i);});
+  if((currentCat==='tout'||currentCat==='annale') && annales.length){
+    html+=`<div class="section-div">Examens & Annales</div>`;
+    annales.forEach(item=>{ html+=renderAnnale(item); });
+  }
+  if(currentCat==='annale') filtered.filter(i=>i.type==='annale').forEach(i=>{html+=renderAnnale(i);});
+  if((currentCat==='tout'||currentCat==='livre') && livres.length){
+    html+=`<div class="section-div">📗 Livres</div>`;
+    livres.forEach(item=>{ html+=renderLivre(item); });
+  }
+  if(currentCat==='livre') filtered.filter(i=>i.type==='livre').forEach(i=>{html+=renderLivre(i);});
+
+  // Bouton "Charger plus" : uniquement en vue "Tout" sans recherche/filtre matière,
+  // et seulement s'il reste potentiellement plus de ressources côté Firestore
+  if(hasMore && currentCat==='tout' && currentMatiere==='tout' && !q && !favoritesMode){
+    html += `<div style="text-align:center;padding:16px;">
+      <button onclick="loadMoreResources()" style="background:#e63946;color:#fff;border:none;
+        padding:.6rem 1.4rem;border-radius:20px;font-size:.85rem;font-weight:600;cursor:pointer;">
+        Charger plus
+      </button>
+    </div>`;
+  }
+
+  feed.innerHTML = html || `<div class="empty-feed"><div class="ei">📭</div>Aucune ressource.</div>`;
+}
+
+function renderMedia(item){
+  const isV = item.type==='video';
+  const id  = isV ? ytId(item.ytid||'') : '';
+  const src = isV ? ytThumb(id) : item.imgurl;
+  return `<div class="vid-card" onclick="openItem('${item.id}')">
+    <img src="${src}" alt="${item.titre}" loading="lazy">
+    ${isV?`<div class="play"></div>`:''}
+    <span class="badge badge-${item.type}">${isV?'Vidéo':'Image'}</span>
+    <div class="vid-title">${item.titre}</div>
+  </div>`;
+}
+
+function renderCours(item){
+  const icon = item.type==='cours'?'📖':'✏️';
+  const bg   = item.type==='cours'?'linear-gradient(135deg,#e8f0fe,#c5d8f6)':'linear-gradient(135deg,#ffe8e8,#ffc5c5)';
+  const top  = item.thumb
+    ? `<img src="${item.thumb}" alt="${item.titre}" style="width:100%;height:100%;object-fit:cover;">`
+    : `<span>${icon}</span>`;
+  return `<div class="cours-card" onclick="openItem('${item.id}')">
+    <div class="cours-card-top" style="background:${bg}">${top}</div>
+    <div class="cours-card-body">
+      <span class="cours-badge badge-${item.type}">${item.type==='cours'?'Cours':'Exercice'}</span>
+      <div class="cours-card-title">${item.titre}</div>
+      <div class="cours-card-desc">${item.desc||''}</div>
+      <div class="cours-card-meta">
+        ${item.matiere?`<span>📚 ${item.matiere}</span>`:''}
+        ${item.niveau?`<span>🎓 ${item.niveau}</span>`:''}
+        <span>${fmtDate(item.date)}</span>
+      </div>
+    </div>
+  </div>`;
+}
+
+function renderEvenement(item){
+  const top = item.imgurl
+    ? `<img src="${item.imgurl}" alt="${item.titre}" style="width:100%;height:100%;object-fit:cover;">`
+    : `<span>📅</span>`;
+  const dateStr = item.evtDate ? new Date(item.evtDate).toLocaleDateString('fr-FR',{day:'2-digit',month:'long',year:'numeric'}) : '';
+  return `<div class="evt-card" onclick="openItem('${item.id}')">
+    <div class="evt-card-top">${top}</div>
+    <div class="evt-card-body">
+      <span class="cours-badge badge-evenement">Événement</span>
+      ${dateStr ? `<div class="evt-date-badge">📅 ${dateStr}</div>` : ''}
+      <div class="evt-card-title">${item.titre}</div>
+      <div class="evt-card-meta">
+        ${item.evtLieu?`<span>📍 ${item.evtLieu}</span>`:''}
+        ${item.desc?`<span>${item.desc}</span>`:''}
+      </div>
+    </div>
+  </div>`;
+}
+
+function renderAnnale(item){
+  return `<div class="annale-card" onclick="openItem('${item.id}')">
+    <div class="annale-card-side">
+      <span class="ac-icon">📝</span>
+      <span class="ac-year">${item.annaleAnnee||''}</span>
+    </div>
+    <div class="annale-card-body">
+      <span class="annale-type-badge">${item.annaleType||'Examen'}</span>
+      <div class="annale-card-title">${item.titre}</div>
+      <div class="annale-card-meta">
+        ${item.matiere?`<span>📚 ${item.matiere}</span>`:''}
+        ${item.niveau?`<span>🎓 ${item.niveau}</span>`:''}
+      </div>
+    </div>
+  </div>`;
+}
+
+function renderLivre(item){
+  const cover = item.thumb
+    ? `<img src="${item.thumb}" alt="${item.titre}">`
+    : `<span>📗</span>`;
+  return `<div class="livre-card" onclick="openItem('${item.id}')">
+    <div class="livre-card-cover">${cover}</div>
+    <div class="livre-card-body">
+      <span class="livre-badge">Livre</span>
+      <div class="livre-card-title">${item.titre}</div>
+      ${item.auteur?`<div class="livre-card-auteur">✍️ ${item.auteur}</div>`:''}
+      <div class="livre-card-meta">
+        ${item.matiere?`<span>📚 ${item.matiere}</span>`:''}
+        ${item.niveau?`<span>🎓 ${item.niveau}</span>`:''}
+        <span>${fmtDate(item.date)}</span>
+      </div>
+    </div>
+  </div>`;
+}
+
+window.openItem = function(id){
+  const item = items.find(i=>i.id===id);
+  if(!item) return;
+
+  // ===== SEO DYNAMIQUE =====
+  updateDynamicSEO(item);
+  // Mettre à jour l'URL sans recharger la page
+  const newUrl = window.location.pathname + '?id=' + id;
+  history.pushState({id}, item.titre, newUrl);
+
+  // Incrémenter les vues dans Firestore
+  updateDoc(doc(db,'ressources',id), {views: increment(1)}).catch(()=>{});
+  document.getElementById('modal-title').textContent = item.titre;
+  let body=`<div class="modal-meta-tags">
+    ${item.matiere?`<span class="mtag">📚 ${item.matiere}</span>`:''}
+    ${item.niveau?`<span class="mtag">🎓 ${item.niveau}</span>`:''}
+    <span class="mtag">${fmtDate(item.date)}</span>
+  </div>`;
+  if(item.desc) body+=`<div class="modal-desc">${item.desc}</div>`;
+  if((item.type==='cours'||item.type==='exercice') && item.docurl && item.docurl.toLowerCase().includes('.pdf')){
+    body+=`<div style="margin-bottom:12px;"><iframe src="${item.docurl}" style="width:100%;height:480px;border:none;border-radius:10px;background:#f2f3f5;" title="${item.titre}"></iframe><a href="${item.docurl}" target="_blank" class="annale-dl-btn" style="margin-top:8px;background:#1d3557;">📥 Télécharger le PDF</a></div>`;
+  }
+  if(item.type==='video'){
+    const vid=ytId(item.ytid||'');
+    body+=`<div class="yt-wrap"><iframe src="https://www.youtube.com/embed/${vid}?autoplay=1" allow="autoplay;encrypted-media" allowfullscreen></iframe></div>`;
+  } else if(item.type==='image'){
+    body+=`<img class="modal-img" src="${item.imgurl}" alt="${item.titre}">`;
+  } else if(item.type==='annale'){
+    if(item.docurl){
+      const isPdf = item.docurl.toLowerCase().includes('.pdf');
+      if(isPdf){
+        body+=`<div style="margin-bottom:12px;">
+          <iframe src="${item.docurl}" style="width:100%;height:480px;border:none;border-radius:10px;background:#f2f3f5;" title="${item.titre}"></iframe>
+          <a href="${item.docurl}" target="_blank" class="annale-dl-btn" style="margin-top:8px;">📥 Télécharger le PDF</a>
+        </div>`;
+      } else {
+        body+=`<img class="modal-img" src="${item.docurl}" alt="${item.titre}">`;
+      }
+    }
+    body+=`<div class="modal-meta-tags" style="margin-top:6px;">
+      ${item.annaleType?`<span class="mtag">📝 ${item.annaleType}</span>`:''}
+      ${item.annaleAnnee?`<span class="mtag">📅 ${item.annaleAnnee}</span>`:''}
+    </div>`;
+  } else if(item.type==='evenement'){
+    if(item.imgurl) body+=`<img class="modal-img" src="${item.imgurl}" alt="${item.titre}">`;
+    const dateStr = item.evtDate ? new Date(item.evtDate).toLocaleDateString('fr-FR',{weekday:'long',day:'2-digit',month:'long',year:'numeric'}) : '';
+    if(dateStr) body+=`<div style="margin-bottom:8px;"><span class="evt-date-badge">📅 ${dateStr}</span></div>`;
+    if(item.evtLieu) body+=`<div style="font-size:.85rem;color:#555;margin-bottom:10px;">📍 <strong>${item.evtLieu}</strong></div>`;
+  } else if(item.type==='livre'){
+    if(item.thumb) body+=`<img class="modal-img" src="${item.thumb}" alt="${item.titre}" style="max-height:220px;object-fit:contain;border-radius:8px;">`;
+    if(item.auteur) body+=`<div style="font-size:.85rem;color:#555;margin-bottom:8px;">✍️ <strong>${item.auteur}</strong></div>`;
+    if(item.docurl){
+      const src = gdrivePreview(item.docurl);
+      body+=`<div style="margin-bottom:12px;">
+        <iframe src="${src}" style="width:100%;height:500px;border:none;border-radius:10px;background:#f2f3f5;" title="${item.titre}"></iframe>
+        <a href="${item.docurl}" target="_blank" class="annale-dl-btn" style="margin-top:8px;background:#b5451b;">📥 Télécharger le livre</a>
+      </div>`;
+    }
+  }
+  if(item.contenu) {
+    // Vérifier si c'est un lien PDF
+    const trimmed = item.contenu.trim();
+    if(trimmed.toLowerCase().startsWith('http') && trimmed.toLowerCase().includes('.pdf')){
+      body += `<div style="margin-bottom:12px;">
+        <iframe src="${trimmed}" style="width:100%;height:480px;border:none;border-radius:10px;background:#f2f3f5;" title="${item.titre}"></iframe>
+        <a href="${trimmed}" target="_blank" class="annale-dl-btn" style="margin-top:8px;">📥 Télécharger le PDF</a>
+      </div>`;
+    } else {
+      try {
+        const blocks = JSON.parse(item.contenu);
+        if (Array.isArray(blocks) && blocks.length) {
+          let richHtml = '<div class="rich-content">';
+          blocks.forEach(blk => {
+            if (!blk.value || !blk.value.trim()) return;
+            if (blk.type === 'title') {
+              richHtml += `<div class="rich-block-title">${blk.value}</div>`;
+            } else if (blk.type === 'paragraph') {
+              richHtml += `<div class="rich-block-para">${blk.value}</div>`;
+            } else if (blk.type === 'image') {
+              richHtml += `<img class="rich-block-img" src="${blk.value}" alt="image" loading="lazy">`;
+            }
+          });
+          richHtml += '</div>';
+          body += richHtml;
+        }
+      } catch(e) {
+        // Ancien format texte brut
+        body += `<div class="modal-text">${item.contenu}</div>`;
+      }
+    }
+  }
+  // Bouton partage WhatsApp + Copier lien
+  const BASE_URL = window.location.href.split('?')[0];
+  const directLink = BASE_URL + '?id=' + item.id;
+  const shareText = encodeURIComponent('📚 ' + item.titre + ' – EtudierGN\n' + directLink);
+  const shareHtml = `<div class="modal-actions">
+    <a class="btn-share" href="https://wa.me/?text=${shareText}" target="_blank">📲 WhatsApp</a>
+    <button class="btn-copy-link" id="copy-btn-${item.id}" onclick="copyLink('${directLink}','${item.id}')">🔗 Copier le lien</button>
+  </div>`;
+
+  // Likes
+  const likes = item.likes || 0;
+  const liked = isLiked(item.id);
+  const likeHtml = `<div class="like-row">
+    <button class="like-btn ${liked?'liked':''}" id="like-btn-${item.id}" onclick="toggleLike('${item.id}')">
+      <span class="licon">${liked?'❤️':'🤍'}</span> <span id="like-count-${item.id}">${likes}</span> J'aime
+    </button>
+  </div>`;
+
+  document.getElementById('modal-body').innerHTML = shareHtml + likeHtml + body + renderComments(item.id);
+  document.getElementById('modal-bg').classList.add('open');
+  loadComments(item.id);
+  document.body.style.overflow='hidden';
+};
+
+window.closeMBg = function(e){ if(e.target===document.getElementById('modal-bg')) closeModal(); };
+window.closeModal = function(){
+  document.getElementById('modal-bg').classList.remove('open');
+  document.getElementById('modal-body').innerHTML='';
+  document.body.style.overflow='';
+  // Restaurer les meta tags par défaut et l'URL
+  resetDefaultSEO();
+  history.pushState({}, 'EtudierGN', window.location.pathname);
+};
+
+
+// ===== LIKES =====
+function isLiked(id){ return localStorage.getItem('liked_'+id)==='1'; }
+window.toggleLike = async function(id){
+  const liked = isLiked(id);
+  const newLiked = !liked;
+  localStorage.setItem('liked_'+id, newLiked?'1':'0');
+  // Mettre à jour le compteur dans Firestore
+  try {
+    await updateDoc(doc(db,'ressources',id), {likes: increment(newLiked ? 1 : -1)});
+  } catch(e) {}
+  // Mettre à jour l'UI immédiatement depuis items[]
+  const item = items.find(i=>i.id===id);
+  const newCount = Math.max(0, (item ? (item.likes||0) : 0) + (newLiked ? 1 : -1));
+  const btn = document.getElementById('like-btn-'+id);
+  const cnt = document.getElementById('like-count-'+id);
+  if(btn){ btn.className='like-btn'+(newLiked?' liked':''); btn.querySelector('.licon').textContent=newLiked?'❤️':'🤍'; }
+  if(cnt) cnt.textContent=newCount;
+  // Si on est dans "Mes favoris" et qu'on retire un like, l'item doit disparaître de la liste
+  if(favoritesMode && !newLiked) render();
+};
+
+// ===== COMMENTAIRES =====
+function getComments(id){ return JSON.parse(localStorage.getItem('comments_'+id)||'[]'); }
+function saveComments(id,arr){ localStorage.setItem('comments_'+id, JSON.stringify(arr)); }
+
+function renderComments(id){
+  const comments = getComments(id);
+  const list = comments.length ? comments.map(c=>`
+    <div class="comment-item">
+      <div class="comment-name">${c.name}</div>
+      <div class="comment-text">${c.text}</div>
+      <div class="comment-date">${c.date}</div>
+    </div>`).join('') : '<p style="color:#bbb;font-size:.78rem;text-align:center;padding:.5rem">Aucun commentaire. Soyez le premier !</p>';
+  return `<div class="comments-section">
+    <div class="comments-title">💬 Commentaires (${comments.length})</div>
+    <div id="comments-list-${id}">${list}</div>
+    <div class="comment-form">
+      <input type="text" id="c-name-${id}" placeholder="Votre nom…" maxlength="30">
+      <textarea id="c-text-${id}" placeholder="Votre commentaire…" maxlength="300"></textarea>
+      <button class="btn-comment" onclick="addComment('${id}')">Envoyer 💬</button>
+    </div>
+  </div>`;
+}
+
+window.addComment = function(id){
+  const name = (document.getElementById('c-name-'+id)||{value:''}).value.trim();
+  const text = (document.getElementById('c-text-'+id)||{value:''}).value.trim();
+  if(!name||!text){ alert('Remplissez votre nom et commentaire !'); return; }
+  const comments = getComments(id);
+  comments.unshift({name, text, date: new Date().toLocaleDateString('fr-FR')});
+  saveComments(id, comments);
+  const list = document.getElementById('comments-list-'+id);
+  if(list) list.innerHTML = comments.map(c=>`
+    <div class="comment-item">
+      <div class="comment-name">${c.name}</div>
+      <div class="comment-text">${c.text}</div>
+      <div class="comment-date">${c.date}</div>
+    </div>`).join('');
+  document.getElementById('c-name-'+id).value='';
+  document.getElementById('c-text-'+id).value='';
+};
+
+function loadComments(id){ /* déjà rendu */ }
+
+// ===== GROUPES MATIÈRE =====
+function renderMatiereBar(){
+  // Extraire toutes les matières distinctes des ressources
+  const matieres = [...new Set(items.map(i=>i.matiere).filter(m=>m&&m.trim()))].sort();
+  const bar = document.getElementById('matiere-bar');
+  if(!matieres.length){ bar.classList.remove('show'); return; }
+  bar.classList.add('show');
+  bar.innerHTML = `<div class="matiere-chip ${currentMatiere==='tout'?'active':''}" onclick="setMatiere(this,'tout')">🗂️ Tout</div>`
+    + matieres.map(m=>`<div class="matiere-chip ${currentMatiere===m.toLowerCase()?'active':''}" onclick="setMatiere(this,'${m}')">${m}</div>`).join('');
+}
+
+window.setMatiere = function(chip, mat){
+  document.querySelectorAll('.matiere-chip').forEach(c=>c.classList.remove('active'));
+  chip.classList.add('active');
+  currentMatiere = mat === 'tout' ? 'tout' : mat.toLowerCase();
+  render();
+};
+
+// ===== LIEN DIRECT =====
+window.copyLink = function(url, id){
+  navigator.clipboard.writeText(url).then(()=>{
+    const btn = document.getElementById('copy-btn-'+id);
+    if(btn){ btn.textContent='✅ Copié !'; btn.classList.add('copied'); setTimeout(()=>{ btn.textContent='🔗 Copier le lien'; btn.classList.remove('copied'); },2000); }
+  }).catch(()=>{
+    prompt('Copiez ce lien :', url);
+  });
+};
+
+// ===== NOTIFICATIONS PUSH (OneSignal) =====
+// ⚠️ Remplace 'ONESIGNAL_APP_ID' par l'App ID réel une fois ton compte OneSignal créé
+// (gratuit sur onesignal.com → New App → Web Push).
+const ONESIGNAL_APP_ID = 'ONESIGNAL_APP_ID';
+
+window.OneSignalDeferred = window.OneSignalDeferred || [];
+OneSignalDeferred.push(async function(OneSignal) {
+  await OneSignal.init({
+    appId: ONESIGNAL_APP_ID,
+    allowLocalhostAsSecureOrigin: true, // utile en test local, sans impact en prod
+  });
+  // Si déjà abonné (autre visite), on masque la barre directement
+  const isSubscribed = OneSignal.User.PushSubscription.optedIn;
+  if(isSubscribed){
+    document.getElementById('notif-bar').style.display='none';
+  } else if(localStorage.getItem('notif')!=='dismiss'){
+    document.getElementById('notif-bar').style.display='flex';
+  }
+});
+
+window.askNotif = async function(){
+  if(!window.OneSignal){ alert('Le service de notifications est en cours de chargement, réessayez dans un instant.'); return; }
+  try{
+    await OneSignal.Notifications.requestPermission();
+    document.getElementById('notif-bar').style.display='none';
+    localStorage.setItem('notif','1');
+  }catch(e){
+    console.warn('Permission notification refusée ou indisponible', e);
+  }
+};
+
+// Permet à l'utilisateur de fermer la barre sans s'abonner (ne plus la montrer ensuite)
+window.dismissNotifBar = function(){
+  document.getElementById('notif-bar').style.display='none';
+  localStorage.setItem('notif','dismiss');
+};
+
+// ===== CACHE LOCAL DES RESSOURCES (affichage instantané + mode hors-ligne) =====
+const RES_CACHE_KEY = 'res_cache_v1';
+const RES_CACHE_MAX_AGE = 1000 * 60 * 60 * 12; // 12h, au-delà on ne s'y fie plus pour le premier affichage
+
+function loadResourcesFromCache(){
+  try{
+    const raw = localStorage.getItem(RES_CACHE_KEY);
+    if(!raw) return;
+    const cached = JSON.parse(raw);
+    if(!cached.items || !cached.items.length) return;
+    items = cached.items;
+    renderMatiereBar();
+    render();
+  }catch(e){ console.warn('Cache ressources illisible', e); }
+}
+
+function saveResourcesToCache(list){
+  try{
+    localStorage.setItem(RES_CACHE_KEY, JSON.stringify({ts:Date.now(), items:list}));
+  }catch(e){ /* quota dépassé ou navigation privée : on ignore silencieusement */ }
+}
+
+// Écoute temps réel Firestore (avec limite progressive)
+function subscribeResources(){
+  if(resourcesUnsub) resourcesUnsub(); // coupe l'ancien listener avant d'en ouvrir un nouveau
+  const q = query(collection(db,'ressources'), orderBy('date','desc'), limit(loadLimit));
+  resourcesUnsub = onSnapshot(q, snap=>{
+    items = snap.docs.map(d=>({id:d.id,...d.data()}));
+    hasMore = snap.docs.length === loadLimit; // s'il y a potentiellement plus de docs
+    saveResourcesToCache(items);
+    renderMatiereBar();
+    render();
+    // Deep link : ouvrir directement ?id=xxx
+    const urlId = new URLSearchParams(window.location.search).get('id');
+    if(urlId && !window._deepLinkDone){
+      window._deepLinkDone = true;
+      if(items.find(i=>i.id===urlId)) openItem(urlId);
+    }
+  }, err=>{
+    console.warn('Firestore onSnapshot erreur (probablement hors-ligne)', err);
+    // En cas d'échec réseau, on retombe sur le cache local s'il existe et n'a pas déjà été affiché
+    if(!items.length) loadResourcesFromCache();
+  });
+}
+loadResourcesFromCache(); // affichage instantané pendant que Firestore se connecte
+subscribeResources();
+
+window.loadMoreResources = function(){
+  loadLimit += LOAD_STEP;
+  subscribeResources();
+};
+
+// ===================================================================
+// ===== SEO DYNAMIQUE : meta tags + JSON-LD selon le contenu =====
+// ===================================================================
+const BASE_URL = 'https://boubacardraga123-sketch.github.io/GuineeScope-/';
+const DEFAULT_TITLE = 'EtudierGN – Plateforme éducative guinéenne';
+const DEFAULT_DESC  = 'Cours, exercices, vidéos et annales pour les lycéens et étudiants de Guinée.';
+const DEFAULT_IMG   = 'https://boubacardraga123-sketch.github.io/GuineeScope-/og-image.svg';
+
+function setMeta(name, val, isProp){
+  const sel = isProp ? `meta[property="${name}"]` : `meta[name="${name}"]`;
+  const el = document.querySelector(sel);
+  if(el) el.setAttribute('content', val);
+}
+
+function updateDynamicSEO(item){
+  if(!item) return;
+  const url   = BASE_URL + '?id=' + item.id;
+  const title = item.titre + ' – EtudierGN';
+  const desc  = (item.desc || item.titre).substring(0,160);
+
+  // Choisir l'image la plus pertinente
+  let img = DEFAULT_IMG;
+  if(item.type==='video' && item.ytid){
+    const vid = item.ytid.match(/([a-zA-Z0-9_-]{11})$/);
+    if(vid) img = 'https://img.youtube.com/vi/' + vid[1] + '/hqdefault.jpg';
+  } else if(item.imgurl){ img = item.imgurl;
+  } else if(item.thumb){  img = item.thumb; }
+
+  // Mettre à jour <title>
+  document.title = title;
+
+  // Mettre à jour les meta standards
+  setMeta('description', desc);
+  setMeta('canonical', url);      // pas un meta mais on update l'og:url
+
+  // Open Graph
+  setMeta('og:title',       title, true);
+  setMeta('og:description', desc,  true);
+  setMeta('og:url',         url,   true);
+  setMeta('og:image',       img,   true);
+  setMeta('og:type', item.type==='video' ? 'video.other' : 'article', true);
+
+  // Twitter Card
+  setMeta('twitter:title',       title);
+  setMeta('twitter:description', desc);
+  setMeta('twitter:image',       img);
+
+  // JSON-LD dynamique selon le type
+  const jsonld = buildJsonLD(item, url, img, desc);
+  const ldTag = document.getElementById('jsonld-dynamic');
+  if(ldTag) ldTag.textContent = JSON.stringify(jsonld);
+}
+
+function resetDefaultSEO(){
+  document.title = DEFAULT_TITLE;
+  setMeta('description', DEFAULT_DESC);
+  setMeta('og:title',       DEFAULT_TITLE, true);
+  setMeta('og:description', DEFAULT_DESC,  true);
+  setMeta('og:url',         BASE_URL,      true);
+  setMeta('og:image',       DEFAULT_IMG,   true);
+  setMeta('og:type',        'website',     true);
+  const ldTag = document.getElementById('jsonld-dynamic');
+  if(ldTag) ldTag.textContent = '';
+}
+
+function buildJsonLD(item, url, img, desc){
+  const publisher = {
+    "@type": "Organization",
+    "name": "EtudierGN",
+    "url": BASE_URL,
+    "logo": { "@type":"ImageObject","url": DEFAULT_IMG }
+  };
+  const dateISO = item.date ? new Date(item.date).toISOString() : new Date().toISOString();
+
+  if(item.type === 'video'){
+    const vid = (item.ytid||'').match(/([a-zA-Z0-9_-]{11})$/);
+    const embedUrl = vid ? 'https://www.youtube.com/embed/' + vid[1] : url;
+    return {
+      "@context": "https://schema.org",
+      "@type": "VideoObject",
+      "name": item.titre,
+      "description": desc,
+      "thumbnailUrl": img,
+      "uploadDate": dateISO,
+      "embedUrl": embedUrl,
+      "url": url,
+      "inLanguage": "fr",
+      "publisher": publisher,
+      "educationalLevel": item.niveau || "",
+      "about": item.matiere ? { "@type":"Thing","name": item.matiere } : undefined
+    };
+  }
+
+  if(item.type === 'evenement'){
+    const evtDate = item.evtDate ? new Date(item.evtDate).toISOString() : dateISO;
+    return {
+      "@context": "https://schema.org",
+      "@type": "Event",
+      "name": item.titre,
+      "description": desc,
+      "startDate": evtDate,
+      "location": item.evtLieu ? { "@type":"Place","name": item.evtLieu, "address":{ "@type":"PostalAddress","addressCountry":"GN" } } : { "@type":"Place","name":"Guinée" },
+      "image": img,
+      "url": url,
+      "organizer": publisher
+    };
+  }
+
+  if(item.type === 'cours' || item.type === 'exercice'){
+    return {
+      "@context": "https://schema.org",
+      "@type": "Course",
+      "name": item.titre,
+      "description": desc,
+      "url": url,
+      "inLanguage": "fr",
+      "provider": publisher,
+      "educationalLevel": item.niveau || "",
+      "about": item.matiere ? { "@type":"Thing","name": item.matiere } : undefined,
+      "image": img,
+      "dateCreated": dateISO
+    };
+  }
+
+  if(item.type === 'livre'){
+    return {
+      "@context": "https://schema.org",
+      "@type": "Book",
+      "name": item.titre,
+      "description": desc,
+      "url": url,
+      "inLanguage": "fr",
+      "author": item.auteur ? { "@type":"Person","name": item.auteur } : publisher,
+      "publisher": publisher,
+      "image": img,
+      "educationalLevel": item.niveau || ""
+    };
+  }
+
+  // Défaut : Article (annale, image, etc.)
+  return {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": item.titre,
+    "description": desc,
+    "url": url,
+    "image": img,
+    "datePublished": dateISO,
+    "inLanguage": "fr",
+    "author": publisher,
+    "publisher": publisher,
+    "about": item.matiere ? { "@type":"Thing","name": item.matiere } : undefined
+  };
+}
+
+// Gestion du bouton Retour navigateur (ferme le modal)
+window.addEventListener('popstate', function(e){
+  const modal = document.getElementById('modal-bg');
+  if(modal && modal.classList.contains('open')){
+    document.getElementById('modal-bg').classList.remove('open');
+    document.getElementById('modal-body').innerHTML='';
+    document.body.style.overflow='';
+    resetDefaultSEO();
+  }
+});
+
+// Charger les pubs locales actives
+(async()=>{
+  try {
+    const snap = await getDocs(collection(db,'pubs'));
+    localAds = snap.docs.map(d=>({id:d.id,...d.data()})).filter(p=>p.actif);
+    if(localAds.length) render(); // Re-render avec pubs si déjà chargé
+  } catch(e){ console.warn('Pubs non chargées',e); }
+})();
+
+// ===== CHAT VISITEUR =====
+let chatSessionId = localStorage.getItem('chat_session_id');
+let visitorName   = localStorage.getItem('chat_visitor_name') || '';
+let chatUnsubscribe = null;
+let chatOpen = false;
+let unreadCount = 0;
+
+// Générer un ID de session unique si inexistant
+if (!chatSessionId) {
+  chatSessionId = 'v_' + Date.now() + '_' + Math.random().toString(36).slice(2,8);
+  localStorage.setItem('chat_session_id', chatSessionId);
+}
+
+window.toggleChat = function() {
+  chatOpen = !chatOpen;
+  const box = document.getElementById('chat-box');
+  box.classList.toggle('open', chatOpen);
+  if (chatOpen) {
+    unreadCount = 0;
+    updateBadge();
+    if (!visitorName) {
+      document.getElementById('chat-name-section').style.display = 'block';
+      document.getElementById('chat-form').style.display = 'none';
+      setTimeout(()=>document.getElementById('chat-visitor-name').focus(), 100);
+    } else {
+      document.getElementById('chat-name-section').style.display = 'none';
+      document.getElementById('chat-form').style.display = 'flex';
+      startChatListen();
+      setTimeout(()=>document.getElementById('chat-input').focus(), 100);
+    }
+  }
+};
+
+window.saveVisitorName = function() {
+  const name = document.getElementById('chat-visitor-name').value.trim();
+  if (!name) return;
+  visitorName = name;
+  localStorage.setItem('chat_visitor_name', name);
+  document.getElementById('chat-name-section').style.display = 'none';
+  document.getElementById('chat-form').style.display = 'flex';
+  // Créer/maj session dans Firestore
+  setDoc(doc(db, 'chats', chatSessionId), {
+    visitorName: name, sessionId: chatSessionId,
+    lastActivity: serverTimestamp(), unreadByAdmin: 0
+  }, {merge: true});
+  startChatListen();
+  setTimeout(()=>document.getElementById('chat-input').focus(), 100);
+};
+
+function startChatListen() {
+  if (chatUnsubscribe) return; // déjà en écoute
+  const msgsRef = collection(db, 'chats', chatSessionId, 'messages');
+  const mq = query(msgsRef, orderBy('ts','asc'));
+  chatUnsubscribe = onSnapshot(mq, snap => {
+    const msgs = snap.docs.map(d => ({id:d.id, ...d.data()}));
+    renderChatMessages(msgs);
+    if (!chatOpen) {
+      const newAdmin = msgs.filter(m => m.sender==='admin' && !m.seenByVisitor).length;
+      if (newAdmin > 0) { unreadCount = newAdmin; updateBadge(); }
+    }
+  });
+}
+
+function renderChatMessages(msgs) {
+  const container = document.getElementById('chat-messages');
+  const empty = document.getElementById('chat-empty');
+  if (!msgs.length) { if(empty) empty.style.display='block'; return; }
+  if(empty) empty.style.display='none';
+  container.innerHTML = msgs.map(m => {
+    const isAdmin = m.sender === 'admin';
+    const time = m.ts ? new Date(m.ts.seconds*1000).toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'}) : '';
+    const msgContent = m.imgUrl
+      ? `<img src="${m.imgUrl}" alt="photo" onclick="window.open('${m.imgUrl}','_blank')">`
+      : m.text;
+    return `<div class="chat-msg ${isAdmin?'admin':'visitor'}">
+      ${isAdmin ? '<strong style="font-size:.68rem;opacity:.7;display:block;margin-bottom:2px;">EtudierGN</strong>' : ''}
+      ${msgContent}
+      <div class="chat-msg-time">${time}</div>
+    </div>`;
+  }).join('');
+  container.scrollTop = container.scrollHeight;
+}
+
+function updateBadge() {
+  const b = document.getElementById('chat-badge');
+  if (unreadCount > 0) {
+    b.textContent = unreadCount; b.style.display='flex';
+  } else {
+    b.style.display='none';
+  }
+}
+
+window.sendVisitorMsg = async function() {
+  const input = document.getElementById('chat-input');
+  const text = input.value.trim();
+  if (!text || !visitorName) return;
+  input.value = '';
+  const msgsRef = collection(db, 'chats', chatSessionId, 'messages');
+  await addDoc(msgsRef, {
+    text, sender: 'visitor', visitorName,
+    ts: serverTimestamp(), seenByAdmin: false
+  });
+  // Mettre à jour la session
+  await setDoc(doc(db, 'chats', chatSessionId), {
+    visitorName, sessionId: chatSessionId,
+    lastMessage: text, lastActivity: serverTimestamp(),
+    unreadByAdmin: 99 // sera reset côté admin
+  }, {merge: true});
+};
+
+// Démarrer l'écoute chat si nom déjà connu
+if (visitorName) startChatListen();
+
+window.triggerPhotoUpload = function() {
+  document.getElementById('chat-photo-input').click();
+};
+
+window.sendVisitorPhoto = async function(input) {
+  if (!input.files || !input.files[0] || !visitorName) return;
+  const file = input.files[0];
+  input.value = '';
+
+  // Convertir en base64
+  const reader = new FileReader();
+  reader.onload = async function(e) {
+    const base64 = e.target.result;
+    const msgsRef = collection(db, 'chats', chatSessionId, 'messages');
+    await addDoc(msgsRef, {
+      text: '📷 Photo', imgUrl: base64,
+      sender: 'visitor', visitorName,
+      ts: serverTimestamp(), seenByAdmin: false
+    });
+    await setDoc(doc(db, 'chats', chatSessionId), {
+      visitorName, sessionId: chatSessionId,
+      lastMessage: '📷 Photo envoyée',
+      lastActivity: serverTimestamp(),
+      unreadByAdmin: 99
+    }, {merge: true});
+  };
+  reader.readAsDataURL(file);
+};
+
+// =====================================================================
+// ÉVALUATION PUBLIQUE — accès via lien ?eval=CODE
+// =====================================================================
+(async function initPublicEval() {
+  const params = new URLSearchParams(window.location.search);
+  const evalCode = params.get('eval');
+  if (!evalCode) return; // Pas de paramètre eval → comportement normal
+
+  const overlay = document.getElementById('eval-public-overlay');
+  const body    = document.getElementById('eval-pub-body');
+  overlay.classList.add('open');
+
+  // Helpers
+  function epEsc(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\"/g,'&quot;'); }
+  function epFmtTime(sec){ const m=Math.floor(sec/60),s=sec%60; return `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`; }
+
+  // Charger l'éval depuis Firestore
+  body.innerHTML = '<div style="text-align:center;padding:40px;color:#64748b;">⏳ Chargement de l\'évaluation…</div>';
+  let ev = null;
+  try {
+    const snap = await getDocs(collection(db, 'evals'));
+    const now = Date.now();
+    ev = snap.docs.map(d=>d.data()).find(e =>
+      String(e.accessCode) === String(evalCode) && !e.closed && e.endsAt > now
+    );
+  } catch(e) {
+    body.innerHTML = '<div style="text-align:center;padding:40px;color:#dc2626;">❌ Erreur de connexion. Vérifiez votre connexion internet.</div>';
+    return;
+  }
+
+  if (!ev) {
+    body.innerHTML = `
+    <div style="text-align:center;padding:48px 20px;">
+      <div style="font-size:3rem;margin-bottom:16px;">⛔</div>
+      <div style="font-size:1.1rem;font-weight:700;color:#dc2626;margin-bottom:8px;">Évaluation introuvable</div>
+      <div style="font-size:.85rem;color:#64748b;margin-bottom:24px;">Le code est incorrect, l'évaluation est terminée ou le lien a expiré.</div>
+      <div style="font-size:.8rem;color:#94a3b8;background:#f8fafc;border-radius:10px;padding:10px 14px;display:inline-block;">Code reçu : <strong style="font-family:monospace">${epEsc(evalCode)}</strong></div>
+    </div>`;
+    return;
+  }
+
+  // Vérification date d'ouverture (Fonctionnalité 3)
+  const nowCheck = Date.now();
+  if (ev.openAt && ev.openAt > nowCheck) {
+    const fmtDT = ts => new Date(ts).toLocaleString('fr-FR',{weekday:'long',day:'2-digit',month:'long',year:'numeric',hour:'2-digit',minute:'2-digit'});
+    body.innerHTML = `
+    <div style="text-align:center;padding:48px 20px;">
+      <div style="font-size:3rem;margin-bottom:16px;">🕐</div>
+      <div style="font-size:1.1rem;font-weight:700;color:#1e40af;margin-bottom:10px;">Évaluation pas encore disponible</div>
+      <div style="background:#dbeafe;border:1.5px solid #93c5fd;border-radius:16px;padding:16px;margin-bottom:20px;max-width:360px;margin-left:auto;margin-right:auto">
+        <div style="font-size:.9rem;font-weight:700;color:#1e3a8a;margin-bottom:6px;">📅 Ouverture prévue le :</div>
+        <div style="font-size:1rem;font-weight:800;color:#1d4ed8;">${fmtDT(ev.openAt)}</div>
+      </div>
+      <div style="font-size:.78rem;color:#94a3b8;">Revenez à cette date pour accéder à l'évaluation.</div>
+    </div>`;
+    return;
+  }
+
+  document.getElementById('eval-pub-title').textContent = '📝 ' + (ev.title || 'Évaluation');
+
+  // Étape 1 : demander le nom de l'élève
+  function showNameScreen() {
+    body.innerHTML = `
+    <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:60vh;padding:24px;text-align:center;">
+      <div style="font-size:3rem;margin-bottom:16px;">📝</div>
+      <h2 style="font-size:1.2rem;font-weight:700;color:#004d2e;margin-bottom:6px;">${epEsc(ev.title)}</h2>
+      <p style="font-size:.85rem;color:#64748b;margin-bottom:6px;">${ev.dept ? epEsc(ev.dept) + ' &nbsp;·&nbsp; ' : ''}${ev.questions.length} question${ev.questions.length>1?'s':''} &nbsp;·&nbsp; ${Math.round(ev.durationSec/60)} min</p>
+      <p style="font-size:.82rem;color:#94a3b8;margin-bottom:24px;">Entrez votre nom complet pour commencer</p>
+      <input id="ep-name-input" type="text" placeholder="Votre nom et prénom…" maxlength="60"
+        style="width:100%;max-width:320px;border:1.5px solid #e2e8f0;border-radius:12px;padding:12px 16px;font-size:1rem;font-family:'Inter',sans-serif;outline:none;text-align:center;margin-bottom:12px;box-sizing:border-box;"
+        onfocus="this.style.borderColor='#004d2e'" onblur="this.style.borderColor='#e2e8f0'"
+        onkeydown="if(event.key==='Enter') document.getElementById('ep-start-btn').click()">
+      <input id="ep-contact-input" type="text" placeholder="WhatsApp (ex: 622xxxxxx) ou e-mail" maxlength="80"
+        style="width:100%;max-width:320px;border:1.5px solid #e2e8f0;border-radius:12px;padding:12px 16px;font-size:.93rem;font-family:'Inter',sans-serif;outline:none;text-align:center;margin-bottom:12px;box-sizing:border-box;"
+        onfocus="this.style.borderColor='#004d2e'" onblur="this.style.borderColor='#e2e8f0'">
+      <div style="font-size:.72rem;color:#94a3b8;margin-bottom:12px;max-width:320px;">📲 Pour recevoir votre note après correction (facultatif)</div>
+      <div id="ep-name-err" style="color:#dc2626;font-size:.78rem;margin-bottom:10px;display:none;">⚠️ Veuillez entrer votre nom.</div>
+      <button id="ep-start-btn" style="background:#004d2e;color:#FCD116;border:none;border-radius:12px;padding:12px 36px;font-size:1rem;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;"
+        onclick="window._epStartEval()">Commencer ▶</button>
+    </div>`;
+  }
+
+  showNameScreen();
+
+  let _tabSwitchCount = 0;
+
+  // Étape 2 : formulaire d'évaluation
+  window._epStartEval = async function() {
+    const nameInput = document.getElementById('ep-name-input');
+    const nom = nameInput ? nameInput.value.trim() : '';
+    if (!nom) { const e=document.getElementById('ep-name-err'); if(e) e.style.display='block'; return; }
+    const contactInput = document.getElementById('ep-contact-input');
+    const studentContact = contactInput ? contactInput.value.trim() : '';
+
+    // Vérifier le nombre de tentatives déjà effectuées
+    const maxAttempts = ev.maxAttempts || 1;
+    if (maxAttempts > 0) {
+      try {
+        const resSnap = await getDocs(
+          query(collection(db, 'eval_results'),
+            where('evalId', '==', String(ev.id)),
+            where('studentName', '==', nom)
+          )
+        );
+        const deja = resSnap.docs;
+        if (deja.length >= maxAttempts) {
+          body.innerHTML = `
+          <div style="text-align:center;padding:48px 20px;">
+            <div style="font-size:3.5rem;margin-bottom:16px;">🔒</div>
+            <div style="font-size:1.2rem;font-weight:800;color:#dc2626;margin-bottom:10px;">Accès refusé</div>
+            <div style="background:#fef2f2;border:1.5px solid #fca5a5;border-radius:16px;padding:16px;margin-bottom:20px;max-width:360px;margin-left:auto;margin-right:auto">
+              <div style="font-size:.9rem;font-weight:700;color:#991b1b;margin-bottom:6px;">Limite de tentatives atteinte</div>
+              <div style="font-size:.82rem;color:#7f1d1d;line-height:1.6">Tu as déjà soumis cette évaluation <strong>${deja.length} fois</strong>.<br>Maximum autorisé : <strong>${maxAttempts} tentative${maxAttempts>1?'s':''}.</strong></div>
+            </div>
+            <div style="font-size:.78rem;color:#94a3b8;">Contacte ton professeur si tu penses qu'il s'agit d'une erreur.</div>
+          </div>`;
+          return;
+        }
+      } catch(e) { console.warn('Vérification tentatives échouée', e); }
+    }
+
+    const studentId = 'pub_' + nom.toLowerCase().replace(/\s+/g,'_') + '_' + Date.now();
+    let answers = {};
+    let questions = [...ev.questions];
+    if (ev.shuffleQ) {
+      for(let i=questions.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[questions[i],questions[j]]=[questions[j],questions[i]];}
+    }
+
+    const deadline = ev.endsAt;
+    window._epTimer = null;
+    let _warned5 = false;
+    window._epOnVisibilityChange = function() {
+      if (document.hidden) {
+        _tabSwitchCount++;
+        const warn = document.getElementById('ep-tab-warn');
+        if (warn) {
+          warn.style.display = 'block';
+          warn.textContent = `⚠️ Sortie d'onglet détectée (${_tabSwitchCount} fois) ! Cette information sera transmise au professeur.`;
+          setTimeout(() => { if(warn) warn.style.display='none'; }, 4000);
+        }
+      }
+    };
+    document.addEventListener('visibilitychange', window._epOnVisibilityChange);
+
+    function renderEvalForm() {
+      const rem = Math.max(0, Math.ceil((deadline - Date.now())/1000));
+      const tc = rem<=60?'#dc2626':rem<=300?'#d97706':'#059669';
+      document.getElementById('eval-pub-timer-display').textContent = epFmtTime(rem);
+      document.getElementById('eval-pub-timer-display').style.color = rem<=60?'#FCD116':'#FCD116';
+
+      let qHTML = questions.map((q,i) => {
+        let opts = q.options || [];
+        let optOrder = opts.map((_,idx)=>idx);
+        if (ev.shuffleOpts && (q.type==='radio'||q.type==='checkbox')) {
+          for(let x=optOrder.length-1;x>0;x--){const y=Math.floor(Math.random()*(x+1));[optOrder[x],optOrder[y]]=[optOrder[y],optOrder[x]];}
+        }
+        let inputHTML = '';
+        if (q.type==='text') {
+          inputHTML = `<input class="eval-pub-input" placeholder="Votre réponse…" value="${epEsc(answers[q.id]||'')}"
+            oninput="window._epAns['${q.id}']=this.value;window._epAutoSave()">`;
+        } else if (q.type==='textarea'||q.type==='image') {
+          inputHTML = `<textarea class="eval-pub-input" style="min-height:80px" placeholder="Votre réponse…"
+            oninput="window._epAns['${q.id}']=this.value;window._epAutoSave()">${epEsc(answers[q.id]||'')}</textarea>`;
+        } else if (q.type==='radio'||q.type==='yesno') {
+          inputHTML = optOrder.map(oi=>`
+          <label class="eval-pub-opt" id="ep-opt-${q.id}-${oi}" onclick="window._epSelectOpt('${q.id}',${oi},'radio')">
+            <input type="radio" name="epq_${q.id}" value="${oi}" style="accent-color:#004d2e;width:16px;height:16px;flex-shrink:0" ${answers[q.id]==oi?'checked':''}>
+            <span>${epEsc(opts[oi]||'')}</span>
+          </label>`).join('');
+        } else if (q.type==='checkbox') {
+          const checked = answers[q.id]||[];
+          inputHTML = optOrder.map(oi=>`
+          <label class="eval-pub-opt" id="ep-opt-${q.id}-${oi}" onclick="window._epSelectOpt('${q.id}',${oi},'checkbox')">
+            <input type="checkbox" value="${oi}" style="accent-color:#004d2e;width:16px;height:16px;flex-shrink:0" ${checked.includes(oi)?'checked':''}>
+            <span>${epEsc(opts[oi]||'')}</span>
+          </label>`).join('');
+        } else if (q.type==='formula') {
+          inputHTML = `<div style="padding:10px;background:#f8fafc;border-radius:10px;margin-bottom:8px;font-size:.95em">${q.formula||''}</div>
+          <textarea class="eval-pub-input" style="min-height:70px" placeholder="Votre réponse…"
+            oninput="window._epAns['${q.id}']=this.value;window._epAutoSave()">${epEsc(answers[q.id]||'')}</textarea>`;
+        }
+        return `
+        <div class="eval-pub-card" style="border-left:4px solid #004d2e;">
+          <div style="display:flex;align-items:flex-start;gap:10px;margin-bottom:12px;">
+            <div style="min-width:32px;height:32px;background:#004d2e;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#FCD116;font-size:13px;font-weight:800;flex-shrink:0">${i+1}</div>
+            <div style="flex:1;min-width:0">
+              <div style="font-weight:700;font-size:1rem;line-height:1.5;color:#111827;">${epEsc(q.title||'(Question)')}${q.optional?'<span style="font-size:.75rem;color:#94a3b8;font-weight:400;margin-left:6px">facultative</span>':''}</div>
+              ${q.contenu?`<div style="font-size:.88rem;color:#1e293b;margin-top:8px;white-space:pre-wrap;background:#f0fdf4;border-radius:8px;padding:10px 12px;border-left:3px solid #004d2e;line-height:1.6;">${epEsc(q.contenu)}</div>`:''}
+              ${q.imageData?`<img src="${q.imageData}" style="max-width:100%;border-radius:10px;border:1px solid #e2e8f0;margin-top:8px;display:block">`:''}
+            </div>
+            <span style="font-size:.75rem;font-weight:700;color:#004d2e;background:#dcfce7;padding:3px 10px;border-radius:20px;flex-shrink:0;white-space:nowrap;border:1px solid #86efac">${q.points} pt${q.points>1?'s':''}</span>
+          </div>
+          ${inputHTML}
+        </div>`;
+      }).join('');
+
+      body.innerHTML = `
+      <div id="ep-save-indicator" style="text-align:center;font-size:.72rem;color:#94a3b8;margin-bottom:10px;">💾 Brouillon sauvegardé</div>
+      <div id="ep-tab-warn" style="display:none;background:#fee2e2;border:1.5px solid #fca5a5;border-radius:10px;padding:10px 14px;margin-bottom:12px;font-size:.82rem;font-weight:700;color:#dc2626;text-align:center;"></div>
+      <div id="ep-timer-warn" style="display:none;background:#fef3c7;border:1.5px solid #fbbf24;border-radius:10px;padding:10px 14px;margin-bottom:12px;font-size:.82rem;font-weight:700;color:#92400e;text-align:center;"></div>
+      ${qHTML}
+      <div style="background:#f0fdf4;border-radius:14px;padding:14px;border:1.5px solid #bbf7d0;margin-bottom:14px;">
+        <div style="font-size:.82rem;color:#065f46;font-weight:600;margin-bottom:10px;">✅ Vérifiez vos réponses puis soumettez.</div>
+        <button class="eval-pub-submit" onclick="window._epSubmit('${ev.id}',false,'${nom.replace(/\\/g,"\\\\").replace(/'/g,"\\'").replace(/"/g,"&quot;")}','${studentId}','${studentContact.replace(/\\/g,"\\\\").replace(/'/g,"\\'").replace(/"/g,"&quot;")}')">📤 Soumettre l'évaluation</button>
+      </div>
+      <div style="height:40px"></div>`;
+
+      // Appliquer état checked aux options déjà sélectionnées
+      Object.keys(answers).forEach(qid => {
+        const q2 = questions.find(x=>String(x.id)===String(qid));
+        if (!q2) return;
+        if (q2.type==='radio'||q2.type==='yesno') {
+          const lbl = document.getElementById(`ep-opt-${qid}-${answers[qid]}`);
+          if(lbl) lbl.style.cssText += ';border-color:#004d2e;background:#f0fdf4';
+        } else if (q2.type==='checkbox') {
+          (answers[qid]||[]).forEach(oi => {
+            const lbl = document.getElementById(`ep-opt-${qid}-${oi}`);
+            if(lbl) lbl.style.cssText += ';border-color:#004d2e;background:#f0fdf4';
+          });
+        }
+      });
+    }
+
+    window._epAns = answers;
+    window._epAutoSave = function() {
+      try {
+        sessionStorage.setItem('_epDraft_'+ev.id, JSON.stringify(window._epAns||{}));
+        const ind = document.getElementById('ep-save-indicator');
+        if(ind){ ind.textContent='💾 Sauvegardé à '+new Date().toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit',second:'2-digit'}); ind.style.color='#059669'; setTimeout(()=>{if(ind)ind.style.color='#94a3b8';},2000); }
+      } catch(e){}
+    };
+
+    window._epSelectOpt = function(qid, oi, type) {
+      if (type==='radio') {
+        window._epAns[qid] = parseInt(oi);
+        // reset visuel
+        questions.find(x=>String(x.id)===String(qid))?.options?.forEach((_,idx)=>{
+          const l=document.getElementById(`ep-opt-${qid}-${idx}`);
+          if(l){l.style.borderColor='#e2e8f0';l.style.background='';}
+          const r=l?.querySelector('input[type=radio]'); if(r) r.checked=false;
+        });
+        const lbl=document.getElementById(`ep-opt-${qid}-${oi}`);
+        if(lbl){lbl.style.borderColor='#004d2e';lbl.style.background='#f0fdf4';}
+        const rd=lbl?.querySelector('input[type=radio]'); if(rd) rd.checked=true;
+      } else {
+        let arr = window._epAns[qid]||[];
+        const cb = document.getElementById(`ep-opt-${qid}-${oi}`)?.querySelector('input[type=checkbox]');
+        if (arr.includes(parseInt(oi))) {
+          arr = arr.filter(x=>x!==parseInt(oi));
+          if(cb) cb.checked=false;
+          const lbl=document.getElementById(`ep-opt-${qid}-${oi}`);
+          if(lbl){lbl.style.borderColor='#e2e8f0';lbl.style.background='';}
+        } else {
+          arr.push(parseInt(oi));
+          if(cb) cb.checked=true;
+          const lbl=document.getElementById(`ep-opt-${qid}-${oi}`);
+          if(lbl){lbl.style.borderColor='#004d2e';lbl.style.background='#f0fdf4';}
+        }
+        window._epAns[qid] = arr;
+      }
+      window._epAutoSave();
+    };
+
+    // Restaurer brouillon
+    try { const s=sessionStorage.getItem('_epDraft_'+ev.id); if(s){ answers=JSON.parse(s); window._epAns=answers; } } catch(e){}
+
+    renderEvalForm();
+    document.getElementById('eval-pub-timer-display').textContent = epFmtTime(Math.max(0,Math.ceil((deadline-Date.now())/1000)));
+
+    // Chrono
+    window._epTimer = setInterval(() => {
+      const rem2 = Math.max(0, Math.ceil((deadline - Date.now())/1000));
+      const tc2 = rem2<=60?'#dc2626':rem2<=300?'#d97706':'#059669';
+      const td = document.getElementById('eval-pub-timer-display');
+      if(td){ td.textContent = epFmtTime(rem2); }
+      if (rem2===300 && !_warned5) {
+        _warned5=true;
+        const w=document.getElementById('ep-timer-warn');
+        if(w){w.style.display='block';w.textContent='⚠️ Il reste 5 minutes ! Pensez à soumettre vos réponses.';}
+      }
+      if (rem2<=0) { clearInterval(window._epTimer); window._epSubmit(ev.id,true,nom,studentId,studentContact); }
+    }, 1000);
+  };
+
+  // Étape 3 : soumettre
+  window._epSubmit = async function(evalId, auto, nom, studentId, studentContact) {
+    // Empêcher double-soumission + feedback visuel immédiat
+    if (window._epSubmitting) return;
+    window._epSubmitting = true;
+    const btn = document.querySelector('.eval-pub-submit');
+    if (btn) { btn.disabled = true; btn.style.opacity = '.6'; btn.textContent = '⏳ Envoi en cours…'; }
+
+    try {
+
+    clearInterval(window._epTimerRef);
+    clearInterval(window._epTimer);
+    // Nettoyer le listener anti-triche
+    document.removeEventListener('visibilitychange', window._epOnVisibilityChange);
+    const answers = window._epAns || {};
+
+    // Calcul score auto
+    let score = 0, fullyAuto = true;
+    ev.questions.forEach(q => {
+      const ans = answers[q.id];
+      if (q.type==='radio'||q.type==='yesno') {
+        if (q.correctAnswers&&q.correctAnswers.length>0) {
+          if (q.correctAnswers.includes(parseInt(ans))) score += q.points;
+        } else { fullyAuto=false; }
+      } else if (q.type==='checkbox') {
+        if (q.correctAnswers&&q.correctAnswers.length>0) {
+          const arr=Array.isArray(ans)?ans:[];
+          if(q.correctAnswers.sort().join(',')===arr.sort().join(',')) score+=q.points;
+        } else { fullyAuto=false; }
+      } else if (q.type==='text'||q.type==='textarea'||q.type==='formula') {
+        if (q.expectedAnswer && q.expectedAnswer.trim()!=='') {
+          const expected = q.expectedAnswer.trim().toLowerCase().replace(/\s+/g,' ');
+          const given = (ans||'').trim().toLowerCase().replace(/\s+/g,' ');
+          if (given===expected) score += q.points;
+        } else { fullyAuto=false; }
+      } else { fullyAuto=false; }
+    });
+
+    const maxScore = ev.questions.reduce((s,q)=>s+q.points,0);
+    const result = {
+      evalId: ev.id,
+      studentId,
+      studentName: nom,
+      studentContact: studentContact || '',
+      answers,
+      score,
+      auto: fullyAuto,
+      submittedAt: Date.now(),
+      forced: !!auto,
+      tabSwitchCount: _tabSwitchCount,
+      source: 'public_link'
+    };
+
+    try {
+      await setDoc(doc(db, 'eval_results', `${ev.id}_${studentId}`), result);
+    } catch(e) {
+      console.warn('Erreur sauvegarde résultat', e);
+      alert('❌ Erreur lors de la soumission. Vérifiez votre connexion et réessayez.\n\n' + e.message);
+      return;
+    }
+
+    try { sessionStorage.removeItem('_epDraft_'+ev.id); } catch(e){}
+
+    // Afficher résultat
+    const pct = maxScore>0?Math.round(score/maxScore*100):0;
+    const color = pct>=60?'#059669':pct>=40?'#d97706':'#dc2626';
+    const hasManualQs = ev.questions.some(q=>!['radio','checkbox','yesno'].includes(q.type));
+
+    document.getElementById('eval-pub-timer-display').textContent = '';
+
+    // Bloc anti-triche dans le résultat
+    const cheatBlock = _tabSwitchCount > 0
+      ? `<div style="background:#fee2e2;border:1.5px solid #fca5a5;border-radius:12px;padding:10px 14px;margin-top:12px;font-size:.8rem;font-weight:700;color:#dc2626;">⚠️ ${_tabSwitchCount} sortie${_tabSwitchCount>1?'s':''} d'onglet détectée${_tabSwitchCount>1?'s':''} pendant l'évaluation.</div>`
+      : '';
+
+    // Bloc corrigé (Fonctionnalité 8)
+    let corrigeBlock = '';
+    if (ev.showCorrige) {
+      const icons = {radio:'🔘',yesno:'✅',checkbox:'☑️',text:'✏️',textarea:'📝'};
+      corrigeBlock = `<div style="margin-top:18px;text-align:left;max-width:560px;margin-left:auto;margin-right:auto">
+        <div style="font-weight:700;font-size:.9rem;color:#004d2e;margin-bottom:10px;border-bottom:2px solid #86efac;padding-bottom:6px;">📋 Corrigé</div>
+        ${ev.questions.map((q,i) => {
+          const userAns = answers[q.id];
+          let corrStr = '';
+          if (q.type==='radio'||q.type==='yesno') {
+            const correctOpt = q.correctAnswers && q.correctAnswers.length>0 ? q.options[q.correctAnswers[0]] : null;
+            const userOpt = (userAns !== undefined && userAns !== null && q.options[userAns]) ? q.options[userAns] : '—';
+            const isOk = q.correctAnswers && q.correctAnswers.includes(parseInt(userAns));
+            corrStr = `<div style="font-size:.78rem;margin-top:4px">Ta réponse : <strong style="color:${isOk?'#059669':'#dc2626'}">${userOpt}</strong>${correctOpt&&!isOk?' · Bonne réponse : <strong style="color:#059669">'+correctOpt+'</strong>':''}</div>`;
+          } else if (q.type==='checkbox') {
+            const arr = Array.isArray(userAns)?userAns:[];
+            const isOk = q.correctAnswers && q.correctAnswers.sort().join(',')===arr.sort().join(',');
+            const correctOpts = q.correctAnswers ? q.correctAnswers.map(oi=>q.options[oi]).join(', ') : '';
+            const userOpts = arr.map(oi=>q.options[oi]).join(', ')||'—';
+            corrStr = `<div style="font-size:.78rem;margin-top:4px">Tes réponses : <strong style="color:${isOk?'#059669':'#dc2626'}">${userOpts}</strong>${correctOpts&&!isOk?' · Bonnes réponses : <strong style="color:#059669">'+correctOpts+'</strong>':''}</div>`;
+          } else if (q.expectedAnswer && q.expectedAnswer.trim()) {
+            const isOk = (userAns||'').trim().toLowerCase().replace(/\s+/g,' ')===q.expectedAnswer.trim().toLowerCase().replace(/\s+/g,' ');
+            corrStr = `<div style="font-size:.78rem;margin-top:4px">Ta réponse : <strong style="color:${isOk?'#059669':'#dc2626'}">${userAns||'—'}</strong>${!isOk?' · Réponse attendue : <strong style="color:#059669">'+q.expectedAnswer+'</strong>':''}</div>`;
+          } else {
+            corrStr = `<div style="font-size:.78rem;color:#94a3b8;margin-top:4px">Correction manuelle par le professeur.</div>`;
+          }
+          return `<div style="background:#f8fafc;border-radius:10px;padding:10px 12px;margin-bottom:8px;border-left:3px solid #004d2e">
+            <div style="font-size:.82rem;font-weight:700;color:#1e293b">${i+1}. ${epEsc(q.title||'')}</div>
+            ${corrStr}
+          </div>`;
+        }).join('')}
+      </div>`;
+    }
+
+    if (hasManualQs && !result.published && !ev.showCorrige) {
+      body.innerHTML = `
+      <div style="text-align:center;padding:48px 20px;">
+        <div style="font-size:3.5rem;margin-bottom:16px;">⏳</div>
+        <div style="font-size:1.2rem;font-weight:800;color:#d97706;margin-bottom:10px;">Copie soumise !</div>
+        <div style="background:#fffbeb;border:1.5px solid #fcd116;border-radius:16px;padding:16px;margin-bottom:20px;max-width:360px;margin-left:auto;margin-right:auto">
+          <div style="font-size:.9rem;font-weight:700;color:#92400e;margin-bottom:8px;">📋 En attente de correction</div>
+          <div style="font-size:.82rem;color:#78350f;line-height:1.6">Ton évaluation contient des questions à correction manuelle.<br><br><strong>Le professeur te communiquera ta note.</strong></div>
+        </div>
+        <div style="font-size:.78rem;color:#94a3b8;">✅ Tes réponses ont bien été enregistrées.</div>
+        ${cheatBlock}
+      </div>`;
+    } else {
+      body.innerHTML = `
+      <div style="text-align:center;padding:40px 20px;max-width:560px;margin:0 auto;">
+        <div style="font-size:3.5rem;margin-bottom:16px;">${pct>=60?'🎉':pct>=40?'📚':'💪'}</div>
+        <div style="font-size:1.4rem;font-weight:900;color:${color};font-family:'Space Mono',monospace;margin-bottom:6px;">${score} / ${maxScore}</div>
+        <div style="font-size:2rem;font-weight:900;color:${color};margin-bottom:10px;">${pct}%</div>
+        <div style="font-size:.82rem;color:#64748b;margin-bottom:6px;">${nom}</div>
+        <div style="font-size:.78rem;color:#94a3b8;">${auto?'⏱ Temps écoulé — formulaire soumis automatiquement.':'✅ Réponses enregistrées.'}</div>
+        ${!fullyAuto&&!ev.showCorrige?'<div style="font-size:.78rem;color:#64748b;margin-top:6px;">📋 Certaines questions seront corrigées par le professeur.</div>':''}
+        ${cheatBlock}
+        ${corrigeBlock}
+      </div>`;
+    }
+
+    } catch(err) {
+      // Si une erreur inattendue survient, on ne reste plus bloqué silencieusement
+      console.error('Erreur _epSubmit', err);
+      window._epSubmitting = false;
+      const btn2 = document.querySelector('.eval-pub-submit');
+      if (btn2) { btn2.disabled = false; btn2.style.opacity = '1'; btn2.textContent = "📤 Soumettre l'évaluation"; }
+      alert('❌ Une erreur est survenue pendant la soumission.\n\nDétail technique : ' + (err && err.message ? err.message : err) + '\n\nVérifiez votre connexion et réessayez. Si le problème persiste, faites une capture d\'écran de ce message pour le professeur.');
+    }
+  };
+})();
+// =====================================================================
+
+// =====================================================================
+// DEVOIR PUBLIC — accès via lien ?devoir=CODE
+// =====================================================================
+(async function initPublicDevoir() {
+  const params = new URLSearchParams(window.location.search);
+  const devoirCode = params.get('devoir');
+  if (!devoirCode) return;
+
+  const overlay = document.getElementById('devoir-public-overlay');
+  const body    = document.getElementById('dv-pub-body');
+  overlay.classList.add('open');
+
+  function dvEsc(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\"/g,'&quot;'); }
+
+  body.innerHTML = '<div style="text-align:center;padding:40px;color:#64748b;">⏳ Chargement du devoir…</div>';
+  let dv = null, dvId = null;
+  try {
+    const snap = await getDocs(collection(db, 'devoirs'));
+    const found = snap.docs.find(d => String(d.data().accessCode) === String(devoirCode));
+    if (found) { dv = found.data(); dvId = found.id; }
+  } catch(e) {
+    body.innerHTML = '<div style="text-align:center;padding:40px;color:#dc2626;">❌ Erreur de connexion. Vérifiez votre connexion internet.</div>';
+    return;
+  }
+
+  if (!dv) {
+    body.innerHTML = `
+    <div style="text-align:center;padding:48px 20px;">
+      <div style="font-size:3rem;margin-bottom:16px;">⛔</div>
+      <div style="font-size:1.1rem;font-weight:700;color:#dc2626;margin-bottom:8px;">Devoir introuvable</div>
+      <div style="font-size:.85rem;color:#64748b;">Le lien est incorrect ou le devoir a été supprimé.</div>
+    </div>`;
+    return;
+  }
+
+  document.getElementById('dv-pub-title').textContent = '📒 ' + (dv.titre || 'Devoir');
+
+  const deadlineStr = dv.deadline ? `<div style="font-size:.78rem;color:#e67e22;margin-top:6px;">⏰ À rendre avant le ${new Date(dv.deadline).toLocaleDateString('fr-FR')}</div>` : '';
+
+  let photoBase64 = null;
+
+  function renderForm() {
+    body.innerHTML = `
+    <div class="eval-pub-card">
+      <h2 style="font-size:1.1rem;font-weight:700;color:#004d2e;margin-bottom:4px;">${dvEsc(dv.titre)}</h2>
+      <div style="font-size:.78rem;color:#64748b;margin-bottom:8px;">${dv.matiere?dvEsc(dv.matiere):''}${dv.matiere&&dv.niveau?' · ':''}${dv.niveau?dvEsc(dv.niveau):''}</div>
+      ${deadlineStr}
+      <img class="dv-pub-img" src="${dvEsc(dv.imageUrl)}" alt="Sujet du devoir">
+      ${(dv.images && dv.images.length > 1) ? dv.images.slice(1).map((url,idx)=>`<img class="dv-pub-img" src="${dvEsc(url)}" alt="Sujet du devoir – page ${idx+2}" style="margin-top:8px">`).join('') : ''}
+      ${dv.desc ? `<p style="font-size:.85rem;color:#334155;line-height:1.6;white-space:pre-wrap;">${dvEsc(dv.desc)}</p>` : ''}
+    </div>
+    <div class="eval-pub-card">
+      <h3 style="font-size:.9rem;font-weight:700;color:#004d2e;margin-bottom:10px;">📤 Envoyer votre réponse</h3>
+      <input id="dv-name-input" type="text" class="eval-pub-input" placeholder="Votre nom et prénom…" maxlength="60" style="margin-bottom:10px;">
+      <input id="dv-contact-input" type="text" class="eval-pub-input" placeholder="WhatsApp (ex: 622xxxxxx) ou e-mail" maxlength="80" style="margin-bottom:10px;">
+      <div style="font-size:.72rem;color:#94a3b8;margin-bottom:10px;">📲 Pour recevoir votre note après correction (facultatif)</div>
+      <label class="dv-pub-photobtn">
+        📷 <span id="dv-photo-label">Prendre / choisir une photo de votre réponse</span>
+        <input type="file" accept="image/*" id="dv-photo-input" style="display:none" onchange="window._dvLoadPhoto(this)">
+      </label>
+      <div id="dv-photo-preview" style="margin-top:10px;"></div>
+      <div id="dv-err" style="color:#dc2626;font-size:.78rem;margin-top:10px;display:none;"></div>
+      <button class="eval-pub-submit" onclick="window._dvSubmit()">✅ Envoyer ma réponse</button>
+    </div>`;
+  }
+
+  window._dvLoadPhoto = function(input) {
+    const file = input.files[0];
+    if (!file) return;
+    if (file.size > 4 * 1024 * 1024) {
+      document.getElementById('dv-err').textContent = '⚠️ Image trop lourde (max 4 Mo). Compressez-la avant de l\'envoyer.';
+      document.getElementById('dv-err').style.display = 'block';
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      photoBase64 = e.target.result;
+      document.getElementById('dv-photo-label').textContent = '✅ Photo sélectionnée — toucher pour changer';
+      document.getElementById('dv-photo-preview').innerHTML = `<img src="${photoBase64}" style="width:100%;border-radius:10px;display:block;">`;
+      document.getElementById('dv-err').style.display = 'none';
+    };
+    reader.readAsDataURL(file);
+  };
+
+  window._dvSubmit = async function() {
+    const nom = document.getElementById('dv-name-input').value.trim();
+    const contactInput = document.getElementById('dv-contact-input');
+    const contact = contactInput ? contactInput.value.trim() : '';
+    const errEl = document.getElementById('dv-err');
+    if (!nom) { errEl.textContent = '⚠️ Veuillez entrer votre nom.'; errEl.style.display = 'block'; return; }
+    if (!photoBase64) { errEl.textContent = '⚠️ Veuillez ajouter une photo de votre réponse.'; errEl.style.display = 'block'; return; }
+    errEl.style.display = 'none';
+    try {
+      await addDoc(collection(db, 'devoirs', dvId, 'reponses'), {
+        nom, contact, photoData: photoBase64, date: Date.now()
+      });
+      body.innerHTML = `
+      <div style="text-align:center;padding:48px 20px;">
+        <div style="font-size:3.5rem;margin-bottom:16px;">🎉</div>
+        <div style="font-size:1.1rem;font-weight:700;color:#004d2e;margin-bottom:8px;">Réponse envoyée !</div>
+        <div style="font-size:.85rem;color:#64748b;">Merci ${dvEsc(nom)}, votre réponse au devoir "${dvEsc(dv.titre)}" a bien été transmise au professeur.</div>
+      </div>`;
+    } catch(e) {
+      errEl.textContent = '❌ Erreur lors de l\'envoi : ' + e.message;
+      errEl.style.display = 'block';
+    }
+  };
+
+  renderForm();
+})();
+// =====================================================================
+</script>
+
+<script>
+let _sc = 0, _st = null;
+function secretClick() {
+  _sc++;
+  clearTimeout(_st);
+  if (_sc >= 5) {
+    _sc = 0;
+    window.location.href = 'admin.html';
+  } else {
+    _st = setTimeout(() => { _sc = 0; }, 2000);
+  }
+}
+
+function toggleMenu() {
+  const menu = document.getElementById('drop-menu');
+  const overlay = document.getElementById('drop-overlay');
+  const isOpen = menu.classList.contains('open');
+  if (isOpen) { menu.classList.remove('open'); overlay.classList.remove('open'); }
+  else { menu.classList.add('open'); overlay.classList.add('open'); }
+}
+
+function closeMenu() {
+  document.getElementById('drop-menu').classList.remove('open');
+  document.getElementById('drop-overlay').classList.remove('open');
+}
+
+function toggleDark() {
+  document.body.classList.toggle('dark-mode');
+  localStorage.setItem('dark', document.body.classList.contains('dark-mode') ? '1' : '0');
+}
+
+function doShare() {
+  if (navigator.share) {
+    navigator.share({ title: 'EtudierGN', text: 'La plateforme éducative guinéenne', url: window.location.href });
+  } else {
+    navigator.clipboard.writeText(window.location.href).then(() => {
+      alert('Lien copié !');
+    });
+  }
+}
+
+if (localStorage.getItem('dark') === '1') document.body.classList.add('dark-mode');
+</script>
+
+<script>
+// ---- SPLASH ----
+(function(){
+  const splash = document.getElementById('splash');
+  const today = new Date().toDateString();
+  const lastSeen = localStorage.getItem('splash_seen');
+  // Afficher seulement si première visite du jour
+  if(lastSeen === today){
+    splash.classList.add('hidden');
+    return;
+  }
+  localStorage.setItem('splash_seen', today);
+  // Disparaît après 2 secondes
+  setTimeout(() => splash.classList.add('hidden'), 2000);
+  // Clic pour passer
+  splash.addEventListener('click', () => splash.classList.add('hidden'));
+})();
+</script>
+
+<script>
+if('serviceWorker' in navigator){
+  navigator.serviceWorker.register('sw.js').catch(()=>{});
+}
+
+// ---- Détection connexion hors-ligne ----
+const offlineBar = document.getElementById('offline-bar');
+function updateOnlineStatus(){
+  if(!navigator.onLine){
+    offlineBar.classList.add('show');
+    // Décaler la topbar pour faire de la place
+    document.querySelector('.topbar').style.marginTop = '34px';
+  } else {
+    offlineBar.classList.remove('show');
+    document.querySelector('.topbar').style.marginTop = '';
+  }
+}
+window.addEventListener('online',  updateOnlineStatus);
+window.addEventListener('offline', updateOnlineStatus);
+updateOnlineStatus();
+</script>
+<script>
+// ===== INTERSTITIELLE PUBLICITAIRE AVANT TÉLÉCHARGEMENT =====
+let _dlUrl = '';
+let _dlCountdownTimer = null;
+let _dlAdLoaded = false; // évite de recharger la pub à chaque ouverture
+const DL_DELAY = 5; // secondes avant que le bouton se débloque
+
+function loadDlAd(){
+  if(_dlAdLoaded) return;
+  _dlAdLoaded = true;
+  const slot = document.getElementById('dl-ad-slot');
+  if(!slot) return;
+  slot.innerHTML = `<ins class="adsbygoogle"
+    style="display:block;width:100%;min-height:100px;"
+    data-ad-client="ca-pub-9367856999469399"
+    data-ad-slot="VOTRE_AD_SLOT_ICI"
+    data-ad-format="auto"
+    data-full-width-responsive="true"></ins>`;
+  try{ (window.adsbygoogle = window.adsbygoogle || []).push({}); }catch(e){ console.warn('AdSense non chargée', e); }
+}
+
+window.openDlInterstitial = function(url, titre, event) {
+  if(event) event.stopPropagation();
+  _dlUrl = url;
+  document.getElementById('dl-int-filename').textContent = '📄 ' + titre;
+  document.getElementById('dl-confirm-btn').disabled = true;
+  document.getElementById('dl-confirm-btn').textContent = '⏳ Patientez…';
+  document.getElementById('dl-interstitial').classList.add('open');
+  loadDlAd(); // charge la pub seulement maintenant, à la 1ère ouverture réelle
+  // Countdown
+  let remaining = DL_DELAY;
+  const cd = document.getElementById('dl-countdown');
+  cd.textContent = `Bouton disponible dans ${remaining}s`;
+  clearInterval(_dlCountdownTimer);
+  _dlCountdownTimer = setInterval(() => {
+    remaining--;
+    if(remaining <= 0) {
+      clearInterval(_dlCountdownTimer);
+      cd.textContent = '✅ Vous pouvez maintenant télécharger !';
+      const btn = document.getElementById('dl-confirm-btn');
+      btn.disabled = false;
+      btn.textContent = '📥 Télécharger maintenant';
+    } else {
+      cd.textContent = `Bouton disponible dans ${remaining}s`;
+    }
+  }, 1000);
+};
+
+window.onAdClicked = function() {
+  // Optionnel : ouvrir le lien publicitaire dans un nouvel onglet
+  // window.open('https://votre-lien-pub.com', '_blank');
+};
+
+window.confirmDownload = function() {
+  if(!_dlUrl) return;
+  // Ouvrir le PDF
+  window.open(_dlUrl, '_blank');
+  closeDlInterstitial();
+};
+
+window.closeDlInterstitial = function() {
+  clearInterval(_dlCountdownTimer);
+  document.getElementById('dl-interstitial').classList.remove('open');
+  _dlUrl = '';
+};
+</script>
+</body>
+</html>
