@@ -290,8 +290,9 @@ body{font-family:'Inter',sans-serif;background:#f2f3f5;color:#111;min-height:100
   <div class="gate-card">
     <div class="gi">🔐</div>
     <h2>Espace Admin</h2>
-    <p>Entrez le mot de passe pour gérer les ressources.</p>
-    <input type="password" id="f-pw" placeholder="Mot de passe" onkeydown="if(event.key==='Enter')doLogin()">
+    <p>Connectez-vous pour gérer les ressources.</p>
+    <input type="email" id="f-email" placeholder="Email" autocomplete="username" onkeydown="if(event.key==='Enter')document.getElementById('f-pw').focus()" style="margin-bottom:8px;">
+    <input type="password" id="f-pw" placeholder="Mot de passe" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()">
     <button class="btn-login" id="btn-login" onclick="doLogin()">Se connecter</button>
     <p class="pw-err" id="pw-err"></p>
     <a href="index.html" class="gate-back">← Retour au site</a>
@@ -766,6 +767,8 @@ body{font-family:'Inter',sans-serif;background:#f2f3f5;color:#111;min-height:100
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged }
+  from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 import { getFirestore, collection, addDoc, deleteDoc, doc, onSnapshot, orderBy, query, limit,
   serverTimestamp, setDoc, updateDoc, getDocs, increment }
   from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
@@ -779,37 +782,51 @@ const firebaseConfig = {
   appId: "1:197482090989:web:f82716bc4fe080017357e4"
 };
 
-const ADMIN_PW = 'BHDS123'; // ← Votre mot de passe admin
-
-const app = initializeApp(firebaseConfig);
-const db  = getFirestore(app);
+const app  = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db   = getFirestore(app);
 let items = [];
 let unsubscribe = null;
 
-// ---- LOGIN ----
+// ---- LOGIN (vraie authentification Firebase) ----
 window.doLogin = function() {
-  const pw  = document.getElementById('f-pw').value;
-  const err = document.getElementById('pw-err');
-  const btn = document.getElementById('btn-login');
-  if (pw === ADMIN_PW) {
+  const email = document.getElementById('f-email').value.trim();
+  const pw    = document.getElementById('f-pw').value;
+  const err   = document.getElementById('pw-err');
+  const btn   = document.getElementById('btn-login');
+  err.style.display = 'none';
+  btn.disabled = true;
+  btn.textContent = 'Connexion…';
+  signInWithEmailAndPassword(auth, email, pw)
+    .catch(() => {
+      err.textContent = '❌ Email ou mot de passe incorrect.';
+      err.style.display = 'block';
+      document.getElementById('f-pw').value = '';
+    })
+    .finally(() => {
+      btn.disabled = false;
+      btn.textContent = 'Se connecter';
+    });
+};
+
+// onAuthStateChanged pilote l'affichage gate/app, plus fiable que de le faire à la main
+onAuthStateChanged(auth, (user) => {
+  if (user) {
     document.getElementById('gate').classList.add('hidden');
     document.getElementById('app').classList.add('on');
     startListen();
   } else {
-    err.textContent = '❌ Mot de passe incorrect.';
-    err.style.display = 'block';
-    document.getElementById('f-pw').value = '';
-    document.getElementById('f-pw').focus();
+    document.getElementById('app').classList.remove('on');
+    document.getElementById('gate').classList.remove('hidden');
   }
-};
+});
 
 // ---- LOGOUT ----
 window.doLogout = function() {
   if (unsubscribe) { unsubscribe(); unsubscribe = null; }
   if (typeof convUnsubscribe === 'function') { convUnsubscribe(); convUnsubscribe = null; }
   if (typeof sessionsUnsubscribe === 'function') { sessionsUnsubscribe(); sessionsUnsubscribe = null; }
-  document.getElementById('app').classList.remove('on');
-  document.getElementById('gate').classList.remove('hidden');
+  signOut(auth);
   document.getElementById('f-pw').value = '';
   document.getElementById('pw-err').style.display = 'none';
   toast('👋 Déconnecté.');

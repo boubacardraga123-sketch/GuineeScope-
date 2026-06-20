@@ -682,6 +682,8 @@ body.dark-mode .drop-item:active{background:#2a2a2a;}
 <!-- Firebase SDK -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getAuth, signInAnonymously, onAuthStateChanged }
+  from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 import { getFirestore, collection, onSnapshot, orderBy, query, limit,
   addDoc, serverTimestamp, doc, updateDoc, setDoc, getDoc, getDocs, increment, where }
   from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
@@ -699,8 +701,19 @@ const firebaseConfig = {
 };
 // ======================================================
 
-const app = initializeApp(firebaseConfig);
-const db  = getFirestore(app);
+const app  = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db   = getFirestore(app);
+
+// Connexion anonyme silencieuse : invisible pour le visiteur, mais donne un
+// uid stable utilisé par les règles Firestore pour limiter chacun à ses propres
+// soumissions (devoirs, résultats d'évaluation, chat).
+let authReady = new Promise((resolve) => {
+  onAuthStateChanged(auth, (user) => {
+    if (user) resolve(user);
+  });
+});
+signInAnonymously(auth).catch((e) => console.error('Auth anonyme échouée :', e));
 
 let items = [];
 let currentCat = 'tout';
@@ -1908,6 +1921,8 @@ window.sendVisitorPhoto = async function(input) {
     };
 
     try {
+      const user = await authReady;
+      result.uid = user.uid;
       await setDoc(doc(db, 'eval_results', `${ev.id}_${studentId}`), result);
     } catch(e) {
       console.warn('Erreur sauvegarde résultat', e);
@@ -2094,8 +2109,9 @@ window.sendVisitorPhoto = async function(input) {
     if (!photoBase64) { errEl.textContent = '⚠️ Veuillez ajouter une photo de votre réponse.'; errEl.style.display = 'block'; return; }
     errEl.style.display = 'none';
     try {
+      const user = await authReady;
       await addDoc(collection(db, 'devoirs', dvId, 'reponses'), {
-        nom, contact, photoData: photoBase64, date: Date.now()
+        nom, contact, photoData: photoBase64, date: Date.now(), uid: user.uid
       });
       body.innerHTML = `
       <div style="text-align:center;padding:48px 20px;">
