@@ -1,8 +1,8 @@
-// =============================================
-// EtudierGN – Service Worker (Mode Hors-ligne)
+// =====================================================
+// EtudierGN — Service Worker (Mode Hors-ligne)
 // Compatible GitHub Pages /GuineeScope-/
 // + Monetag Push Notifications
-// =============================================
+// =====================================================
 
 // ---- MONETAG ----
 self.options = {
@@ -13,8 +13,8 @@ self.lary = ""
 importScripts('https://5gvci.com/act/files/service-worker.min.js?r=sw')
 
 // ---- CACHE EtudierGN ----
-const CACHE_NAME   = 'etudiergn-v3';
-const CACHE_STATIC = 'etudiergn-static-v3';
+const CACHE_NAME   = 'etudiergn-v4';
+const CACHE_STATIC = 'etudiergn-static-v4';
 
 const BASE = self.registration.scope;
 
@@ -57,6 +57,7 @@ self.addEventListener('fetch', event => {
   if (
     url.hostname.includes('firestore.googleapis.com') ||
     url.hostname.includes('firebase') ||
+    url.hostname.includes('googleapis.com') ||
     url.hostname.includes('gstatic.com/firebasejs')
   ) {
     event.respondWith(
@@ -108,7 +109,7 @@ self.addEventListener('fetch', event => {
     return;
   }
 
-  // 7. Fichiers locaux → réseau d'abord
+  // 7. Fichiers locaux → réseau d'abord (toujours frais, jamais de cache HTTP intermédiaire)
   if (url.origin === self.location.origin) {
     event.respondWith(networkFirstLocal(event.request));
     return;
@@ -137,7 +138,9 @@ async function cacheFirst(request, cacheName) {
 
 async function networkFirstLocal(request) {
   try {
-    const response = await fetch(request);
+    // cache: 'no-store' force le navigateur à ignorer son cache HTTP
+    // et à toujours redemander la dernière version au serveur.
+    const response = await fetch(request, { cache: 'no-store' });
     if (response && response.status === 200) {
       const cache = await caches.open(CACHE_STATIC);
       cache.put(request, response.clone());
