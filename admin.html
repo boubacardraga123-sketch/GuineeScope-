@@ -2118,6 +2118,8 @@ window.sendAdminEval = async function() {
   // Synchroniser les titres depuis le DOM (copier-coller Android peut rater oninput)
   const qTitleInputs = document.querySelectorAll('#aeb-questions input[placeholder^="✏️ Intitulé"]');
   qTitleInputs.forEach((inp, i) => { if (_adminEvalQuestions[i]) _adminEvalQuestions[i].title = inp.value; });
+  const qPointsInputs = document.querySelectorAll('#aeb-questions input[type="number"][title="Points"]');
+  qPointsInputs.forEach((inp, i) => { if (_adminEvalQuestions[i]) _adminEvalQuestions[i].points = Math.max(1, parseInt(inp.value)||1); });
 
   if (_adminEvalQuestions.length===0) { alert('Ajoutez au moins une question !'); return; }
 
