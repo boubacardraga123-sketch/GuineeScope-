@@ -290,9 +290,8 @@ body{font-family:'Inter',sans-serif;background:#f2f3f5;color:#111;min-height:100
   <div class="gate-card">
     <div class="gi">🔐</div>
     <h2>Espace Admin</h2>
-    <p>Connectez-vous pour gérer les ressources.</p>
-    <input type="email" id="f-email" placeholder="Email admin" autocomplete="email" onkeydown="if(event.key==='Enter')doLogin()">
-    <input type="password" id="f-pw" placeholder="Mot de passe" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()">
+    <p>Entrez le mot de passe pour gérer les ressources.</p>
+    <input type="password" id="f-pw" placeholder="Mot de passe" onkeydown="if(event.key==='Enter')doLogin()">
     <button class="btn-login" id="btn-login" onclick="doLogin()">Se connecter</button>
     <p class="pw-err" id="pw-err"></p>
     <a href="index.html" class="gate-back">← Retour au site</a>
@@ -307,7 +306,6 @@ body{font-family:'Inter',sans-serif;background:#f2f3f5;color:#111;min-height:100
       <span class="admin-badge">ADMIN</span>
     </div>
     <div class="topbar-right">
-      <span class="user-email" id="admin-user-email"></span>
       <button class="btn-topbar" onclick="doLogout()">🚪 Déconnexion</button>
     </div>
   </div>
@@ -771,11 +769,9 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/fireba
 import { getFirestore, collection, addDoc, deleteDoc, doc, onSnapshot, orderBy, query, limit,
   serverTimestamp, setDoc, updateDoc, getDocs, increment }
   from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged }
-  from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyAUFd6H0y--KO9O_lau3sr6H0lGxmfgB9M",
+  apiKey: "AIzaSyAUFd6H0y--K090_lau3sr6H0lGxmfgB9M",
   authDomain: "etudier-gn.firebaseapp.com",
   projectId: "etudier-gn",
   storageBucket: "etudier-gn.firebasestorage.app",
@@ -783,66 +779,41 @@ const firebaseConfig = {
   appId: "1:197482090989:web:f82716bc4fe080017357e4"
 };
 
-const app  = initializeApp(firebaseConfig);
-const db   = getFirestore(app);
-const auth = getAuth(app);
+const ADMIN_PW = 'BHDS123'; // ← Votre mot de passe admin
+
+const app = initializeApp(firebaseConfig);
+const db  = getFirestore(app);
 let items = [];
 let unsubscribe = null;
 
 // ---- LOGIN ----
-window.doLogin = async function() {
-  const email = document.getElementById('f-email').value.trim();
-  const pw    = document.getElementById('f-pw').value;
-  const err   = document.getElementById('pw-err');
-  const btn   = document.getElementById('btn-login');
-  if (!email || !pw) {
-    err.textContent = '⚠️ Veuillez remplir l\'email et le mot de passe.';
-    err.style.display = 'block'; return;
-  }
-  btn.disabled = true; btn.textContent = 'Connexion…';
-  err.style.display = 'none';
-  try {
-    await signInWithEmailAndPassword(auth, email, pw);
-    // onAuthStateChanged prend le relais
-  } catch(e) {
-    const msgs = {
-      'auth/invalid-credential':   '❌ Email ou mot de passe incorrect.',
-      'auth/user-not-found':       '❌ Aucun compte trouvé pour cet email.',
-      'auth/wrong-password':       '❌ Mot de passe incorrect.',
-      'auth/invalid-email':        '❌ Format d\'email invalide.',
-      'auth/too-many-requests':    '⚠️ Trop de tentatives. Réessayez plus tard.',
-    };
-    err.textContent = msgs[e.code] || ('❌ Erreur : ' + e.message);
+window.doLogin = function() {
+  const pw  = document.getElementById('f-pw').value;
+  const err = document.getElementById('pw-err');
+  const btn = document.getElementById('btn-login');
+  if (pw === ADMIN_PW) {
+    document.getElementById('gate').classList.add('hidden');
+    document.getElementById('app').classList.add('on');
+    startListen();
+  } else {
+    err.textContent = '❌ Mot de passe incorrect.';
     err.style.display = 'block';
     document.getElementById('f-pw').value = '';
+    document.getElementById('f-pw').focus();
   }
-  btn.disabled = false; btn.textContent = 'Se connecter';
 };
 
 // ---- LOGOUT ----
-window.doLogout = async function() {
+window.doLogout = function() {
   if (unsubscribe) { unsubscribe(); unsubscribe = null; }
   if (typeof convUnsubscribe === 'function') { convUnsubscribe(); convUnsubscribe = null; }
   if (typeof sessionsUnsubscribe === 'function') { sessionsUnsubscribe(); sessionsUnsubscribe = null; }
-  await signOut(auth);
+  document.getElementById('app').classList.remove('on');
+  document.getElementById('gate').classList.remove('hidden');
+  document.getElementById('f-pw').value = '';
+  document.getElementById('pw-err').style.display = 'none';
   toast('👋 Déconnecté.');
 };
-
-// ---- AUTH STATE ----
-onAuthStateChanged(auth, user => {
-  if (user) {
-    document.getElementById('gate').classList.add('hidden');
-    document.getElementById('app').classList.add('on');
-    const emailEl = document.getElementById('admin-user-email');
-    if (emailEl) emailEl.textContent = user.email;
-    startListen();
-  } else {
-    document.getElementById('app').classList.remove('on');
-    document.getElementById('gate').classList.remove('hidden');
-    document.getElementById('f-pw').value = '';
-    document.getElementById('pw-err').style.display = 'none';
-  }
-});
 
 // ---- FIRESTORE ----
 function startListen() {
