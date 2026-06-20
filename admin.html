@@ -1751,7 +1751,17 @@ window.showEvalAdminResults = async function(evalId) {
     window._currentEvalForResults = { ev, results, maxScore };
     // Réutiliser le modal existant
     document.getElementById('modal-title').textContent = `📊 Résultats — ${aEsc(ev.title)}`;
-    let html = `<div style="font-size:.78rem;color:#64748b;margin-bottom:12px">${ev.questions.length} questions · ${maxScore} pts max · ${results.length} copie(s)</div>`;
+    let html = `<div style="font-size:.78rem;color:#64748b;margin-bottom:8px">${ev.questions.length} questions · <span id="eval-res-maxscore-label">${maxScore} pts max</span> · ${results.length} copie(s)</div>
+    <button onclick="window._toggleEditPoints()" style="width:100%;background:#eff6ff;color:#1e40af;border:1.5px solid #93c5fd;border-radius:8px;padding:7px;font-size:.78rem;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;margin-bottom:10px">✏️ Modifier le barème (points par question)</button>
+    <div id="eval-edit-points-panel" style="display:none;background:#f8fafc;border:1.5px solid #e2e8f0;border-radius:10px;padding:10px;margin-bottom:12px">
+      ${ev.questions.map((q,qi)=>`
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+        <div style="flex:1;font-size:.8rem;color:#334155;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${qi+1}. ${aEsc(q.title||'Question')}</div>
+        <input type="number" id="ep-pts-${qi}" value="${q.points}" min="1" max="100" style="width:55px;border:1.5px solid #e2e8f0;border-radius:7px;padding:5px 6px;text-align:center;font-family:'Inter',sans-serif;font-size:.85rem;outline:none">
+        <span style="font-size:.72rem;color:#94a3b8">pts</span>
+      </div>`).join('')}
+      <button onclick="window._saveEditedPoints()" style="width:100%;background:#004d2e;color:#FCD116;border:none;border-radius:8px;padding:8px;font-size:.82rem;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;margin-top:4px">💾 Appliquer le nouveau barème</button>
+    </div>`;
     if(!results.length){ html += '<div style="text-align:center;color:#94a3b8;padding:20px;font-size:.85rem">Aucune réponse soumise.</div>'; }
     else {
       // Bouton envoyer tous les résultats
@@ -1932,6 +1942,55 @@ window._sendAllResults = function() {
   }
   sendNext();
 };
+window._toggleEditPoints = function() {
+  const panel = document.getElementById("eval-edit-points-panel");
+  if (panel) panel.style.display = panel.style.display === "none" ? "block" : "none";
+};
+
+window._saveEditedPoints = async function() {
+  const ctx = window._currentEvalForResults;
+  if (!ctx) return;
+  const { ev, results } = ctx;
+  const newQuestions = ev.questions.map((q, qi) => {
+    const inp = document.getElementById("ep-pts-"+qi);
+    const pts = inp ? Math.max(1, parseInt(inp.value)||1) : q.points;
+    return { ...q, points: pts };
+  });
+  const newMaxScore = newQuestions.reduce((s,q)=>s+q.points, 0);
+  try {
+    await updateDoc(doc(db, "evals", String(ev.id)), { questions: newQuestions });
+    ev.questions = newQuestions;
+    ctx.maxScore = newMaxScore;
+    const lbl = document.getElementById("eval-res-maxscore-label");
+    if (lbl) lbl.textContent = newMaxScore + " pts max";
+    results.forEach((r, ri) => {
+      const pct = newMaxScore>0?Math.round(r.score/newMaxScore*100):0;
+      const col = pct>=60?"#059669":pct>=40?"#d97706":"#dc2626";
+      const scoreEl = document.getElementById("eval-res-score-"+ri);
+      const pctEl   = document.getElementById("eval-res-pct-"+ri);
+      if (scoreEl) { scoreEl.textContent = r.score+"/"+newMaxScore; scoreEl.style.color = col; }
+      if (pctEl)   { pctEl.textContent   = pct+"%";                 pctEl.style.color   = col; }
+      const sendEl = document.getElementById("eval-res-send-"+ri);
+      if (sendEl) {
+        const appre2 = pct>=80?"Excellent 🌟":pct>=60?"Bien 👍":pct>=40?"Assez bien 📚":"À améliorer 💪";
+        const msgNote2 = encodeURIComponent("Bonjour "+(r.studentName||"")+",\n\nVoici votre résultat pour l'évaluation \""+ev.title+"\" :\n\n📊 Note : "+r.score+"/"+newMaxScore+" ("+pct+"%)\n🏅 Appréciation : "+appre2+"\n\nBon courage ! — Collection BHDS");
+        const contact2 = (r.studentContact||"").trim();
+        if (contact2) {
+          if (contact2.includes("@")) {
+            const subj2 = encodeURIComponent("Résultat — "+ev.title);
+            sendEl.innerHTML = "<a href=\"mailto:"+encodeURIComponent(contact2)+"?subject="+subj2+"&body="+msgNote2+"\" style=\"display:inline-block;margin-top:6px;background:#1d4ed8;color:#fff;border:none;border-radius:8px;padding:5px 12px;font-size:.72rem;font-weight:700;cursor:pointer;text-decoration:none;\">📧 Envoyer par e-mail</a>";
+          } else {
+            const phone2 = contact2.replace(/\D/g,"");
+            sendEl.innerHTML = "<a href=\"https://wa.me/"+phone2+"?text="+msgNote2+"\" target=\"_blank\" style=\"display:inline-block;margin-top:6px;background:#25d366;color:#fff;border:none;border-radius:8px;padding:5px 12px;font-size:.72rem;font-weight:700;cursor:pointer;text-decoration:none;\">📲 Envoyer sur WhatsApp</a>";
+          }
+        }
+      }
+    });
+    document.getElementById("eval-edit-points-panel").style.display = "none";
+    toast("✅ Barème mis à jour ! Les boutons WhatsApp sont régénérés.");
+  } catch(e) { toast("❌ Erreur : " + e.message); }
+};
+
 window.closeMBg = function() {
   const m = document.getElementById('modal-bg');
   if(m) m.style.display='none';
@@ -2118,8 +2177,6 @@ window.sendAdminEval = async function() {
   // Synchroniser les titres depuis le DOM (copier-coller Android peut rater oninput)
   const qTitleInputs = document.querySelectorAll('#aeb-questions input[placeholder^="✏️ Intitulé"]');
   qTitleInputs.forEach((inp, i) => { if (_adminEvalQuestions[i]) _adminEvalQuestions[i].title = inp.value; });
-  const qPointsInputs = document.querySelectorAll('#aeb-questions input[type="number"][title="Points"]');
-  qPointsInputs.forEach((inp, i) => { if (_adminEvalQuestions[i]) _adminEvalQuestions[i].points = Math.max(1, parseInt(inp.value)||1); });
 
   if (_adminEvalQuestions.length===0) { alert('Ajoutez au moins une question !'); return; }
 
