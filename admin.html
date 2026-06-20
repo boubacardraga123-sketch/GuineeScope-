@@ -1,0 +1,2414 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EtudierGN – Admin</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+body{font-family:'Inter',sans-serif;background:#f2f3f5;color:#111;min-height:100vh;max-width:480px;margin:0 auto;}
+@media(min-width:768px){
+  body{max-width:100%;}
+  #gate .gate-card{max-width:420px;}
+  .topbar{max-width:960px;margin:0 auto;}
+  .admin-tabs{max-width:960px;margin:0 auto;}
+  #admin-content{max-width:960px;margin:0 auto;}
+  .stats-row{grid-template-columns:repeat(7,1fr);}
+  .frow{grid-template-columns:1fr 1fr 1fr;}
+  .big-stats{grid-template-columns:repeat(4,1fr);}
+  .big-stats-3{grid-template-columns:repeat(3,1fr);}
+  .chat-admin-layout{height:calc(100vh - 130px);}
+  .chat-sessions-panel{width:220px;}
+  .bottom-nav{max-width:960px;}
+  .dash-section{display:grid;grid-template-columns:1fr 1fr;gap:0 16px;}
+  .dash-section .big-stats{grid-column:1/-1;}
+}
+
+/* GATE */
+#gate{position:fixed;inset:0;z-index:999;background:#f2f3f5;display:flex;align-items:center;justify-content:center;padding:1.2rem;}
+#gate.hidden{display:none;}
+.gate-card{background:#fff;border-radius:16px;padding:2rem 1.5rem;width:100%;max-width:360px;text-align:center;box-shadow:0 4px 24px rgba(0,0,0,.08);}
+.gate-card .gi{font-size:2.5rem;margin-bottom:.6rem;}
+.gate-card h2{font-size:1.1rem;font-weight:700;margin-bottom:.3rem;}
+.gate-card p{font-size:.82rem;color:#888;margin-bottom:1.2rem;}
+.gate-card input{width:100%;border:1.5px solid #e5e7eb;background:#f9fafb;font-family:inherit;font-size:.95rem;padding:.7rem 1rem;border-radius:10px;outline:none;margin-bottom:.8rem;color:#111;}
+.gate-card input:focus{border-color:#e63946;}
+.btn-login{width:100%;background:#e63946;color:#fff;border:none;font-family:inherit;font-size:.95rem;font-weight:700;padding:.75rem;border-radius:10px;cursor:pointer;transition:.2s;}
+.btn-login:active{background:#c1121f;}
+.btn-login:disabled{opacity:.5;cursor:not-allowed;}
+.gate-back{display:block;margin-top:.75rem;font-size:.8rem;color:#888;text-decoration:none;}
+.pw-err{color:#ef4444;font-size:.78rem;margin-top:.5rem;display:none;background:#fff0f0;padding:.5rem .8rem;border-radius:6px;}
+
+/* APP */
+#app{display:none;}
+#app.on{display:block;}
+
+/* TOPBAR */
+.topbar{position:sticky;top:0;z-index:100;background:#fff;border-bottom:1px solid #e5e7eb;display:flex;align-items:center;justify-content:space-between;padding:0 12px;height:50px;}
+.logo{font-size:1.1rem;font-weight:700;color:#111;}.logo span{color:#e63946;}
+.admin-badge{background:#e63946;color:#fff;font-size:.6rem;font-weight:700;padding:2px 6px;border-radius:3px;vertical-align:middle;}
+.topbar-right{display:flex;align-items:center;gap:6px;}
+.user-email{font-size:.7rem;color:#888;max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.btn-topbar{background:#f2f3f5;border:none;font-family:inherit;font-size:.78rem;padding:.38rem .8rem;border-radius:20px;cursor:pointer;color:#555;}
+
+/* STATS */
+.stats-row{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;padding:10px 10px 4px;}
+/* ===== PUBS ===== */
+.pub-card{background:#fff;margin:6px 10px;border-radius:12px;padding:14px;box-shadow:0 1px 4px rgba(0,0,0,.05);}
+.pub-card h3{font-size:.85rem;font-weight:700;color:#e63946;margin-bottom:12px;}
+.pub-list-item{background:#fff;margin:4px 10px;border-radius:10px;padding:10px 12px;display:flex;align-items:center;gap:10px;box-shadow:0 1px 3px rgba(0,0,0,.04);}
+.pub-list-thumb{width:60px;height:40px;object-fit:cover;border-radius:6px;background:#f2f3f5;flex-shrink:0;}
+.pub-list-thumb-ph{width:60px;height:40px;border-radius:6px;background:#f2f3f5;display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0;}
+.pub-list-info{flex:1;min-width:0;}
+.pub-list-title{font-size:.82rem;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.pub-list-url{font-size:.68rem;color:#aaa;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.pub-list-actions{display:flex;gap:6px;flex-shrink:0;}
+.toggle-pub-btn{font-size:.7rem;padding:.3rem .6rem;border:none;border-radius:6px;cursor:pointer;font-family:inherit;font-weight:600;}
+.toggle-pub-btn.on{background:#d1fae5;color:#065f46;}
+.toggle-pub-btn.off{background:#fee2e2;color:#991b1b;}
+.del-pub-btn{font-size:.7rem;padding:.3rem .6rem;border:none;border-radius:6px;cursor:pointer;font-family:inherit;background:#f2f3f5;color:#888;}
+.sc{background:#fff;border-radius:10px;padding:.6rem .3rem;text-align:center;}
+.sc .n{font-size:1.2rem;font-weight:700;color:#e63946;}
+.sc .l{font-size:.6rem;color:#aaa;margin-top:1px;}
+
+/* FORM */
+.form-card{background:#fff;margin:6px 10px;border-radius:12px;padding:14px;box-shadow:0 1px 4px rgba(0,0,0,.05);}
+.form-card h3{font-size:.85rem;font-weight:700;color:#e63946;margin-bottom:12px;}
+.frow{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;}
+.fg{display:flex;flex-direction:column;gap:4px;margin-bottom:8px;}
+.fg label{font-size:.72rem;color:#888;font-weight:600;}
+.fg input,.fg select,.fg textarea{border:1.5px solid #e5e7eb;background:#f9fafb;font-family:inherit;font-size:.85rem;padding:.6rem .8rem;border-radius:8px;outline:none;color:#111;}
+.fg input:focus,.fg select:focus,.fg textarea:focus{border-color:#e63946;background:#fff;}
+.fg textarea{resize:vertical;min-height:80px;line-height:1.6;}
+.fg .hint{font-size:.68rem;color:#aaa;}
+.btn-pub{background:#e63946;color:#fff;border:none;font-family:inherit;font-size:.88rem;font-weight:700;padding:.65rem 1.4rem;border-radius:8px;cursor:pointer;width:100%;margin-top:4px;}
+.btn-pub:disabled{opacity:.5;cursor:not-allowed;}
+.btn-fb{background:#1877f2;color:#fff;border:none;font-family:inherit;font-size:.85rem;font-weight:700;padding:.6rem 1.2rem;border-radius:8px;cursor:pointer;width:100%;margin-top:6px;display:none;}
+.btn-fb:active{background:#1558b0;}
+
+/* LIST */
+.list-head{font-size:.72rem;font-weight:700;color:#aaa;text-transform:uppercase;letter-spacing:.06em;padding:10px 12px 4px;}
+.item{background:#fff;margin:4px 10px;border-radius:10px;padding:10px 12px;display:flex;align-items:center;gap:10px;box-shadow:0 1px 3px rgba(0,0,0,.04);}
+.item-icon{font-size:1.3rem;flex-shrink:0;}
+.item-info{flex:1;min-width:0;}
+.item-title{font-size:.87rem;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.item-sub{font-size:.7rem;color:#aaa;margin-top:3px;display:flex;gap:8px;flex-wrap:wrap;}
+.ibadge{font-size:.6rem;font-weight:700;padding:2px 5px;border-radius:3px;text-transform:uppercase;}
+.ib-video{background:#1d3557;color:#fff;}
+.ib-cours{background:#1d3557;color:#fff;}
+.ib-exercice{background:#e63946;color:#fff;}
+.ib-image{background:#457b9d;color:#fff;}
+.ib-evenement{background:#e67e22;color:#fff;}
+.ib-annale{background:#6c3483;color:#fff;}
+.btn-del{background:#fff0f0;border:1px solid #fca5a5;color:#ef4444;font-family:inherit;font-size:.72rem;font-weight:600;padding:.35rem .7rem;border-radius:6px;cursor:pointer;flex-shrink:0;}
+.btn-del:active{background:#fee2e2;}
+.empty{text-align:center;color:#bbb;padding:2.5rem 1rem;font-size:.85rem;}
+.loading{text-align:center;padding:2rem;color:#aaa;font-size:.85rem;}
+.spinner{width:24px;height:24px;border:3px solid #f2f3f5;border-top-color:#e63946;border-radius:50%;animation:spin .7s linear infinite;margin:0 auto 8px;}
+@keyframes spin{to{transform:rotate(360deg);}}
+
+/* EDITEUR DE CONTENU RICHE */
+.rich-editor{border:1.5px solid #e5e7eb;border-radius:8px;background:#f9fafb;overflow:hidden;}
+.rich-editor-toolbar{display:flex;gap:6px;padding:7px 10px;background:#fff;border-bottom:1px solid #e5e7eb;flex-wrap:wrap;}
+.re-btn{background:#f2f3f5;border:1.5px solid #e5e7eb;font-family:inherit;font-size:.72rem;font-weight:600;
+  padding:.3rem .65rem;border-radius:6px;cursor:pointer;color:#333;white-space:nowrap;}
+.re-btn:active{background:#e5e7eb;}
+.re-blocks{display:flex;flex-direction:column;gap:8px;padding:10px;}
+.re-block{background:#fff;border:1.5px solid #e5e7eb;border-radius:8px;overflow:hidden;position:relative;}
+.re-block-head{display:flex;align-items:center;gap:6px;padding:5px 8px;background:#f9fafb;border-bottom:1px solid #f0f0f0;}
+.re-block-type{font-size:.65rem;font-weight:700;color:#888;text-transform:uppercase;}
+.re-block-del{margin-left:auto;background:#fff0f0;border:1px solid #fca5a5;color:#ef4444;
+  font-size:.65rem;padding:2px 7px;border-radius:4px;cursor:pointer;font-family:inherit;}
+.re-block textarea{width:100%;border:none;background:#fff;font-family:inherit;font-size:.84rem;
+  padding:8px 10px;outline:none;color:#111;resize:vertical;min-height:70px;line-height:1.6;}
+.re-block input[type=text]{width:100%;border:none;background:#fff;font-family:inherit;font-size:.82rem;
+  padding:8px 10px;outline:none;color:#111;}
+.re-block-preview{max-width:100%;max-height:120px;object-fit:cover;display:block;margin:0 auto 6px;}
+.re-block-move{display:flex;gap:4px;}
+.re-move-btn{background:#f2f3f5;border:1px solid #e5e7eb;font-size:.7rem;padding:2px 6px;
+  border-radius:4px;cursor:pointer;font-family:inherit;color:#555;}
+.re-empty{text-align:center;color:#bbb;font-size:.78rem;padding:1.5rem;display:none;}
+.re-empty.visible{display:block;}
+
+/* BOTTOM NAV */
+.bottom-nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;background:#fff;border-top:1px solid #e5e7eb;display:flex;z-index:100;}
+.bnav-item{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:8px 0;font-size:.62rem;color:#aaa;cursor:pointer;gap:2px;}
+.bnav-item.active{color:#e63946;}
+.bnav-icon{font-size:1.2rem;}
+
+/* TOAST */
+#toast{position:fixed;bottom:70px;left:50%;transform:translateX(-50%) translateY(20px);background:#333;color:#fff;font-size:.82rem;padding:.55rem 1.2rem;border-radius:20px;opacity:0;transition:.3s;z-index:999;white-space:nowrap;}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+.pb60{padding-bottom:60px;}
+@media(max-width:360px){.frow{grid-template-columns:1fr;}}
+
+/* TABS ADMIN */
+.admin-tabs{display:flex;border-bottom:2px solid #e5e7eb;background:#fff;margin-bottom:0;}
+.admin-tab{flex:1;text-align:center;padding:.65rem .5rem;font-size:.78rem;font-weight:600;
+  color:#aaa;border:none;background:none;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;}
+.admin-tab.active{color:#e63946;border-bottom-color:#e63946;}
+
+/* DASHBOARD */
+.dash-section{padding:10px;}
+.dash-card{background:#fff;border-radius:12px;padding:14px;margin-bottom:10px;box-shadow:0 1px 4px rgba(0,0,0,.05);}
+.dash-card h3{font-size:.82rem;font-weight:700;color:#555;margin-bottom:10px;display:flex;align-items:center;gap:5px;}
+.big-stats{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;}
+.big-stat{background:linear-gradient(135deg,#1d3557,#2a4a7f);border-radius:10px;padding:14px;color:#fff;text-align:center;}
+.big-stat.red{background:linear-gradient(135deg,#e63946,#c1121f);}
+.big-stat .bn{font-size:2rem;font-weight:700;}
+.big-stat .bl{font-size:.7rem;opacity:.8;margin-top:2px;}
+.type-bars{display:flex;flex-direction:column;gap:6px;}
+.type-bar-row{display:flex;align-items:center;gap:8px;font-size:.78rem;}
+.type-bar-label{width:70px;color:#555;font-weight:500;}
+.type-bar-track{flex:1;background:#f2f3f5;border-radius:10px;height:8px;overflow:hidden;}
+.type-bar-fill{height:100%;border-radius:10px;transition:.5s;}
+.type-bar-count{width:20px;text-align:right;color:#888;font-weight:600;}
+.recent-list{display:flex;flex-direction:column;gap:6px;}
+.recent-item{display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid #f5f5f5;}
+.recent-item:last-child{border:none;}
+.recent-icon{font-size:1.1rem;}
+.recent-info{flex:1;min-width:0;}
+.recent-title{font-size:.8rem;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.recent-meta{font-size:.68rem;color:#aaa;}
+
+/* COMMENTAIRES ADMIN */
+.com-filter{display:flex;gap:6px;padding:8px 10px;flex-wrap:wrap;}
+.com-chip{background:#f2f3f5;border:1.5px solid #e5e7eb;color:#888;font-family:inherit;
+  font-size:.72rem;padding:.3rem .7rem;border-radius:20px;cursor:pointer;}
+.com-chip.active{background:#e63946;border-color:#e63946;color:#fff;font-weight:600;}
+.com-card{background:#fff;margin:4px 10px;border-radius:10px;padding:10px 12px;
+  box-shadow:0 1px 3px rgba(0,0,0,.04);}
+.com-resource{font-size:.7rem;color:#e63946;font-weight:700;margin-bottom:3px;}
+.com-author{font-size:.78rem;font-weight:700;color:#333;}
+.com-text{font-size:.8rem;color:#555;margin-top:2px;line-height:1.4;}
+.com-date{font-size:.65rem;color:#aaa;margin-top:3px;}
+.com-actions{display:flex;gap:6px;margin-top:6px;}
+.btn-del-com{background:#fff0f0;border:1px solid #fca5a5;color:#ef4444;font-family:inherit;
+  font-size:.7rem;padding:.28rem .65rem;border-radius:5px;cursor:pointer;}
+.no-comments{text-align:center;color:#bbb;padding:2rem;font-size:.85rem;}
+
+/* STATS VUES/LIKES */
+.stat-pill{display:inline-flex;align-items:center;gap:3px;font-size:.68rem;font-weight:600;
+  padding:2px 7px;border-radius:10px;margin-right:4px;}
+.stat-views{background:#e8f0fe;color:#1d3557;}
+.stat-likes{background:#fff0f0;color:#e63946;}
+.stats-tab-section{padding:10px;}
+.stats-card{background:#fff;border-radius:12px;padding:14px;margin-bottom:10px;box-shadow:0 1px 4px rgba(0,0,0,.05);}
+.stats-card h3{font-size:.82rem;font-weight:700;color:#555;margin-bottom:10px;display:flex;align-items:center;gap:5px;}
+.rank-item{display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid #f5f5f5;}
+.rank-item:last-child{border:none;}
+.rank-num{width:22px;height:22px;border-radius:50%;background:#f2f3f5;font-size:.7rem;font-weight:700;
+  color:#888;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.rank-num.gold{background:#ffd700;color:#7a5c00;}
+.rank-num.silver{background:#c0c0c0;color:#555;}
+.rank-num.bronze{background:#cd7f32;color:#fff;}
+.rank-info{flex:1;min-width:0;}
+.rank-title{font-size:.82rem;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.rank-meta{font-size:.68rem;color:#aaa;margin-top:1px;}
+.rank-stats{display:flex;gap:4px;flex-shrink:0;}
+.big-stats-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:10px;}
+.big-stat.blue{background:linear-gradient(135deg,#457b9d,#1d3557);}
+.reset-btn{background:#fff0f0;border:1px solid #fca5a5;color:#ef4444;font-family:inherit;
+  font-size:.72rem;font-weight:600;padding:.35rem .8rem;border-radius:6px;cursor:pointer;margin-top:8px;}
+
+/* ===== CHAT ADMIN ===== */
+.chat-admin-layout{display:flex;height:calc(100vh - 160px);min-height:300px;}
+.chat-sessions-panel{width:140px;border-right:1px solid #e5e7eb;overflow-y:auto;flex-shrink:0;background:#fafafa;}
+.chat-session-item{padding:9px 10px;cursor:pointer;border-bottom:1px solid #f0f0f0;position:relative;}
+.chat-session-item:active,.chat-session-item.selected{background:#fff0f0;}
+.csi-name{font-size:.8rem;font-weight:700;color:#111;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.csi-preview{font-size:.68rem;color:#aaa;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:1px;}
+.csi-badge{position:absolute;top:6px;right:6px;background:#e63946;color:#fff;font-size:.55rem;
+  font-weight:700;min-width:15px;height:15px;border-radius:8px;display:flex;align-items:center;justify-content:center;padding:0 3px;}
+.chat-conv-panel{flex:1;display:flex;flex-direction:column;min-width:0;}
+.conv-head{padding:8px 12px;border-bottom:1px solid #f0f0f0;background:#fff;display:flex;align-items:center;gap:8px;}
+.conv-head-name{font-size:.88rem;font-weight:700;color:#111;flex:1;}
+.conv-head-sub{font-size:.65rem;color:#aaa;}
+.conv-messages{flex:1;overflow-y:auto;padding:10px 12px;display:flex;flex-direction:column;gap:7px;background:#f9fafb;}
+.conv-msg img{max-width:100%;border-radius:8px;margin-top:4px;display:block;cursor:pointer;}
+.conv-msg{max-width:82%;padding:7px 10px;border-radius:12px;font-size:.82rem;line-height:1.4;word-break:break-word;}
+.conv-msg.visitor{background:#fff;color:#111;align-self:flex-start;border-bottom-left-radius:3px;
+  box-shadow:0 1px 3px rgba(0,0,0,.06);}
+.conv-msg.admin{background:#e63946;color:#fff;align-self:flex-end;border-bottom-right-radius:3px;}
+.conv-msg-time{font-size:.6rem;opacity:.55;margin-top:2px;}
+.conv-msg.admin .conv-msg-time{text-align:right;}
+.conv-msg-sender{font-size:.65rem;font-weight:700;opacity:.7;margin-bottom:2px;}
+.conv-empty{color:#bbb;font-size:.78rem;text-align:center;padding:2rem .5rem;align-self:center;}
+.conv-form{display:flex;gap:6px;padding:8px 10px;border-top:1px solid #e5e7eb;background:#fff;}
+.conv-form input{flex:1;border:1.5px solid #e5e7eb;background:#f9fafb;font-family:inherit;
+  font-size:.82rem;padding:.45rem .8rem;border-radius:20px;outline:none;color:#111;}
+.conv-form input:focus{border-color:#e63946;}
+.conv-send-btn{background:#e63946;border:none;color:#fff;width:34px;height:34px;border-radius:50%;
+  font-size:.95rem;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.chat-no-select{display:flex;align-items:center;justify-content:center;flex:1;color:#bbb;font-size:.82rem;flex-direction:column;gap:6px;}
+.chat-tab-badge{background:#e63946;color:#fff;font-size:.55rem;font-weight:700;
+  min-width:15px;height:15px;border-radius:8px;display:inline-flex;align-items:center;justify-content:center;
+  padding:0 3px;margin-left:3px;vertical-align:middle;}
+</style>
+</head>
+<body>
+
+<!-- GATE LOGIN -->
+<div id="gate">
+  <div class="gate-card">
+    <div class="gi">🔐</div>
+    <h2>Espace Admin</h2>
+    <p>Entrez le mot de passe pour gérer les ressources.</p>
+    <input type="password" id="f-pw" placeholder="Mot de passe" onkeydown="if(event.key==='Enter')doLogin()">
+    <button class="btn-login" id="btn-login" onclick="doLogin()">Se connecter</button>
+    <p class="pw-err" id="pw-err"></p>
+    <a href="index.html" class="gate-back">← Retour au site</a>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="app">
+  <div class="topbar">
+    <div style="display:flex;align-items:center;gap:8px;">
+      <span class="logo">Étudier<span>GN</span></span>
+      <span class="admin-badge">ADMIN</span>
+    </div>
+    <div class="topbar-right">
+      <button class="btn-topbar" onclick="doLogout()">🚪 Déconnexion</button>
+    </div>
+  </div>
+
+
+  <!-- ONGLETS ADMIN -->
+  <div class="admin-tabs">
+    <button class="admin-tab active" onclick="showAdminTab('dashboard')">📊</button>
+    <button class="admin-tab" onclick="showAdminTab('ressources')">📚</button>
+    <button class="admin-tab" onclick="showAdminTab('commentaires')">💬</button>
+    <button class="admin-tab" onclick="showAdminTab('stats')">👁️</button>
+    <button class="admin-tab" id="chat-tab-btn" onclick="showAdminTab('chat')">✉️<span id="chat-admin-badge" class="chat-tab-badge" style="display:none">0</span></button>
+    <button class="admin-tab" onclick="showAdminTab('pubs')">📢</button>
+    <button class="admin-tab" onclick="showAdminTab('evals')">📝</button>
+    <button class="admin-tab" onclick="showAdminTab('devoirs')">📒</button>
+    <button class="admin-tab" onclick="showAdminTab('parcours')">🎓</button>
+  </div>
+
+  <div class="pb60" id="admin-content">
+    <div id="tab-ressources">
+    <div class="stats-row">
+      <div class="sc"><div class="n" id="s-t">–</div><div class="l">Total</div></div>
+      <div class="sc"><div class="n" id="s-v">–</div><div class="l">Vidéos</div></div>
+      <div class="sc"><div class="n" id="s-c">–</div><div class="l">Cours</div></div>
+      <div class="sc"><div class="n" id="s-e">–</div><div class="l">Exercices</div></div>
+      <div class="sc"><div class="n" id="s-i">–</div><div class="l">Images</div></div>
+      <div class="sc"><div class="n" id="s-ev">–</div><div class="l">Événements</div></div>
+      <div class="sc"><div class="n" id="s-an">–</div><div class="l">Annales</div></div>
+    </div>
+
+    <div class="form-card">
+      <h3 id="form-card-title">➕ Ajouter une ressource</h3>
+      <div id="edit-banner" style="display:none;background:#fff3cd;color:#856404;border:1px solid #ffeeba;border-radius:8px;padding:8px 12px;margin-bottom:10px;font-size:.82rem;align-items:center;justify-content:space-between;">
+        <span>✏️ Modification en cours…</span>
+        <button type="button" onclick="cancelEdit()" style="background:none;border:none;color:#856404;font-weight:700;cursor:pointer;">✕ Annuler</button>
+      </div>
+      <div class="frow">
+        <div class="fg"><label>Titre *</label><input type="text" id="f-titre" placeholder="Titre…"></div>
+        <div class="fg"><label>Type *</label>
+          <select id="f-type" onchange="toggleF()">
+            <option value="video">🎬 Vidéo YouTube</option>
+            <option value="cours">📖 Cours</option>
+            <option value="exercice">✏️ Exercice</option>
+            <option value="image">🖼️ Image</option>
+            <option value="evenement">📅 Événement</option>
+            <option value="annale">📝 Examen & Annale</option>
+            <option value="livre">📗 Livre</option>
+          </select>
+        </div>
+      </div>
+      <div class="frow">
+        <div class="fg"><label>Matière</label><input type="text" id="f-mat" placeholder="Maths, Physique…"></div>
+        <div class="fg"><label>Niveau</label><input type="text" id="f-niv" placeholder="BTS, Terminale…"></div>
+      </div>
+      <div class="fg" id="fyt">
+        <label>URL YouTube *</label>
+        <input type="text" id="f-yt" placeholder="https://youtube.com/watch?v=…">
+        <span class="hint">Lien complet ou ID (11 caractères).</span>
+      </div>
+      <div class="fg" id="fimg" style="display:none">
+        <label>URL Image Postimage *</label>
+        <input type="text" id="f-img" placeholder="https://i.postimg.cc/…/img.jpg">
+        <span class="hint">Utilisez le Direct Link de Postimage.</span>
+      </div>
+      <div class="fg" id="fthumb" style="display:none">
+        <label>Image de couverture (URL)</label>
+        <input type="text" id="f-thumb" placeholder="URL miniature optionnelle">
+      </div>
+      <div class="fg" id="fevt-date" style="display:none">
+        <label>Date de l'événement *</label>
+        <input type="date" id="f-evt-date">
+      </div>
+      <div class="fg" id="fevt-lieu" style="display:none">
+        <label>Lieu</label>
+        <input type="text" id="f-evt-lieu" placeholder="Conakry, Kindia…">
+      </div>
+      <div class="fg" id="fevt-thumb" style="display:none">
+        <label>Image de l'événement (URL)</label>
+        <input type="text" id="f-evt-thumb" placeholder="https://i.postimg.cc/…">
+      </div>
+      <div class="fg" id="fannale-annee" style="display:none">
+        <label>Année de l'examen *</label>
+        <input type="number" id="f-annale-annee" placeholder="2023" min="1990" max="2099">
+      </div>
+      <div class="fg" id="fannale-type" style="display:none">
+        <label>Type d'examen *</label>
+        <select id="f-annale-type">
+          <option value="BAC">BAC</option>
+          <option value="BEPC">BEPC</option>
+          <option value="BTS">BTS</option>
+          <option value="Concours">Concours</option>
+          <option value="Autre">Autre</option>
+        </select>
+      </div>
+      <div class="fg" id="fannale-doc" style="display:none">
+        <label>URL du document (PDF ou image) *</label>
+        <input type="text" id="f-annale-doc" placeholder="https://i.postimg.cc/… ou lien PDF">
+        <span class="hint">Image Postimage ou lien PDF direct.</span>
+      </div>
+      <div class="fg" id="flivre-auteur" style="display:none">
+        <label>Auteur</label>
+        <input type="text" id="f-livre-auteur" placeholder="Nom de l'auteur…">
+      </div>
+      <div class="fg" id="flivre-doc" style="display:none">
+        <label>PDF Google Drive *</label>
+        <input type="text" id="f-livre-doc" placeholder="https://drive.google.com/file/d/ID/view">
+        <span class="hint">Google Drive → Partager → "Tout le monde" → coller le lien /view ici.</span>
+      </div>
+      <div class="fg" id="flivre-cover" style="display:none">
+        <label>Image de couverture (URL)</label>
+        <input type="text" id="f-livre-cover" placeholder="https://i.postimg.cc/…/cover.jpg">
+      </div>
+      <div class="fg"><label>Description</label><input type="text" id="f-desc" placeholder="Brève description…"></div>
+      <div class="fg" id="fcont" style="display:none">
+        <label>Contenu complet</label>
+        <div class="rich-editor">
+          <div class="rich-editor-toolbar">
+            <button type="button" class="re-btn" onclick="addBlock('paragraph')">✏️ + Paragraphe</button>
+            <button type="button" class="re-btn" onclick="addBlock('image')">🖼️ + Image</button>
+            <button type="button" class="re-btn" onclick="addBlock('title')">🔠 + Titre</button>
+          </div>
+          <div class="re-blocks" id="re-blocks">
+            <div class="re-empty visible" id="re-empty">Cliquez sur un bouton ci-dessus pour ajouter du contenu</div>
+          </div>
+        </div>
+      </div>
+      <button class="btn-pub" id="btn-pub" onclick="addItem()">✅ Publier</button>
+      <button class="btn-fb" id="btn-fb" onclick="shareFacebook()">📘 Partager sur Facebook</button>
+    </div>
+
+    <div class="list-head">Ressources publiées</div>
+    <input type="text" id="admin-list-search" placeholder="🔎 Rechercher par titre, matière, type…"
+      oninput="onAdminListSearch()"
+      style="width:100%;box-sizing:border-box;padding:.6rem .8rem;margin-bottom:10px;border:1.5px solid #e5e7eb;border-radius:8px;font-family:inherit;font-size:.85rem;">
+    <div id="admin-list"><div class="loading"><div class="spinner"></div>Chargement…</div></div>
+    </div><!-- /tab-ressources -->
+    <!-- DASHBOARD -->
+    <div id="tab-dashboard" style="display:none">
+      <div class="dash-section">
+        <div class="big-stats">
+          <div class="big-stat"><div class="bn" id="d-total">0</div><div class="bl">📚 Ressources</div></div>
+          <div class="big-stat red"><div class="bn" id="d-comments">0</div><div class="bl">💬 Commentaires</div></div>
+        </div>
+        <div class="dash-card">
+          <h3>📊 Répartition du contenu</h3>
+          <div class="type-bars">
+            <div class="type-bar-row">
+              <span class="type-bar-label">🎬 Vidéos</span>
+              <div class="type-bar-track"><div class="type-bar-fill" id="bar-video" style="background:#1d3557;width:0%"></div></div>
+              <span class="type-bar-count" id="cnt-video">0</span>
+            </div>
+            <div class="type-bar-row">
+              <span class="type-bar-label">📖 Cours</span>
+              <div class="type-bar-track"><div class="type-bar-fill" id="bar-cours" style="background:#e63946;width:0%"></div></div>
+              <span class="type-bar-count" id="cnt-cours">0</span>
+            </div>
+            <div class="type-bar-row">
+              <span class="type-bar-label">✏️ Exercices</span>
+              <div class="type-bar-track"><div class="type-bar-fill" id="bar-exercice" style="background:#457b9d;width:0%"></div></div>
+              <span class="type-bar-count" id="cnt-exercice">0</span>
+            </div>
+            <div class="type-bar-row">
+              <span class="type-bar-label">🖼️ Images</span>
+              <div class="type-bar-track"><div class="type-bar-fill" id="bar-image" style="background:#25D366;width:0%"></div></div>
+              <span class="type-bar-count" id="cnt-image">0</span>
+            </div>
+          </div>
+        </div>
+        <div class="dash-card">
+          <h3>🕐 Dernières ressources ajoutées</h3>
+          <div class="recent-list" id="recent-list">
+            <p style="color:#bbb;font-size:.8rem;text-align:center">Aucune ressource</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- COMMENTAIRES -->
+    <div id="tab-commentaires" style="display:none">
+      <div class="com-filter">
+        <button class="com-chip active" onclick="filterCom(this,'tout')">Tous</button>
+        <button class="com-chip" onclick="filterCom(this,'video')">🎬 Vidéos</button>
+        <button class="com-chip" onclick="filterCom(this,'cours')">📖 Cours</button>
+        <button class="com-chip" onclick="filterCom(this,'exercice')">✏️ Exercices</button>
+      </div>
+      <div id="com-list"></div>
+    </div>
+
+    <!-- CHAT ADMIN -->
+    <div id="tab-chat" style="display:none">
+      <div class="chat-admin-layout">
+        <!-- Liste des sessions -->
+        <div class="chat-sessions-panel" id="chat-sessions-list">
+          <div style="padding:8px 10px;font-size:.68rem;font-weight:700;color:#aaa;text-transform:uppercase;letter-spacing:.05em;border-bottom:1px solid #f0f0f0;">Visiteurs</div>
+          <div id="sessions-items"><div style="padding:1rem;color:#bbb;font-size:.75rem;text-align:center">Aucune session</div></div>
+        </div>
+        <!-- Conversation -->
+        <div class="chat-conv-panel" id="chat-conv-panel">
+          <div class="chat-no-select" id="chat-no-select">
+            <span style="font-size:2rem">💬</span>
+            <span>Sélectionnez un visiteur</span>
+          </div>
+          <div id="chat-conv-content" style="display:none;flex:1;display:none;flex-direction:column;">
+            <div class="conv-head">
+              <div>
+                <div class="conv-head-name" id="conv-visitor-name">—</div>
+                <div class="conv-head-sub" id="conv-visitor-sub"></div>
+              </div>
+              <button onclick="deleteConversation()" title="Supprimer cette conversation" style="background:#fee2e2;border:none;color:#dc2626;font-size:.85rem;padding:.4rem .6rem;border-radius:8px;cursor:pointer;">🗑</button>
+            </div>
+            <div class="conv-messages" id="conv-messages"></div>
+            <div class="conv-form">
+              <input type="text" id="admin-chat-input" placeholder="Répondre…" maxlength="500" onkeydown="if(event.key==='Enter')sendAdminMsg()">
+              <button class="conv-send-btn" onclick="sendAdminMsg()">➤</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PUBS LOCALES -->
+    <div id="tab-pubs" style="display:none">
+      <div class="pub-card">
+        <h3>📢 Ajouter une bannière pub</h3>
+        <div class="fg"><label>Titre / Nom annonceur *</label><input type="text" id="p-titre" placeholder="École XYZ, Boutique ABC…"></div>
+        <div class="fg"><label>URL de l'image (bannière) *</label><input type="text" id="p-img" placeholder="https://i.postimg.cc/…/banner.jpg"><span class="hint">Recommandé : 728×90 ou 320×100 px</span></div>
+        <div class="fg"><label>Lien de destination *</label><input type="text" id="p-lien" placeholder="https://site-annonceur.com"></div>
+        <div class="fg"><label>Position dans le feed</label>
+          <select id="p-pos">
+            <option value="apres_medias">Après les Médias</option>
+            <option value="apres_cours">Après les Cours (3e carte)</option>
+            <option value="les_deux">Les deux positions</option>
+          </select>
+        </div>
+        <button class="btn-pub" onclick="addPub()">✅ Publier la bannière</button>
+      </div>
+      <div class="list-head">Bannières enregistrées</div>
+      <div id="pub-list"><div class="loading"><div class="spinner"></div>Chargement…</div></div>
+    </div>
+
+    <!-- STATS VUES / LIKES -->
+    <div id="tab-stats" style="display:none">
+      <div class="stats-tab-section">
+        <div class="big-stats-3">
+          <div class="big-stat"><div class="bn" id="st-total-views">0</div><div class="bl">👁️ Vues totales</div></div>
+          <div class="big-stat red"><div class="bn" id="st-total-likes">0</div><div class="bl">❤️ Likes totaux</div></div>
+          <div class="big-stat blue"><div class="bn" id="st-total-res">0</div><div class="bl">📚 Ressources</div></div>
+        </div>
+
+        <div class="stats-card">
+          <h3>👁️ Top vues</h3>
+          <div id="rank-views"></div>
+        </div>
+
+        <div class="stats-card">
+          <h3>❤️ Top likes</h3>
+          <div id="rank-likes"></div>
+        </div>
+
+        <div class="stats-card">
+          <h3>⚙️ Gestion des stats</h3>
+          <p style="font-size:.78rem;color:#888;margin-bottom:8px;">Réinitialiser les vues ou likes d'une ressource spécifique depuis la liste ci-dessous.</p>
+          <div id="reset-list"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ÉVALUATIONS -->
+    <div id="tab-evals" style="display:none">
+      <div style="padding:12px 0 6px">
+        <button onclick="openEvalAdminBuilder()" style="width:100%;background:#004d2e;color:#FCD116;border:none;border-radius:12px;padding:12px;font-size:.95rem;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;">＋ Nouvelle évaluation</button>
+      </div>
+      <div id="evals-admin-list"><div class="loading"><div class="spinner"></div>Chargement…</div></div>
+    </div>
+
+    <!-- DEVOIRS -->
+    <div id="tab-devoirs" style="display:none">
+      <div class="form-card">
+        <h3>📒 Envoyer un devoir</h3>
+        <div class="fg"><label>Titre du devoir *</label><input type="text" id="dv-titre" placeholder="Ex : Devoir de Mathématiques – Chapitre 3"></div>
+        <div class="frow">
+          <div class="fg"><label>Matière</label><input type="text" id="dv-matiere" placeholder="Maths, Physique…"></div>
+          <div class="fg"><label>Niveau</label><input type="text" id="dv-niveau" placeholder="BTS, Terminale…"></div>
+        </div>
+        <div class="fg">
+          <label>Images du devoir * <span style="font-weight:400;color:#aaa">(une ou plusieurs pages)</span></label>
+          <div id="dv-imgs-list" style="display:flex;flex-direction:column;gap:6px;margin-bottom:6px"></div>
+          <button type="button" onclick="addDevoirImg()" style="background:#e8f5e9;color:#2e7d32;border:1px solid #a5d6a7;border-radius:8px;padding:7px 12px;font-family:'Inter',sans-serif;font-size:.82rem;font-weight:700;cursor:pointer;width:100%">＋ Ajouter une image (page)</button>
+          <span class="hint">Hébergez chaque page sur postimage.cc puis collez le Direct Link.</span>
+        </div>
+        <div class="fg"><label>Consigne / Description</label><textarea id="dv-desc" placeholder="Instructions pour les élèves…" style="border:1.5px solid #e5e7eb;background:#f9fafb;font-family:inherit;font-size:.85rem;padding:.6rem .8rem;border-radius:8px;outline:none;resize:vertical;min-height:70px;"></textarea></div>
+        <div class="fg"><label>Date limite (optionnel)</label><input type="date" id="dv-deadline"></div>
+        <button class="btn-pub" onclick="createDevoir()">✅ Créer & obtenir le lien</button>
+      </div>
+
+      <div class="list-head">Devoirs envoyés</div>
+      <div id="devoirs-admin-list"><div class="loading"><div class="spinner"></div>Chargement…</div></div>
+    </div>
+
+    <!-- PARCOURS -->
+    <div id="tab-parcours" style="display:none">
+      <div style="display:flex;gap:0;margin:10px 10px 0;background:#fff;border-radius:10px;overflow:hidden;border:1px solid #e5e7eb">
+        <button id="pc-subtab-modules" onclick="showParcoursSubTab('modules')" style="flex:1;border:none;background:#1d3557;color:#fff;font-family:inherit;font-size:.8rem;font-weight:700;padding:10px 0;cursor:pointer">📚 Modules</button>
+        <button id="pc-subtab-eleves" onclick="showParcoursSubTab('eleves')" style="flex:1;border:none;background:#fff;color:#555;font-family:inherit;font-size:.8rem;font-weight:700;padding:10px 0;cursor:pointer">🧑‍🎓 Élèves & progression</button>
+      </div>
+
+      <!-- Sous-onglet MODULES -->
+      <div id="pc-sub-modules">
+        <div class="form-card">
+          <h3 id="pc-mod-form-title">📦 Nouveau module</h3>
+          <input type="hidden" id="pc-mod-editid" value="">
+          <div class="fg"><label>Titre du module *</label><input type="text" id="pc-mod-titre" placeholder="Ex : Module 1 – Les bases"></div>
+          <div class="fg"><label>Description</label><textarea id="pc-mod-desc" placeholder="Ce que l'élève va apprendre…" style="border:1.5px solid #e5e7eb;background:#f9fafb;font-family:inherit;font-size:.85rem;padding:.6rem .8rem;border-radius:8px;outline:none;resize:vertical;min-height:55px;"></textarea></div>
+          <div class="fg"><label>Ordre *</label><input type="number" id="pc-mod-ordre" placeholder="1, 2, 3…" min="1"></div>
+          <div class="fg">
+            <label>Cours du module * <span style="font-weight:400;color:#aaa">(titre + lien)</span></label>
+            <div id="pc-mod-cours-list" style="display:flex;flex-direction:column;gap:6px;margin-bottom:6px"></div>
+            <button type="button" onclick="addPcCours()" style="background:#e8f5e9;color:#2e7d32;border:1px solid #a5d6a7;border-radius:8px;padding:7px 12px;font-family:'Inter',sans-serif;font-size:.82rem;font-weight:700;cursor:pointer;width:100%">＋ Ajouter un cours</button>
+          </div>
+          <button class="btn-pub" onclick="savePcModule()">✅ Enregistrer le module</button>
+          <button onclick="resetPcModuleForm()" style="width:100%;margin-top:8px;background:#f2f3f5;color:#555;border:none;border-radius:10px;padding:10px;font-size:.85rem;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;">Annuler / Nouveau</button>
+        </div>
+        <div class="list-head">Modules créés</div>
+        <div id="pc-modules-list"><div class="loading"><div class="spinner"></div>Chargement…</div></div>
+      </div>
+
+      <!-- Sous-onglet ÉLÈVES -->
+      <div id="pc-sub-eleves" style="display:none">
+        <div class="form-card">
+          <h3>🧑‍🎓 Inscrire un élève</h3>
+          <div class="fg"><label>Nom complet *</label><input type="text" id="pc-el-nom" placeholder="Ex : Mariam Diallo"></div>
+          <div class="frow">
+            <div class="fg"><label>Téléphone WhatsApp</label><input type="text" id="pc-el-tel" placeholder="+224 6xx xx xx xx"></div>
+            <div class="fg"><label>E-mail</label><input type="text" id="pc-el-email" placeholder="exemple@mail.com"></div>
+          </div>
+          <button class="btn-pub" onclick="createInscription()">✅ Inscrire & générer le lien</button>
+        </div>
+        <div class="big-stats" id="pc-big-stats" style="margin:10px 10px 0;">
+          <div class="sc"><div class="n" id="pc-s-total">–</div><div class="l">Élèves</div></div>
+          <div class="sc"><div class="n" id="pc-s-cours">–</div><div class="l">Cours complétés</div></div>
+          <div class="sc"><div class="n" id="pc-s-certif">–</div><div class="l">Certificats obtenus</div></div>
+        </div>
+        <div class="list-head">Tableau de bord élèves</div>
+        <div id="pc-eleves-list"><div class="loading"><div class="spinner"></div>Chargement…</div></div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="bottom-nav">
+    <div class="bnav-item" onclick="location.href='index.html'"><div class="bnav-icon">🌐</div>Site public</div>
+    <div style="flex:2;display:flex;align-items:center;justify-content:center;font-size:.65rem;color:#bbb;text-align:center;line-height:1.3;">© EtudierGN<br><span style="color:#e63946;font-weight:600;">Collection BHDS</span></div>
+    <div class="bnav-item active"><div class="bnav-icon">⚙️</div>Admin</div>
+  </div>
+</div>
+
+<!-- MODAL ÉVAL ADMIN -->
+<div id="modal-bg" style="display:none;position:fixed;inset:0;z-index:500;background:rgba(0,0,0,.45);padding:16px;overflow-y:auto" onclick="if(event.target===this)closeMBg()">
+  <div style="background:#fff;border-radius:18px;max-width:520px;margin:20px auto;padding:0;overflow:hidden">
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid #f0f0f0">
+      <h2 id="modal-title" style="font-size:1rem;font-weight:700;margin:0"></h2>
+      <button onclick="closeMBg()" style="background:none;border:none;font-size:1.2rem;cursor:pointer;color:#64748b">✕</button>
+    </div>
+    <div id="modal-body" style="padding:16px;max-height:75vh;overflow-y:auto"></div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getFirestore, collection, addDoc, deleteDoc, doc, onSnapshot, orderBy, query, limit,
+  serverTimestamp, setDoc, updateDoc, getDocs, increment }
+  from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAUFd6H0y--K090_lau3sr6H0lGxmfgB9M",
+  authDomain: "etudier-gn.firebaseapp.com",
+  projectId: "etudier-gn",
+  storageBucket: "etudier-gn.firebasestorage.app",
+  messagingSenderId: "197482090989",
+  appId: "1:197482090989:web:f82716bc4fe080017357e4"
+};
+
+const ADMIN_PW = 'BHDS123'; // ← Votre mot de passe admin
+
+const app = initializeApp(firebaseConfig);
+const db  = getFirestore(app);
+let items = [];
+let unsubscribe = null;
+
+// ---- LOGIN ----
+window.doLogin = function() {
+  const pw  = document.getElementById('f-pw').value;
+  const err = document.getElementById('pw-err');
+  const btn = document.getElementById('btn-login');
+  if (pw === ADMIN_PW) {
+    document.getElementById('gate').classList.add('hidden');
+    document.getElementById('app').classList.add('on');
+    startListen();
+  } else {
+    err.textContent = '❌ Mot de passe incorrect.';
+    err.style.display = 'block';
+    document.getElementById('f-pw').value = '';
+    document.getElementById('f-pw').focus();
+  }
+};
+
+// ---- LOGOUT ----
+window.doLogout = function() {
+  if (unsubscribe) { unsubscribe(); unsubscribe = null; }
+  if (typeof convUnsubscribe === 'function') { convUnsubscribe(); convUnsubscribe = null; }
+  if (typeof sessionsUnsubscribe === 'function') { sessionsUnsubscribe(); sessionsUnsubscribe = null; }
+  document.getElementById('app').classList.remove('on');
+  document.getElementById('gate').classList.remove('hidden');
+  document.getElementById('f-pw').value = '';
+  document.getElementById('pw-err').style.display = 'none';
+  toast('👋 Déconnecté.');
+};
+
+// ---- FIRESTORE ----
+function startListen() {
+  const q = query(collection(db, 'ressources'), orderBy('date', 'desc'));
+  unsubscribe = onSnapshot(q, snap => {
+    items = snap.docs.map(d => ({id: d.id, ...d.data()}));
+    renderList();
+    updateStats();
+  });
+  startChatAdminListen();
+}
+
+function updateStats() {
+  document.getElementById('s-t').textContent = items.length;
+  document.getElementById('s-v').textContent = items.filter(i=>i.type==='video').length;
+  document.getElementById('s-c').textContent = items.filter(i=>i.type==='cours').length;
+  document.getElementById('s-e').textContent = items.filter(i=>i.type==='exercice').length;
+  document.getElementById('s-i').textContent = items.filter(i=>i.type==='image').length;
+  document.getElementById('s-ev').textContent = items.filter(i=>i.type==='evenement').length;
+  document.getElementById('s-an').textContent = items.filter(i=>i.type==='annale').length;
+}
+
+// ---- FORM ----
+window.toggleF = function() {
+  const t = document.getElementById('f-type').value;
+  document.getElementById('fyt').style.display    = t==='video'                     ? 'flex' : 'none';
+  document.getElementById('fimg').style.display   = t==='image'                     ? 'flex' : 'none';
+  document.getElementById('fthumb').style.display = (t==='cours'||t==='exercice')   ? 'flex' : 'none';
+  document.getElementById('fcont').style.display  = (t==='cours'||t==='exercice')   ? 'flex' : 'none';
+  document.getElementById('fevt-date').style.display  = t==='evenement' ? 'flex' : 'none';
+  document.getElementById('fevt-lieu').style.display  = t==='evenement' ? 'flex' : 'none';
+  document.getElementById('fevt-thumb').style.display = t==='evenement' ? 'flex' : 'none';
+  document.getElementById('fannale-annee').style.display = t==='annale' ? 'flex' : 'none';
+  document.getElementById('fannale-type').style.display  = t==='annale' ? 'flex' : 'none';
+  document.getElementById('fannale-doc').style.display   = t==='annale' ? 'flex' : 'none';
+  document.getElementById('flivre-auteur').style.display = t==='livre'  ? 'flex' : 'none';
+  document.getElementById('flivre-doc').style.display    = t==='livre'  ? 'flex' : 'none';
+  document.getElementById('flivre-cover').style.display  = t==='livre'  ? 'flex' : 'none';
+};
+
+function ytId(url) {
+  if (!url) return '';
+  const m = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|embed\/)([a-zA-Z0-9_-]{11})/);
+  return m ? m[1] : url.trim();
+}
+
+// ---- EDITEUR DE CONTENU RICHE ----
+let richBlocks = [];
+
+window.addBlock = function(type) {
+  const id = 'blk_' + Date.now();
+  richBlocks.push({id, type, value: ''});
+  renderBlocks();
+};
+
+window.removeBlock = function(id) {
+  richBlocks = richBlocks.filter(b => b.id !== id);
+  renderBlocks();
+};
+
+window.moveBlock = function(id, dir) {
+  const idx = richBlocks.findIndex(b => b.id === id);
+  if (dir === -1 && idx > 0) [richBlocks[idx-1], richBlocks[idx]] = [richBlocks[idx], richBlocks[idx-1]];
+  if (dir === 1 && idx < richBlocks.length-1) [richBlocks[idx], richBlocks[idx+1]] = [richBlocks[idx+1], richBlocks[idx]];
+  renderBlocks();
+};
+
+window.updateBlock = function(id, value) {
+  const b = richBlocks.find(b => b.id === id);
+  if (b) b.value = value;
+  if (b && b.type === 'image') {
+    const prev = document.getElementById('prev_' + id);
+    if (prev) { prev.src = value; prev.style.display = value ? 'block' : 'none'; }
+  }
+};
+
+function renderBlocks() {
+  const cont = document.getElementById('re-blocks');
+  const empty = document.getElementById('re-empty');
+  if (!richBlocks.length) {
+    if (empty) empty.classList.add('visible');
+    // Remove all blocks except empty message
+    [...cont.children].forEach(c => { if (c !== empty) c.remove(); });
+    return;
+  }
+  if (empty) empty.classList.remove('visible');
+  // Clear and re-render
+  [...cont.children].forEach(c => { if (c !== empty) c.remove(); });
+  richBlocks.forEach((blk, idx) => {
+    const el = document.createElement('div');
+    el.className = 're-block';
+    el.id = 'block_' + blk.id;
+    const labels = {paragraph:'Paragraphe', image:'Image', title:'Titre'};
+    const icons  = {paragraph:'✏️', image:'🖼️', title:'🔠'};
+    let input = '';
+    if (blk.type === 'paragraph') {
+      input = `<textarea placeholder="Tapez votre paragraphe ici…" oninput="updateBlock('${blk.id}',this.value)">${blk.value}</textarea>`;
+    } else if (blk.type === 'title') {
+      input = `<input type="text" placeholder="Titre de section…" value="${blk.value}" oninput="updateBlock('${blk.id}',this.value)">`;
+    } else if (blk.type === 'image') {
+      input = `<input type="text" placeholder="URL de l'image (Postimage, etc.)…" value="${blk.value}" oninput="updateBlock('${blk.id}',this.value)">
+        <img id="prev_${blk.id}" class="re-block-preview" src="${blk.value}" alt="" style="display:${blk.value?'block':'none'}">`;
+    }
+    el.innerHTML = `
+      <div class="re-block-head">
+        <span class="re-block-type">${icons[blk.type]} ${labels[blk.type]}</span>
+        <div class="re-block-move">
+          ${idx > 0 ? `<button class="re-move-btn" onclick="moveBlock('${blk.id}',-1)">▲</button>` : ''}
+          ${idx < richBlocks.length-1 ? `<button class="re-move-btn" onclick="moveBlock('${blk.id}',1)">▼</button>` : ''}
+        </div>
+        <button class="re-block-del" onclick="removeBlock('${blk.id}')">✕ Supprimer</button>
+      </div>
+      ${input}`;
+    cont.appendChild(el);
+  });
+}
+
+function resetRichEditor() {
+  richBlocks = [];
+  renderBlocks();
+}
+
+// ---- ÉDITION D'UNE RESSOURCE EXISTANTE ----
+let editingId = null;
+
+window.editItem = function(id) {
+  const item = items.find(i => i.id === id);
+  if (!item) { toast('⚠️ Ressource introuvable.'); return; }
+  editingId = id;
+
+  document.getElementById('f-titre').value = item.titre || '';
+  document.getElementById('f-type').value  = item.type || 'video';
+  toggleF(); // affiche les bons champs selon le type
+  document.getElementById('f-mat').value  = item.matiere || '';
+  document.getElementById('f-niv').value  = item.niveau || '';
+  document.getElementById('f-desc').value = item.desc || '';
+  document.getElementById('f-thumb').value = item.thumb || '';
+
+  if (item.type === 'video')   document.getElementById('f-yt').value = item.ytid || '';
+  if (item.type === 'image')   document.getElementById('f-img').value = item.imgurl || '';
+  if (item.type === 'evenement') {
+    document.getElementById('f-evt-date').value  = item.evtDate || '';
+    document.getElementById('f-evt-lieu').value  = item.evtLieu || '';
+    document.getElementById('f-evt-thumb').value = item.imgurl || '';
+  }
+  if (item.type === 'annale') {
+    document.getElementById('f-annale-annee').value = item.annaleAnnee || '';
+    document.getElementById('f-annale-type').value  = item.annaleType || 'BAC';
+    document.getElementById('f-annale-doc').value   = item.docurl || '';
+  }
+  if (item.type === 'livre') {
+    document.getElementById('f-livre-auteur').value = item.auteur || '';
+    document.getElementById('f-livre-doc').value     = item.docurl || '';
+    document.getElementById('f-livre-cover').value   = item.thumb || '';
+  }
+
+  // Recharge le contenu riche (cours/exercice) dans l'éditeur de blocs
+  richBlocks = [];
+  if ((item.type === 'cours' || item.type === 'exercice') && item.contenu) {
+    try { richBlocks = JSON.parse(item.contenu) || []; } catch(e) { richBlocks = []; }
+  }
+  renderBlocks();
+
+  document.getElementById('form-card-title').textContent = '✏️ Modifier la ressource';
+  document.getElementById('edit-banner').style.display = 'flex';
+  document.getElementById('btn-pub').textContent = '💾 Enregistrer les modifications';
+  document.getElementById('btn-fb').style.display = 'none';
+
+  showAdminTab('ressources');
+  document.querySelector('.form-card').scrollIntoView({behavior:'smooth', block:'start'});
+};
+
+window.cancelEdit = function() {
+  editingId = null;
+  ['f-titre','f-yt','f-img','f-thumb','f-mat','f-niv','f-desc','f-evt-date','f-evt-lieu','f-evt-thumb','f-annale-annee','f-annale-doc','f-livre-auteur','f-livre-doc','f-livre-cover'].forEach(id => {
+    const el = document.getElementById(id); if (el) el.value = '';
+  });
+  resetRichEditor();
+  document.getElementById('form-card-title').textContent = '➕ Ajouter une ressource';
+  document.getElementById('edit-banner').style.display = 'none';
+  document.getElementById('btn-pub').textContent = '✅ Publier';
+};
+
+window.addItem = async function() {
+  const titre = document.getElementById('f-titre').value.trim();
+  if (!titre) { toast('⚠️ Titre obligatoire !'); return; }
+  const type  = document.getElementById('f-type').value;
+  const mat   = document.getElementById('f-mat').value.trim();
+  const niv   = document.getElementById('f-niv').value.trim();
+  const desc  = document.getElementById('f-desc').value.trim();
+  const thumb = document.getElementById('f-thumb').value.trim();
+
+  const originalItem = editingId ? items.find(i => i.id === editingId) : null;
+  let data = {titre, type, matiere:mat, niveau:niv, desc, date: (originalItem && originalItem.date) || Date.now()};
+
+  // Contenu riche pour cours/exercice
+  if (type === 'cours' || type === 'exercice') {
+    data.contenu = JSON.stringify(richBlocks.filter(b => b.value.trim()));
+  }
+
+  if (type==='video') {
+    data.ytid = ytId(document.getElementById('f-yt').value.trim());
+    if (!data.ytid) { toast('⚠️ URL YouTube invalide !'); return; }
+  }
+  if (type==='image') {
+    data.imgurl = document.getElementById('f-img').value.trim();
+    if (!data.imgurl) { toast('⚠️ URL image manquante !'); return; }
+  }
+  if (type==='annale') {
+    data.annaleAnnee = document.getElementById('f-annale-annee').value;
+    data.annaleType  = document.getElementById('f-annale-type').value;
+    data.docurl      = document.getElementById('f-annale-doc').value.trim();
+    if (!data.annaleAnnee) { toast('⚠️ Année obligatoire !'); return; }
+    if (!data.docurl) { toast('⚠️ URL du document obligatoire !'); return; }
+  }
+  if (type==='evenement') {
+    data.evtDate = document.getElementById('f-evt-date').value;
+    data.evtLieu = document.getElementById('f-evt-lieu').value.trim();
+    data.imgurl  = document.getElementById('f-evt-thumb').value.trim();
+    if (!data.evtDate) { toast('⚠️ Date de l\'événement obligatoire !'); return; }
+  }
+  if (type==='livre') {
+    data.auteur = document.getElementById('f-livre-auteur').value.trim();
+    data.docurl = document.getElementById('f-livre-doc').value.trim();
+    data.thumb  = document.getElementById('f-livre-cover').value.trim();
+    if (!data.docurl) { toast('⚠️ Lien Google Drive obligatoire !'); return; }
+  }
+  if (thumb) data.thumb = thumb;
+
+  const btn = document.getElementById('btn-pub');
+  const isEditing = !!editingId;
+  btn.disabled = true; btn.textContent = isEditing ? '⏳ Enregistrement…' : '⏳ Publication…';
+  try {
+    if (isEditing) {
+      await updateDoc(doc(db, 'ressources', editingId), data);
+      toast('✅ Ressource mise à jour !');
+    } else {
+      await addDoc(collection(db, 'ressources'), data);
+      toast('✅ Ressource publiée !');
+      // Afficher bouton Facebook (uniquement pour une nouvelle publication)
+      const fbBtn = document.getElementById('btn-fb');
+      fbBtn.style.display = 'block';
+      fbBtn._lastTitre = titre;
+      fbBtn._lastDesc = desc;
+    }
+    ['f-titre','f-yt','f-img','f-thumb','f-mat','f-niv','f-desc','f-evt-date','f-evt-lieu','f-evt-thumb','f-annale-annee','f-annale-doc','f-livre-auteur','f-livre-doc','f-livre-cover'].forEach(id => {
+      const el = document.getElementById(id); if (el) el.value = '';
+    });
+    resetRichEditor();
+    if (isEditing) {
+      editingId = null;
+      document.getElementById('form-card-title').textContent = '➕ Ajouter une ressource';
+      document.getElementById('edit-banner').style.display = 'none';
+    }
+  } catch(e) {
+    toast('❌ Erreur : ' + e.message);
+  }
+  btn.disabled = false; btn.textContent = isEditing ? '💾 Enregistrer les modifications' : '✅ Publier';
+  if (!editingId) btn.textContent = '✅ Publier';
+};
+
+window.shareFacebook = function() {
+  const fbBtn = document.getElementById('btn-fb');
+  const titre = fbBtn._lastTitre || '';
+  const desc = fbBtn._lastDesc || '';
+  const siteUrl = 'https://boubacardraga123-sketch.github.io/GuineeScope-/';
+  // Compatible mobile (Facebook Lite inclus)
+  const shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(siteUrl)}`;
+  window.location.href = shareUrl;
+};
+
+window.delItem = async function(id) {
+  if (!confirm('Supprimer cette ressource ?')) return;
+  try {
+    await deleteDoc(doc(db, 'ressources', id));
+    toast('🗑️ Supprimé.');
+  } catch(e) {
+    toast('❌ Erreur : ' + e.message);
+  }
+};
+
+function fmtDate(ts) { return new Date(ts).toLocaleDateString('fr-FR'); }
+
+let _adminListDebounce = null;
+window.onAdminListSearch = function(){
+  clearTimeout(_adminListDebounce);
+  _adminListDebounce = setTimeout(renderList, 200);
+};
+
+function renderList() {
+  const icons = {video:'🎬',cours:'📖',exercice:'✏️',image:'🖼️',evenement:'📅',annale:'📝'};
+  const bc    = {video:'ib-video',cours:'ib-cours',exercice:'ib-exercice',image:'ib-image',evenement:'ib-evenement',annale:'ib-annale'};
+  const lb    = {video:'Vidéo',cours:'Cours',exercice:'Exercice',image:'Image',evenement:'Événement',annale:'Annale'};
+  const list  = document.getElementById('admin-list');
+  const q = (document.getElementById('admin-list-search')||{value:''}).value.trim().toLowerCase();
+  const filteredItems = !q ? items : items.filter(item =>
+    (item.titre||'').toLowerCase().includes(q) ||
+    (item.matiere||'').toLowerCase().includes(q) ||
+    (item.niveau||'').toLowerCase().includes(q) ||
+    (lb[item.type]||item.type||'').toLowerCase().includes(q)
+  );
+  if (!items.length) {
+    list.innerHTML = '<div class="empty">Aucune ressource. Ajoutez du contenu ! 📝</div>';
+    return;
+  }
+  if (!filteredItems.length) {
+    list.innerHTML = '<div class="empty">Aucun résultat pour cette recherche.</div>';
+    return;
+  }
+  list.innerHTML = filteredItems.map(item => {
+    const views = item.views || 0;
+    const likes = item.likes || 0;
+    return `
+    <div class="item">
+      <div class="item-icon">${icons[item.type]||'📄'}</div>
+      <div class="item-info">
+        <div class="item-title">${item.titre}</div>
+        <div class="item-sub">
+          <span class="ibadge ${bc[item.type]||''}">${lb[item.type]||item.type}</span>
+          ${item.matiere?`<span>${item.matiere}</span>`:''}
+          ${item.niveau?`<span>${item.niveau}</span>`:''}
+          <span>${fmtDate(item.date)}</span>
+        </div>
+        <div style="margin-top:4px;">
+          <span class="stat-pill stat-views">👁️ ${views}</span>
+          <span class="stat-pill stat-likes">❤️ ${likes}</span>
+        </div>
+      </div>
+      <button class="btn-edit" onclick="editItem('${item.id}')" style="background:none;border:none;font-size:1.1rem;cursor:pointer;padding:4px 8px;">✏️</button>
+      <button class="btn-del" onclick="delItem('${item.id}')">🗑️</button>
+    </div>`}).join('');
+}
+
+function toast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+
+// ===== TABS ADMIN =====
+window.showAdminTab = function(tab) {
+  ['dashboard','ressources','commentaires','stats','chat','pubs','evals','devoirs','parcours'].forEach(t => {
+    const el = document.getElementById('tab-'+t);
+    if(el) el.style.display = t===tab ? 'block' : 'none';
+  });
+  document.querySelectorAll('.admin-tab').forEach((b,i) => {
+    b.classList.toggle('active', ['dashboard','ressources','commentaires','stats','chat','pubs','evals','devoirs','parcours'][i]===tab);
+  });
+  if(tab==='dashboard') updateDashboard();
+  if(tab==='commentaires') renderComAdmin('tout');
+  if(tab==='stats') renderStats();
+  if(tab==='chat') { renderSessionsList(); }
+  if(tab==='pubs') loadPubs();
+  if(tab==='evals') loadEvalsAdmin();
+  if(tab==='devoirs') { loadDevoirsAdmin(); _devoirImgs=[''];renderDevoirImgs(); }
+  if(tab==='parcours') { loadPcModules(); loadPcEleves(); _pcCours=[{titre:'',url:''}]; renderPcCoursList(); }
+};
+
+// ===== STATS VUES / LIKES =====
+function renderStats() {
+  const icons = {video:'🎬',cours:'📖',exercice:'✏️',image:'🖼️',evenement:'📅',annale:'📝'};
+
+  // Récupérer vues et likes depuis localStorage
+  const data = items.map(item => ({
+    ...item,
+    views: item.views || 0,
+    likes: item.likes || 0,
+  }));
+
+  const totalViews = data.reduce((s,i)=>s+i.views,0);
+  const totalLikes = data.reduce((s,i)=>s+i.likes,0);
+  document.getElementById('st-total-views').textContent = totalViews;
+  document.getElementById('st-total-likes').textContent = totalLikes;
+  document.getElementById('st-total-res').textContent = items.length;
+
+  // Top vues
+  const byViews = [...data].sort((a,b)=>b.views-a.views).slice(0,5);
+  document.getElementById('rank-views').innerHTML = byViews.length
+    ? byViews.map((item,i)=>`
+      <div class="rank-item">
+        <div class="rank-num ${i===0?'gold':i===1?'silver':i===2?'bronze':''}">${i+1}</div>
+        <div class="rank-info">
+          <div class="rank-title">${icons[item.type]||''} ${item.titre}</div>
+          <div class="rank-meta">${item.matiere||''} ${item.niveau?'· '+item.niveau:''}</div>
+        </div>
+        <div class="rank-stats">
+          <span class="stat-pill stat-views">👁️ ${item.views}</span>
+        </div>
+      </div>`).join('')
+    : '<p style="color:#bbb;font-size:.8rem;text-align:center">Aucune vue enregistrée</p>';
+
+  // Top likes
+  const byLikes = [...data].sort((a,b)=>b.likes-a.likes).slice(0,5);
+  document.getElementById('rank-likes').innerHTML = byLikes.length
+    ? byLikes.map((item,i)=>`
+      <div class="rank-item">
+        <div class="rank-num ${i===0?'gold':i===1?'silver':i===2?'bronze':''}">${i+1}</div>
+        <div class="rank-info">
+          <div class="rank-title">${icons[item.type]||''} ${item.titre}</div>
+          <div class="rank-meta">${item.matiere||''} ${item.niveau?'· '+item.niveau:''}</div>
+        </div>
+        <div class="rank-stats">
+          <span class="stat-pill stat-likes">❤️ ${item.likes}</span>
+        </div>
+      </div>`).join('')
+    : '<p style="color:#bbb;font-size:.8rem;text-align:center">Aucun like enregistré</p>';
+
+  // Liste reset
+  document.getElementById('reset-list').innerHTML = data.map(item=>`
+    <div class="rank-item">
+      <div class="rank-info">
+        <div class="rank-title">${icons[item.type]||''} ${item.titre}</div>
+        <div class="rank-meta">
+          <span class="stat-pill stat-views">👁️ ${item.views}</span>
+          <span class="stat-pill stat-likes">❤️ ${item.likes}</span>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:4px;">
+        <button class="reset-btn" onclick="resetStat('${item.id}','views')">Reset vues</button>
+        <button class="reset-btn" onclick="resetStat('${item.id}','likes')">Reset likes</button>
+      </div>
+    </div>`).join('') || '<p style="color:#bbb;font-size:.8rem;text-align:center">Aucune ressource</p>';
+}
+
+window.resetStat = async function(id, type) {
+  const label = type==='views' ? 'les vues' : 'les likes';
+  if(!confirm(`Réinitialiser ${label} de cette ressource ?`)) return;
+  try {
+    const field = type==='views' ? {views: 0} : {likes: 0};
+    await updateDoc(doc(db,'ressources',id), field);
+    toast(`✅ ${type==='views'?'Vues':'Likes'} réinitialisés.`);
+  } catch(e) {
+    toast('❌ Erreur : ' + e.message);
+  }
+};
+function updateDashboard() {
+  const total = items.length;
+  const v = items.filter(i=>i.type==='video').length;
+  const c = items.filter(i=>i.type==='cours').length;
+  const e = items.filter(i=>i.type==='exercice').length;
+  const im = items.filter(i=>i.type==='image').length;
+
+  document.getElementById('d-total').textContent = total;
+
+  // Compter tous les commentaires
+  let totalCom = 0;
+  items.forEach(item => {
+    const coms = JSON.parse(localStorage.getItem('comments_'+item.id)||'[]');
+    totalCom += coms.length;
+  });
+  document.getElementById('d-comments').textContent = totalCom;
+
+  // Barres
+  const max = Math.max(v,c,e,im,1);
+  document.getElementById('bar-video').style.width = (v/max*100)+'%';
+  document.getElementById('bar-cours').style.width = (c/max*100)+'%';
+  document.getElementById('bar-exercice').style.width = (e/max*100)+'%';
+  document.getElementById('bar-image').style.width = (im/max*100)+'%';
+  document.getElementById('cnt-video').textContent = v;
+  document.getElementById('cnt-cours').textContent = c;
+  document.getElementById('cnt-exercice').textContent = e;
+  document.getElementById('cnt-image').textContent = im;
+
+  // Récentes
+  const icons = {video:'🎬',cours:'📖',exercice:'✏️',image:'🖼️',evenement:'📅',annale:'📝'};
+  const recent = [...items].slice(0,5);
+  document.getElementById('recent-list').innerHTML = recent.length
+    ? recent.map(item=>`<div class="recent-item">
+        <div class="recent-icon">${icons[item.type]||'📄'}</div>
+        <div class="recent-info">
+          <div class="recent-title">${item.titre}</div>
+          <div class="recent-meta">${item.matiere||''} · ${new Date(item.date).toLocaleDateString('fr-FR')}</div>
+        </div>
+      </div>`).join('')
+    : '<p style="color:#bbb;font-size:.8rem;text-align:center">Aucune ressource</p>';
+}
+
+// ===== COMMENTAIRES ADMIN =====
+let currentComFilter = 'tout';
+window.filterCom = function(btn, type) {
+  document.querySelectorAll('.com-chip').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  currentComFilter = type;
+  renderComAdmin(type);
+};
+
+function renderComAdmin(type) {
+  const list = document.getElementById('com-list');
+  let allComs = [];
+  items.forEach(item => {
+    if(type!=='tout' && item.type!==type) return;
+    const coms = JSON.parse(localStorage.getItem('comments_'+item.id)||'[]');
+    coms.forEach((c,ci) => {
+      allComs.push({...c, itemId:item.id, itemTitle:item.titre, itemType:item.type, ci});
+    });
+  });
+  if(!allComs.length){
+    list.innerHTML='<div class="no-comments">💬 Aucun commentaire pour le moment.</div>';
+    return;
+  }
+  const icons = {video:'🎬',cours:'📖',exercice:'✏️',image:'🖼️',evenement:'📅',annale:'📝'};
+  list.innerHTML = allComs.map((c,i)=>`
+    <div class="com-card" id="com-card-${c.itemId}-${c.ci}">
+      <div class="com-resource">${icons[c.itemType]||''} ${c.itemTitle}</div>
+      <div class="com-author">👤 ${c.name}</div>
+      <div class="com-text">${c.text}</div>
+      <div class="com-date">📅 ${c.date}</div>
+      <div class="com-actions">
+        <button class="btn-del-com" onclick="deleteCom('${c.itemId}',${c.ci})">🗑️ Supprimer</button>
+      </div>
+    </div>`).join('');
+}
+
+window.deleteCom = function(itemId, ci) {
+  if(!confirm('Supprimer ce commentaire ?')) return;
+  const coms = JSON.parse(localStorage.getItem('comments_'+itemId)||'[]');
+  coms.splice(ci, 1);
+  localStorage.setItem('comments_'+itemId, JSON.stringify(coms));
+  renderComAdmin(currentComFilter);
+  toast('🗑️ Commentaire supprimé.');
+};
+
+toggleF();
+showAdminTab("dashboard");
+
+// ===== CHAT ADMIN =====
+let chatSessions = [];
+let selectedSessionId = null;
+let convUnsubscribe = null;
+let sessionsUnsubscribe = null;
+let totalUnread = 0;
+
+function startChatAdminListen() {
+  if (sessionsUnsubscribe) return;
+  // Triées par activité récente + limitées : évite de charger toute la collection
+  // au fur et à mesure que les sessions de chat s'accumulent.
+  const sessRef = query(collection(db, 'chats'), orderBy('lastActivity', 'desc'), limit(150));
+  sessionsUnsubscribe = onSnapshot(sessRef, snap => {
+    chatSessions = snap.docs.map(d => ({id: d.id, ...d.data()}));
+    // Le tri est déjà fait par la requête Firestore (lastActivity desc),
+    // on garde un tri de sécurité au cas où un doc aurait un champ manquant.
+    chatSessions.sort((a,b) => {
+      const ta = a.lastActivity ? a.lastActivity.seconds : 0;
+      const tb = b.lastActivity ? b.lastActivity.seconds : 0;
+      return tb - ta;
+    });
+    totalUnread = chatSessions.reduce((s,sess) => s + (sess.unreadByAdmin||0), 0);
+    updateChatAdminBadge();
+    renderSessionsList();
+    // Si une session est déjà sélectionnée, rafraîchir son header
+    if (selectedSessionId) {
+      const sess = chatSessions.find(s => s.id === selectedSessionId);
+      if (sess) updateConvHead(sess);
+    }
+  });
+}
+
+function updateChatAdminBadge() {
+  const b = document.getElementById('chat-admin-badge');
+  if (!b) return;
+  if (totalUnread > 0) { b.textContent = totalUnread; b.style.display = 'inline-flex'; }
+  else { b.style.display = 'none'; }
+}
+
+function renderSessionsList() {
+  const container = document.getElementById('sessions-items');
+  if (!chatSessions.length) {
+    container.innerHTML = '<div style="padding:1rem;color:#bbb;font-size:.75rem;text-align:center">Aucune session</div>';
+    return;
+  }
+  container.innerHTML = chatSessions.map(sess => {
+    const unread = sess.unreadByAdmin || 0;
+    const isSelected = sess.id === selectedSessionId;
+    const preview = sess.lastMessage ? sess.lastMessage.substring(0,28)+(sess.lastMessage.length>28?'…':'') : '—';
+    return `<div class="chat-session-item ${isSelected?'selected':''}" onclick="selectSession('${sess.id}')">
+      <div class="csi-name">👤 ${sess.visitorName||'Visiteur'}</div>
+      <div class="csi-preview">${preview}</div>
+      ${unread > 0 ? `<div class="csi-badge">${unread}</div>` : ''}
+      <button onclick="event.stopPropagation();deleteConversation('${sess.id}')" title="Supprimer" style="position:absolute;bottom:6px;right:6px;background:none;border:none;color:#ccc;font-size:.75rem;cursor:pointer;padding:2px 4px;">🗑</button>
+    </div>`;
+  }).join('');
+}
+
+window.selectSession = function(sessionId) {
+  selectedSessionId = sessionId;
+  const sess = chatSessions.find(s => s.id === sessionId);
+  // Afficher la conv
+  document.getElementById('chat-no-select').style.display = 'none';
+  const convContent = document.getElementById('chat-conv-content');
+  convContent.style.display = 'flex';
+  convContent.style.flexDirection = 'column';
+  convContent.style.flex = '1';
+  if (sess) updateConvHead(sess);
+  // Réinitialiser unread
+  setDoc(doc(db, 'chats', sessionId), {unreadByAdmin: 0}, {merge: true});
+  // Démarrer écoute messages
+  if (convUnsubscribe) convUnsubscribe();
+  const msgsRef = collection(db, 'chats', sessionId, 'messages');
+  const mq = query(msgsRef, orderBy('ts', 'asc'));
+  convUnsubscribe = onSnapshot(mq, snap => {
+    const msgs = snap.docs.map(d => ({id: d.id, ...d.data()}));
+    renderConvMessages(msgs);
+  });
+  renderSessionsList();
+};
+
+function updateConvHead(sess) {
+  document.getElementById('conv-visitor-name').textContent = '👤 ' + (sess.visitorName||'Visiteur');
+  const ts = sess.lastActivity ? new Date(sess.lastActivity.seconds*1000).toLocaleString('fr-FR',{hour:'2-digit',minute:'2-digit',day:'2-digit',month:'2-digit'}) : '';
+  document.getElementById('conv-visitor-sub').textContent = ts ? 'Dernière activité : ' + ts : '';
+}
+
+function renderConvMessages(msgs) {
+  const container = document.getElementById('conv-messages');
+  if (!msgs.length) {
+    container.innerHTML = '<div class="conv-empty">💬 Aucun message dans cette conversation.</div>';
+    return;
+  }
+  container.innerHTML = msgs.map(m => {
+    const isAdmin = m.sender === 'admin';
+    const time = m.ts ? new Date(m.ts.seconds*1000).toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'}) : '';
+    const senderLabel = isAdmin ? 'Vous (Admin)' : (m.visitorName||'Visiteur');
+    const msgContent = m.imgUrl
+      ? `<img src="${m.imgUrl}" alt="photo" onclick="window.open('${m.imgUrl}','_blank')">`
+      : m.text;
+    return `<div class="conv-msg ${isAdmin?'admin':'visitor'}" style="position:relative;padding-right:24px;">
+      <button onclick="deleteSessionMsg('${m.id}')" title="Supprimer ce message" style="position:absolute;top:2px;right:2px;background:none;border:none;color:${isAdmin?'rgba(255,255,255,.7)':'#bbb'};font-size:.7rem;cursor:pointer;padding:2px;line-height:1;">🗑</button>
+      <div class="conv-msg-sender">${senderLabel}</div>
+      ${msgContent}
+      <div class="conv-msg-time">${time}</div>
+    </div>`;
+  }).join('');
+  container.scrollTop = container.scrollHeight;
+}
+
+window.sendAdminMsg = async function() {
+  if (!selectedSessionId) return;
+  const input = document.getElementById('admin-chat-input');
+  const text = input.value.trim();
+  if (!text) return;
+  input.value = '';
+  const msgsRef = collection(db, 'chats', selectedSessionId, 'messages');
+  await addDoc(msgsRef, {
+    text, sender: 'admin',
+    ts: serverTimestamp(), seenByVisitor: false
+  });
+  await setDoc(doc(db, 'chats', selectedSessionId), {
+    lastMessage: '(Admin) ' + text,
+    lastActivity: serverTimestamp()
+  }, {merge: true});
+  toast('✅ Message envoyé.');
+};
+
+// Supprimer un message précis de la conversation ouverte
+window.deleteSessionMsg = async function(msgId) {
+  if (!selectedSessionId) return;
+  if (!confirm('Supprimer ce message ?')) return;
+  try {
+    await deleteDoc(doc(db, 'chats', selectedSessionId, 'messages', msgId));
+    toast('🗑️ Message supprimé.');
+  } catch(e) { toast('❌ Erreur : ' + e.message); }
+};
+
+// Supprimer une conversation entière (tous ses messages + la session)
+// Sans argument : supprime la conversation actuellement ouverte.
+window.deleteConversation = async function(sessionId) {
+  const id = sessionId || selectedSessionId;
+  if (!id) return;
+  if (!confirm('Supprimer toute cette conversation ? Cette action est irréversible.')) return;
+  try {
+    const msgsSnap = await getDocs(collection(db, 'chats', id, 'messages'));
+    for (const m of msgsSnap.docs) { await deleteDoc(doc(db, 'chats', id, 'messages', m.id)); }
+    await deleteDoc(doc(db, 'chats', id));
+    if (id === selectedSessionId) {
+      if (convUnsubscribe) { convUnsubscribe(); convUnsubscribe = null; }
+      selectedSessionId = null;
+      document.getElementById('chat-conv-content').style.display = 'none';
+      document.getElementById('chat-no-select').style.display = 'flex';
+    }
+    toast('🗑️ Conversation supprimée.');
+  } catch(e) { toast('❌ Erreur : ' + e.message); }
+};
+
+// ===== PUBS LOCALES =====
+async function loadPubs() {
+  const listEl = document.getElementById('pub-list');
+  listEl.innerHTML = '<div class="loading"><div class="spinner"></div>Chargement…</div>';
+  try {
+    const snap = await getDocs(collection(db,'pubs'));
+    const pubs = snap.docs.map(d=>({id:d.id,...d.data()}));
+    if(!pubs.length){
+      listEl.innerHTML = '<div style="padding:1rem;color:#bbb;font-size:.8rem;text-align:center">Aucune bannière pour l\'instant.</div>';
+      return;
+    }
+    listEl.innerHTML = pubs.map(p=>`
+      <div class="pub-list-item" id="pub-item-${p.id}">
+        ${p.imageUrl
+          ? `<img class="pub-list-thumb" src="${p.imageUrl}" alt="${p.titre||''}" onerror="this.style.display='none'">`
+          : `<div class="pub-list-thumb-ph">📢</div>`}
+        <div class="pub-list-info">
+          <div class="pub-list-title">${p.titre||'Sans titre'}</div>
+          <div class="pub-list-url">${p.lienUrl||''}</div>
+          <div style="font-size:.65rem;color:#aaa;margin-top:2px;">Position : ${p.position||'—'}</div>
+        </div>
+        <div class="pub-list-actions">
+          <button class="toggle-pub-btn ${p.actif?'on':'off'}" onclick="togglePub('${p.id}',${!p.actif})">${p.actif?'✅ Active':'⏸ Off'}</button>
+          <button class="del-pub-btn" onclick="deletePub('${p.id}')">🗑️</button>
+        </div>
+      </div>`).join('');
+  } catch(e){ listEl.innerHTML = '<div style="padding:1rem;color:#e63946;font-size:.8rem;">Erreur de chargement.</div>'; }
+}
+
+window.addPub = async function() {
+  const titre   = document.getElementById('p-titre').value.trim();
+  const imageUrl = document.getElementById('p-img').value.trim();
+  const lienUrl  = document.getElementById('p-lien').value.trim();
+  const position = document.getElementById('p-pos').value;
+  if(!titre||!imageUrl||!lienUrl){ toast('⚠️ Remplissez tous les champs.'); return; }
+  try {
+    await addDoc(collection(db,'pubs'), {titre, imageUrl, lienUrl, position, actif:true, date: serverTimestamp()});
+    document.getElementById('p-titre').value='';
+    document.getElementById('p-img').value='';
+    document.getElementById('p-lien').value='';
+    toast('✅ Bannière ajoutée !');
+    loadPubs();
+  } catch(e){ toast('❌ Erreur : '+e.message); }
+};
+
+window.togglePub = async function(id, actif) {
+  try {
+    await updateDoc(doc(db,'pubs',id), {actif});
+    toast(actif ? '✅ Pub activée.' : '⏸ Pub désactivée.');
+    loadPubs();
+  } catch(e){ toast('❌ Erreur.'); }
+};
+
+window.deletePub = async function(id) {
+  if(!confirm('Supprimer cette bannière ?')) return;
+  try {
+    await deleteDoc(doc(db,'pubs',id));
+    toast('🗑️ Bannière supprimée.');
+    loadPubs();
+  } catch(e){ toast('❌ Erreur.'); }
+};
+
+// =====================================================================
+// ÉVALUATIONS — onglet 📝
+// =====================================================================
+let _adminEvalQuestions = [];
+let _adminEvalQCounter  = 0;
+let _adminEvalPoints    = [];
+
+function aEsc(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
+
+// Charger et afficher les évaluations
+window.loadEvalsAdmin = async function() {
+  const list = document.getElementById('evals-admin-list');
+  if(!list) return;
+  list.innerHTML = '<div class="loading"><div class="spinner"></div>Chargement…</div>';
+  try {
+    const snap = await getDocs(collection(db,'evals'));
+    const now = Date.now();
+    const evals = snap.docs.map(d=>d.data()).sort((a,b)=>b.createdAt-a.createdAt);
+    if(!evals.length){ list.innerHTML='<p style="text-align:center;color:#aaa;padding:24px;font-size:.85rem;">Aucune évaluation. Créez-en une avec le bouton ci-dessus.</p>'; return; }
+    list.innerHTML = evals.map(e => {
+      const isActive = !e.closed && e.endsAt > now;
+      const isPending = !e.closed && e.openAt && e.openAt > now; // pas encore ouvert
+      const border = isPending ? '#3b82f6' : isActive ? '#059669' : '#94a3b8';
+      const badge = isPending
+        ? `<span style="background:#dbeafe;color:#1e40af;font-size:.7rem;font-weight:700;padding:2px 8px;border-radius:20px;">🕐 Pas encore ouvert</span>`
+        : isActive
+        ? `<span style="background:#dcfce7;color:#059669;font-size:.7rem;font-weight:700;padding:2px 8px;border-radius:20px;">⏳ En cours</span>`
+        : `<span style="background:#f1f5f9;color:#64748b;font-size:.7rem;font-weight:700;padding:2px 8px;border-radius:20px;">✅ Terminée</span>`;
+      const fmtDT = ts => ts ? new Date(ts).toLocaleString('fr-FR',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'}) : null;
+      const dateAccessStr = (e.openAt || e.closeAt)
+        ? `<div style="font-size:.7rem;color:#3b82f6;margin-top:3px;">📅 ${e.openAt?'Ouverture : '+fmtDT(e.openAt):''} ${e.openAt&&e.closeAt?' · ':''} ${e.closeAt?'Fermeture : '+fmtDT(e.closeAt):''}</div>`
+        : '';
+      const corrigeStr = e.showCorrige
+        ? `<span style="background:#dcfce7;color:#166534;font-size:.65rem;font-weight:700;padding:2px 7px;border-radius:10px;margin-left:6px;">📋 Corrigé affiché</span>`
+        : `<span style="background:#f1f5f9;color:#94a3b8;font-size:.65rem;font-weight:700;padding:2px 7px;border-radius:10px;margin-left:6px;">📋 Sans corrigé</span>`;
+      const pub_url = `${window.location.origin}${window.location.pathname.replace('admin.html','index.html')}?eval=${e.accessCode}`;
+      return `
+      <div style="background:#fff;border-radius:12px;padding:12px;margin-bottom:10px;border-left:4px solid ${border};box-shadow:0 1px 4px rgba(0,0,0,.06)">
+        <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:8px">
+          <div style="flex:1;min-width:0">
+            <div style="font-weight:700;font-size:.95rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${aEsc(e.title)}</div>
+            <div style="font-size:.75rem;color:#64748b;margin-top:2px">${e.questions.length} question${e.questions.length>1?'s':''} · ${Math.round(e.durationSec/60)} min${e.dept?' · '+aEsc(e.dept):''} · 🔒 ${e.maxAttempts||1} tentative${(e.maxAttempts||1)>1?'s':''}${corrigeStr}</div>
+            ${dateAccessStr}
+          </div>
+          ${badge}
+        </div>
+        <div style="background:#fef3c7;border:1.5px solid #fbbf24;border-radius:10px;padding:8px 12px;margin-bottom:10px;display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+          <span style="font-size:.72rem;font-weight:700;color:#92400e;">🔑 Code :</span>
+          <span style="font-family:'Space Mono',monospace;font-size:1.1rem;font-weight:800;color:#b45309;letter-spacing:3px">${e.accessCode}</span>
+          <button onclick="navigator.clipboard.writeText('${e.accessCode}').then(()=>toast('Code copié !'))" style="background:#fcd116;border:none;border-radius:6px;padding:3px 8px;font-size:.72rem;font-weight:700;color:#1e293b;cursor:pointer">Copier</button>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <div style="display:flex;gap:6px;flex-wrap:wrap">
+            <button onclick="shareEvalWhatsApp('${e.accessCode}','${aEsc(e.title)}')" style="flex:1;background:#25d366;color:#fff;border:none;border-radius:8px;padding:8px;font-size:.78rem;font-weight:700;cursor:pointer">📱 WhatsApp</button>
+            <button onclick="shareEvalEmail('${e.accessCode}','${aEsc(e.title)}')" style="flex:1;background:#1a73e8;color:#fff;border:none;border-radius:8px;padding:8px;font-size:.78rem;font-weight:700;cursor:pointer">📧 Email</button>
+            <button onclick="copyEvalLink('${e.accessCode}')" style="flex:1;background:#f1f5f9;color:#334155;border:none;border-radius:8px;padding:8px;font-size:.78rem;font-weight:700;cursor:pointer">🔗 Lien</button>
+          </div>
+          <div style="display:flex;gap:6px;flex-wrap:wrap">
+            <button onclick="shareEvalMulti('${e.accessCode}','${aEsc(e.title)}')" style="flex:1;background:#0f172a;color:#FCD116;border:none;border-radius:8px;padding:8px;font-size:.78rem;font-weight:700;cursor:pointer">👥 Envoyer à plusieurs</button>
+          </div>
+          <div style="display:flex;gap:6px;flex-wrap:wrap">
+            <button onclick="showEvalAdminResults('${e.id}')" style="flex:1;background:#ede9fe;color:#6d28d9;border:none;border-radius:8px;padding:8px;font-size:.78rem;font-weight:700;cursor:pointer">📊 Résultats</button>
+            ${isActive?`<button onclick="closeEvalAdmin('${e.id}')" style="flex:1;background:#fee2e2;color:#dc2626;border:none;border-radius:8px;padding:8px;font-size:.78rem;font-weight:700;cursor:pointer">⏹ Clore</button>`:''}
+            <button onclick="deleteEvalAdmin('${e.id}')" style="flex:1;background:#fee2e2;color:#dc2626;border:none;border-radius:8px;padding:8px;font-size:.78rem;font-weight:700;cursor:pointer">🗑</button>
+          </div>
+        </div>
+      </div>`;
+    }).join('');
+  } catch(err){ list.innerHTML='<p style="color:#dc2626;padding:16px;text-align:center;font-size:.82rem;">❌ Erreur de chargement.</p>'; }
+};
+
+// Partage WhatsApp
+window.shareEvalWhatsApp = function(code, title) {
+  const url = `${window.location.origin}${window.location.pathname.replace('admin.html','index.html')}?eval=${code}`;
+  const msg = encodeURIComponent(`📝 *${title}*\n\nClique sur ce lien pour accéder à l'évaluation :\n${url}\n\n🔑 Code d'accès : *${code}*\n\nBonne chance ! 🍀`);
+  window.open(`https://wa.me/?text=${msg}`, '_blank');
+};
+
+// Partage Email
+window.shareEvalEmail = function(code, title) {
+  const url = `${window.location.origin}${window.location.pathname.replace('admin.html','index.html')}?eval=${code}`;
+  const sujet = encodeURIComponent(`Évaluation : ${title}`);
+  const corps = encodeURIComponent(`Bonjour,\n\nVoici le lien pour accéder à l'évaluation "${title}" :\n\n${url}\n\nCode d'accès : ${code}\n\nBonne chance !\n\nEtudierGN`);
+  window.open(`mailto:?subject=${sujet}&body=${corps}`, '_blank');
+};
+
+// Copier le lien
+window.copyEvalLink = function(code) {
+  const url = `${window.location.origin}${window.location.pathname.replace('admin.html','index.html')}?eval=${code}`;
+  navigator.clipboard.writeText(url).then(()=>toast('🔗 Lien copié !')).catch(()=>toast('Lien : '+url));
+};
+
+// Envoyer le lien à plusieurs élèves
+window.shareEvalMulti = function(code, title) {
+  const url = `${window.location.origin}${window.location.pathname.replace('admin.html','index.html')}?eval=${code}`;
+  const msg = `📝 *${title}*\n\nClique sur ce lien pour accéder à l'évaluation :\n${url}\n\n🔑 Code d'accès : *${code}*\n\nBonne chance ! 🍀`;
+
+  document.getElementById('modal-title').textContent = '👥 Envoyer à plusieurs élèves';
+  document.getElementById('modal-body').innerHTML = `
+    <div style="margin-bottom:12px;font-size:.82rem;color:#334155;line-height:1.6">
+      Ajoutez les contacts un par ligne :<br>
+      <span style="color:#64748b;font-size:.75rem">• Numéro WhatsApp : <code>622123456</code><br>• Email : <code>eleve@gmail.com</code></span>
+    </div>
+    <textarea id="multi-contacts" placeholder="622111111\n622222222\neleve@example.com\n…" style="width:100%;min-height:140px;border:1.5px solid #e2e8f0;border-radius:10px;padding:10px;font-family:'Inter',sans-serif;font-size:.88rem;outline:none;resize:vertical;box-sizing:border-box"></textarea>
+    <div style="margin:10px 0;background:#f0fdf4;border:1.5px solid #bbf7d0;border-radius:10px;padding:10px;font-size:.78rem;color:#065f46">
+      <strong>Message qui sera envoyé :</strong><br><span style="white-space:pre-wrap;color:#334155">${msg}</span>
+    </div>
+    <div style="display:flex;gap:8px;margin-top:4px">
+      <button onclick="closeMBg()" style="flex:1;background:#f1f5f9;color:#64748b;border:none;border-radius:10px;padding:10px;font-size:.85rem;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif">Annuler</button>
+      <button onclick="window._sendMultiLinks('${code.replace(/'/g,"\\'")}',${JSON.stringify(msg)})" style="flex:2;background:#004d2e;color:#FCD116;border:none;border-radius:10px;padding:10px;font-size:.85rem;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif">📤 Envoyer à tous</button>
+    </div>`;
+  document.getElementById('modal-bg').style.display='block';
+};
+
+window._sendMultiLinks = function(code, msg) {
+  const raw = (document.getElementById('multi-contacts')?.value||'').trim();
+  if (!raw) { toast('⚠️ Aucun contact saisi.'); return; }
+  const contacts = raw.split('\n').map(s=>s.trim()).filter(Boolean);
+  if (!contacts.length) { toast('⚠️ Aucun contact valide.'); return; }
+  closeMBg();
+  let i = 0;
+  function sendNext() {
+    if (i >= contacts.length) { toast(`✅ ${contacts.length} message(s) ouverts.`); return; }
+    const c = contacts[i++];
+    const enc = encodeURIComponent(msg);
+    if (c.includes('@')) {
+      window.open(`mailto:${c}?subject=${encodeURIComponent('Évaluation — '+code)}&body=${enc}`, '_blank');
+    } else {
+      const phone = c.replace(/\D/g,'');
+      window.open(`https://wa.me/${phone}?text=${enc}`, '_blank');
+    }
+    setTimeout(sendNext, 800);
+  }
+  sendNext();
+};
+
+// Clore une éval
+window.closeEvalAdmin = async function(evalId) {
+  if(!confirm('Clore cette évaluation maintenant ?')) return;
+  try {
+    await setDoc(doc(db,'evals',String(evalId)), {closed:true, endsAt: Date.now()}, {merge:true});
+    toast('⏹ Évaluation close.');
+    loadEvalsAdmin();
+  } catch(e){ toast('❌ Erreur.'); }
+};
+
+// Supprimer une éval
+window.deleteEvalAdmin = async function(evalId) {
+  if(!confirm('Supprimer définitivement cette évaluation et tous ses résultats ?')) return;
+  try {
+    await deleteDoc(doc(db,'evals',String(evalId)));
+    const snap = await getDocs(collection(db,'eval_results'));
+    const toDelete = snap.docs.filter(d=>String(d.data().evalId)===String(evalId));
+    await Promise.all(toDelete.map(d=>deleteDoc(d.ref)));
+    toast('🗑️ Évaluation supprimée.');
+    loadEvalsAdmin();
+  } catch(e){ toast('❌ Erreur.'); }
+};
+
+// Afficher résultats
+window.showEvalAdminResults = async function(evalId) {
+  try {
+    const evSnap = await getDocs(collection(db,'evals'));
+    const ev = evSnap.docs.map(d=>d.data()).find(e=>String(e.id)===String(evalId));
+    if(!ev) return;
+    const resSnap = await getDocs(collection(db,'eval_results'));
+    const results = resSnap.docs.map(d=>d.data()).filter(r=>String(r.evalId)===String(evalId));
+    const maxScore = ev.questions.reduce((s,q)=>s+q.points,0);
+    // Stocker pour _sendAllResults
+    window._currentEvalForResults = { ev, results, maxScore };
+    // Réutiliser le modal existant
+    document.getElementById('modal-title').textContent = `📊 Résultats — ${aEsc(ev.title)}`;
+    let html = `<div style="font-size:.78rem;color:#64748b;margin-bottom:12px">${ev.questions.length} questions · ${maxScore} pts max · ${results.length} copie(s)</div>`;
+    if(!results.length){ html += '<div style="text-align:center;color:#94a3b8;padding:20px;font-size:.85rem">Aucune réponse soumise.</div>'; }
+    else {
+      // Bouton envoyer tous les résultats
+      const withContact = results.filter(r=>(r.studentContact||'').trim());
+      if (withContact.length) {
+        html += `<button onclick="window._sendAllResults()" style="width:100%;background:#004d2e;color:#FCD116;border:none;border-radius:10px;padding:10px;font-size:.85rem;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;margin-bottom:12px">📨 Envoyer tous les résultats (${withContact.length} élève${withContact.length>1?'s':''})</button>`;
+      }
+      results.forEach(r => {
+        const pct = maxScore>0?Math.round(r.score/maxScore*100):0;
+        const col = pct>=60?'#059669':pct>=40?'#d97706':'#dc2626';
+        const nomAff = r.studentName || ('Élève #'+r.studentId);
+        const appre = pct>=80?'Excellent 🌟':pct>=60?'Bien 👍':pct>=40?'Assez bien 📚':'À améliorer 💪';
+        const msgNote = encodeURIComponent(`Bonjour ${r.studentName||''},\n\nVoici votre résultat pour l'évaluation "${ev.title}" :\n\n📊 Note : ${r.score}/${maxScore} (${pct}%)\n🏅 Appréciation : ${appre}\n\nBon courage ! — Collection BHDS`);
+        const contact = (r.studentContact||'').trim();
+        let sendBtn = '';
+        if (contact) {
+          const isEmail = contact.includes('@');
+          if (isEmail) {
+            const subj = encodeURIComponent(`Résultat — ${ev.title}`);
+            sendBtn = `<a href="mailto:${encodeURIComponent(contact)}?subject=${subj}&body=${msgNote}" style="display:inline-block;margin-top:6px;background:#1d4ed8;color:#fff;border:none;border-radius:8px;padding:5px 12px;font-size:.72rem;font-weight:700;cursor:pointer;text-decoration:none;">📧 Envoyer par e-mail</a>`;
+          } else {
+            const phone = contact.replace(/\D/g,'');
+            sendBtn = `<a href="https://wa.me/${phone}?text=${msgNote}" target="_blank" style="display:inline-block;margin-top:6px;background:#25d366;color:#fff;border:none;border-radius:8px;padding:5px 12px;font-size:.72rem;font-weight:700;cursor:pointer;text-decoration:none;">📲 Envoyer sur WhatsApp</a>`;
+          }
+        } else {
+          sendBtn = `<span style="font-size:.7rem;color:#94a3b8;display:block;margin-top:4px;">Pas de contact renseigné</span>`;
+        }
+        html += `<div style="padding:10px;background:#f8fafc;border-radius:10px;margin-bottom:8px">
+          <div style="display:flex;align-items:center;gap:10px">
+            <div style="flex:1;font-weight:600;font-size:.85rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${aEsc(nomAff)}</div>
+            <div style="font-family:'Space Mono',monospace;font-size:1.1rem;font-weight:800;color:${col}">${r.score}/${maxScore}</div>
+            <div style="font-size:.78rem;font-weight:700;color:${col};min-width:34px;text-align:right">${pct}%</div>
+          </div>
+          ${(r.tabSwitchCount||0) > 0 ? `<div style="margin-top:5px;font-size:.72rem;font-weight:700;color:#dc2626;background:#fee2e2;border-radius:6px;padding:3px 8px;display:inline-block;">⚠️ ${r.tabSwitchCount} sortie${r.tabSwitchCount>1?'s':''} d'onglet détectée${r.tabSwitchCount>1?'s':''}</div>` : '<div style="margin-top:5px;font-size:.72rem;color:#059669;background:#dcfce7;border-radius:6px;padding:3px 8px;display:inline-block;">✅ Aucune sortie d\'onglet</div>'}
+          ${sendBtn}
+        </div>`;
+      });
+    }
+    document.getElementById('modal-body').innerHTML = html;
+    document.getElementById('modal-bg').style.display='block';
+  } catch(e){ toast('❌ Erreur lors du chargement des résultats.'); }
+};
+
+// ─── Builder éval ────────────────────────────────────────────────────────────
+
+window._sendAllResults = function() {
+  const ctx = window._currentEvalForResults;
+  if (!ctx) return;
+  const { ev, results, maxScore } = ctx;
+  const withContact = results.filter(r=>(r.studentContact||'').trim());
+  if (!withContact.length) { toast('⚠️ Aucun élève avec contact.'); return; }
+  if (!confirm(`Envoyer les résultats à ${withContact.length} élève${withContact.length>1?'s':''} ?`)) return;
+  let i = 0;
+  function sendNext() {
+    if (i >= withContact.length) { toast(`✅ ${withContact.length} résultat(s) envoyés.`); return; }
+    const r = withContact[i++];
+    const pct = maxScore>0?Math.round(r.score/maxScore*100):0;
+    const appre = pct>=80?'Excellent 🌟':pct>=60?'Bien 👍':pct>=40?'Assez bien 📚':'À améliorer 💪';
+    const msg = encodeURIComponent(`Bonjour ${r.studentName||''},\n\nVoici votre résultat pour l'évaluation "${ev.title}" :\n\n📊 Note : ${r.score}/${maxScore} (${pct}%)\n🏅 Appréciation : ${appre}\n\nBon courage ! — Collection BHDS`);
+    const contact = r.studentContact.trim();
+    if (contact.includes('@')) {
+      const subj = encodeURIComponent(`Résultat — ${ev.title}`);
+      window.open(`mailto:${contact}?subject=${subj}&body=${msg}`, '_blank');
+    } else {
+      const phone = contact.replace(/\D/g,'');
+      window.open(`https://wa.me/${phone}?text=${msg}`, '_blank');
+    }
+    setTimeout(sendNext, 800);
+  }
+  sendNext();
+};
+window.closeMBg = function() {
+  const m = document.getElementById('modal-bg');
+  if(m) m.style.display='none';
+};
+window.openEvalAdminBuilder = function() {
+  _adminEvalQuestions = [];
+  _adminEvalQCounter  = 0;
+  _adminEvalPoints    = [];
+  document.getElementById('modal-title').textContent = '📝 Créer une évaluation';
+  document.getElementById('modal-body').innerHTML = buildAdminEvalHTML();
+  document.getElementById('modal-bg').style.display='block';
+  renderAdminEvalQuestions();
+};
+
+function buildAdminEvalHTML() {
+  return `
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px">
+    <div><label style="font-size:.78rem;font-weight:600;color:#64748b;display:block;margin-bottom:4px">Titre</label>
+    <input id="aeb-title" value="Évaluation" style="width:100%;border:1.5px solid #e2e8f0;border-radius:8px;padding:8px 10px;font-family:'Inter',sans-serif;font-size:.88rem;outline:none;box-sizing:border-box"></div>
+    <div><label style="font-size:.78rem;font-weight:600;color:#64748b;display:block;margin-bottom:4px">Matière / Classe</label>
+    <input id="aeb-dept" placeholder="Ex: Terminale S" style="width:100%;border:1.5px solid #e2e8f0;border-radius:8px;padding:8px 10px;font-family:'Inter',sans-serif;font-size:.88rem;outline:none;box-sizing:border-box"></div>
+  </div>
+
+  <div style="background:#f0fdf4;border-radius:12px;padding:12px;margin-bottom:12px;border:1.5px solid #bbf7d0">
+    <div style="font-weight:700;font-size:.82rem;color:#065f46;margin-bottom:8px">⏱ Durée</div>
+    <div style="display:flex;align-items:center;gap:8px">
+      <input type="number" id="aeb-minutes" value="30" min="1" max="180" style="width:70px;padding:8px;border:1.5px solid #bbf7d0;border-radius:8px;font-family:'Inter',sans-serif;font-size:.95rem;font-weight:700;text-align:center;background:#fff;color:#065f46">
+      <span style="font-size:.82rem;color:#065f46;font-weight:600">minutes</span>
+    </div>
+  </div>
+
+  <div style="background:#fef3c7;border-radius:12px;padding:12px;margin-bottom:12px;border:1.5px solid #fbbf24">
+    <div style="font-weight:700;font-size:.82rem;color:#92400e;margin-bottom:8px">🔒 Limite de tentatives</div>
+    <div style="display:flex;align-items:center;gap:8px">
+      <input type="number" id="aeb-max-attempts" value="1" min="1" max="10" style="width:70px;padding:8px;border:1.5px solid #fbbf24;border-radius:8px;font-family:'Inter',sans-serif;font-size:.95rem;font-weight:700;text-align:center;background:#fff;color:#92400e">
+      <span style="font-size:.82rem;color:#92400e;font-weight:600">tentative(s) par élève</span>
+    </div>
+    <div style="font-size:.7rem;color:#78350f;margin-top:6px">⚠️ Un élève ayant atteint la limite ne pourra plus accéder à l'évaluation.</div>
+  </div>
+
+  <div style="background:#eff6ff;border-radius:12px;padding:12px;margin-bottom:12px;border:1.5px solid #93c5fd">
+    <div style="font-weight:700;font-size:.82rem;color:#1e40af;margin-bottom:8px">📅 Accès par date (optionnel)</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:6px">
+      <div>
+        <label style="font-size:.72rem;font-weight:600;color:#1e40af;display:block;margin-bottom:3px">🟢 Ouverture</label>
+        <input type="datetime-local" id="aeb-open-at" style="width:100%;padding:7px 8px;border:1.5px solid #93c5fd;border-radius:8px;font-family:'Inter',sans-serif;font-size:.8rem;outline:none;background:#fff;color:#1e3a8a;box-sizing:border-box">
+      </div>
+      <div>
+        <label style="font-size:.72rem;font-weight:600;color:#1e40af;display:block;margin-bottom:3px">🔴 Fermeture</label>
+        <input type="datetime-local" id="aeb-close-at" style="width:100%;padding:7px 8px;border:1.5px solid #93c5fd;border-radius:8px;font-family:'Inter',sans-serif;font-size:.8rem;outline:none;background:#fff;color:#1e3a8a;box-sizing:border-box">
+      </div>
+    </div>
+    <div style="font-size:.7rem;color:#3b82f6;">Si non renseignée, l'ouverture est immédiate et la fermeture est calculée selon la durée.</div>
+  </div>
+
+  <div style="background:#f0fdf4;border-radius:12px;padding:12px;margin-bottom:12px;border:1.5px solid #86efac">
+    <div style="font-weight:700;font-size:.82rem;color:#166534;margin-bottom:8px">📋 Corrigé après soumission</div>
+    <label style="display:flex;align-items:center;gap:10px;cursor:pointer;font-size:.85rem;color:#166534;font-weight:600">
+      <input type="checkbox" id="aeb-show-corrige" style="width:18px;height:18px;accent-color:#16a34a;cursor:pointer">
+      Afficher les bonnes réponses à l'élève après soumission
+    </label>
+    <div style="font-size:.7rem;color:#166534;margin-top:6px">⚠️ Si coché, l'élève verra les corrections après avoir soumis.</div>
+  </div>
+
+  <div style="font-weight:700;font-size:.82rem;color:#111;margin-bottom:8px">❓ Questions</div>
+  <div style="display:flex;gap:5px;flex-wrap:wrap;margin-bottom:8px">
+    ${[['✏️','text','Texte court'],['📝','textarea','Texte long'],['🔘','radio','Choix unique'],['☑️','checkbox','Choix multiple'],['✅','yesno','Oui/Non']].map(([ic,tp,lb])=>
+      `<button style="background:#f8fafc;border:1.5px solid #e2e8f0;border-radius:8px;padding:5px 10px;font-size:.75rem;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif" onclick="addAdminEvalQ('${tp}')">${ic} ${lb}</button>`
+    ).join('')}
+  </div>
+
+  <div id="aeb-questions" style="display:flex;flex-direction:column;gap:8px;margin-bottom:12px"></div>
+
+  <div style="display:flex;gap:8px;margin-top:8px">
+    <button onclick="closeMBg()" style="flex:1;background:#f1f5f9;color:#64748b;border:none;border-radius:10px;padding:10px;font-size:.88rem;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif">Annuler</button>
+    <button onclick="sendAdminEval()" style="flex:2;background:#004d2e;color:#FCD116;border:none;border-radius:10px;padding:10px;font-size:.88rem;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif">🚀 Créer & Partager</button>
+  </div>`;
+}
+
+window.addAdminEvalQ = function(type) {
+  const id = ++_adminEvalQCounter;
+  const q = { id, type, title:'', contenu:'', options:[], required:true, correctAnswers:[], points:2 };
+  if (type==='radio'||type==='checkbox') q.options=['Option A','Option B'];
+  if (type==='yesno') q.options=['Oui','Non'];
+  _adminEvalQuestions.push(q);
+  renderAdminEvalQuestions();
+};
+
+function renderAdminEvalQuestions() {
+  const c = document.getElementById('aeb-questions');
+  if (!c) return;
+  if (!_adminEvalQuestions.length) { c.innerHTML='<div style="text-align:center;color:#94a3b8;font-size:.82rem;padding:16px;background:#f8fafc;border-radius:10px">Ajoutez des questions via les boutons ci-dessus.</div>'; return; }
+  c.innerHTML = _adminEvalQuestions.map((q,i)=>{
+    let optsHTML = '';
+    if (q.type==='radio'||q.type==='checkbox'||q.type==='yesno') {
+      optsHTML = `<div style="margin-top:8px">` + q.options.map((o,oi)=>`
+        <div style="display:flex;align-items:center;gap:6px;margin-bottom:4px">
+          <input type="${q.type==='checkbox'?'checkbox':'radio'}" name="aq_${q.id}" style="accent-color:#004d2e;flex-shrink:0"
+            ${q.correctAnswers.includes(oi)?'checked':''}
+            onchange="window._adminEvalSetCorrect(${i},${oi},this)">
+          <input value="${aEsc(o)}" style="flex:1;border:1px solid #e2e8f0;border-radius:6px;padding:5px 8px;font-family:'Inter',sans-serif;font-size:.82rem;outline:none"
+            ${q.type==='yesno'?'readonly':''} oninput="_adminEvalQuestions[${i}].options[${oi}]=this.value">
+        </div>`).join('') + `</div>`;
+      if (q.type!=='yesno') optsHTML += `<button onclick="window._adminEvalAddOpt(${i})" style="font-size:.72rem;color:#004d2e;background:none;border:none;cursor:pointer;padding:4px 0;font-family:'Inter',sans-serif">＋ Option</button>`;
+    }
+    const imgPreview = q.imageData
+      ? `<div style="position:relative;display:inline-block;margin-top:8px">
+           <img src="${q.imageData}" style="max-width:100%;max-height:180px;border-radius:8px;border:1px solid #e2e8f0;display:block">
+           <button onclick="_adminEvalQuestions[${i}].imageData='';renderAdminEvalQuestions()"
+             style="position:absolute;top:4px;right:4px;background:rgba(220,38,38,.85);color:#fff;border:none;border-radius:50%;width:22px;height:22px;font-size:.75rem;cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:1">✕</button>
+         </div>`
+      : '';
+    return `
+    <div style="background:#f8fafc;border-radius:10px;padding:12px;border:1px solid #e2e8f0">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+        <div style="width:24px;height:24px;background:#004d2e;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#FCD116;font-size:10px;font-weight:800;flex-shrink:0">${i+1}</div>
+        <input placeholder="✏️ Intitulé de la question (obligatoire)…" value="${aEsc(q.title)}" style="flex:1;border:1.5px solid ${q.title?'#e2e8f0':'#fca5a5'};background:${q.title?'#fff':'#fff5f5'};border-radius:8px;padding:7px 10px;font-family:'Inter',sans-serif;font-size:.85rem;outline:none"
+          oninput="_adminEvalQuestions[${i}].title=this.value;this.style.borderColor=this.value?'#e2e8f0':'#fca5a5';this.style.background=this.value?'#fff':'#fff5f5'">
+        <input type="number" value="${q.points}" min="1" max="20" style="width:50px;border:1.5px solid #e2e8f0;border-radius:8px;padding:7px 6px;text-align:center;font-family:'Inter',sans-serif;font-size:.82rem;outline:none"
+          oninput="_adminEvalQuestions[${i}].points=parseInt(this.value)||1" title="Points">
+        <button onclick="window._adminEvalRemoveQ(${i})" style="background:#fee2e2;border:none;border-radius:6px;padding:5px 8px;color:#dc2626;cursor:pointer;font-size:.8rem">✕</button>
+      </div>
+      <textarea placeholder="Énoncé complet (optionnel)…" style="width:100%;border:1px solid #e2e8f0;border-radius:8px;padding:7px 10px;font-family:'Inter',sans-serif;font-size:.82rem;outline:none;resize:vertical;min-height:40px;box-sizing:border-box"
+        oninput="_adminEvalQuestions[${i}].contenu=this.value">${aEsc(q.contenu)}</textarea>
+      <!-- Bouton image -->
+      <div style="margin-top:6px">
+        <label style="display:inline-flex;align-items:center;gap:5px;background:#e0f2fe;color:#0369a1;border:1px solid #bae6fd;border-radius:8px;padding:5px 10px;font-size:.78rem;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif">
+          🖼️ ${q.imageData ? 'Changer l\'image' : 'Ajouter une image'}
+          <input type="file" accept="image/*" style="display:none" onchange="window._adminEvalLoadImg(${i},this)">
+        </label>
+        ${imgPreview}
+      </div>
+      ${optsHTML}
+      ${(q.type==='text'||q.type==='textarea'||q.type==='formula')?`
+      <div style="margin-top:8px;background:#f0fdf4;border:1.5px solid #bbf7d0;border-radius:8px;padding:8px 10px">
+        <div style="font-size:.72rem;font-weight:700;color:#065f46;margin-bottom:5px">✅ Réponse attendue (pour correction automatique)</div>
+        <input placeholder="Tapez la réponse exacte attendue…" value="${aEsc(q.expectedAnswer||'')}"
+          style="width:100%;border:1px solid #bbf7d0;border-radius:6px;padding:6px 8px;font-family:'Inter',sans-serif;font-size:.82rem;outline:none;box-sizing:border-box;background:#fff"
+          oninput="_adminEvalQuestions[${i}].expectedAnswer=this.value">
+        <div style="font-size:.68rem;color:#6b7280;margin-top:4px">⚡ Si laissé vide → correction manuelle par le professeur</div>
+      </div>`:``}
+    </div>`;
+  }).join('');
+}
+
+window._adminEvalSetCorrect = function(qi, oi, el) {
+  const q = _adminEvalQuestions[qi];
+  if (!q) return;
+  if (q.type==='radio'||q.type==='yesno') { q.correctAnswers=[oi]; }
+  else { if(el.checked){if(!q.correctAnswers.includes(oi))q.correctAnswers.push(oi);}else{q.correctAnswers=q.correctAnswers.filter(x=>x!==oi);} }
+};
+
+window._adminEvalAddOpt = function(qi) {
+  if(_adminEvalQuestions[qi]) { _adminEvalQuestions[qi].options.push('Option '+(String.fromCharCode(65+_adminEvalQuestions[qi].options.length))); renderAdminEvalQuestions(); }
+};
+
+window._adminEvalRemoveQ = function(i) {
+  _adminEvalQuestions.splice(i, 1);
+  renderAdminEvalQuestions();
+};
+
+// Charger une image dans une question (base64)
+window._adminEvalLoadImg = function(qi, input) {
+  const file = input.files[0];
+  if (!file) return;
+  // Limiter à 2 Mo
+  if (file.size > 2 * 1024 * 1024) {
+    alert('⚠️ Image trop lourde (max 2 Mo). Compressez-la avant de l\'envoyer.');
+    return;
+  }
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    _adminEvalQuestions[qi].imageData = e.target.result;
+    renderAdminEvalQuestions();
+  };
+  reader.readAsDataURL(file);
+};
+
+// Créer & envoyer l'évaluation
+window.sendAdminEval = async function() {
+  const title   = document.getElementById('aeb-title')?.value?.trim() || 'Évaluation';
+  const dept    = document.getElementById('aeb-dept')?.value?.trim()  || '';
+  const minutes = parseInt(document.getElementById('aeb-minutes')?.value)||30;
+  // Synchroniser les titres depuis le DOM (copier-coller Android peut rater oninput)
+  const qTitleInputs = document.querySelectorAll('#aeb-questions input[placeholder^="✏️ Intitulé"]');
+  qTitleInputs.forEach((inp, i) => { if (_adminEvalQuestions[i]) _adminEvalQuestions[i].title = inp.value; });
+
+  if (_adminEvalQuestions.length===0) { alert('Ajoutez au moins une question !'); return; }
+
+  // Vérifier que chaque question a un intitulé
+  const qSansTitre = _adminEvalQuestions.findIndex(q => !q.title || !q.title.trim());
+  if (qSansTitre !== -1) {
+    alert('⚠️ La question ' + (qSansTitre + 1) + ' n\'a pas d\'intitulé.\nVeuillez saisir le texte de la question avant de continuer.');
+    const inputs = document.querySelectorAll('#aeb-questions input[placeholder^="✏️ Intitulé de la question"]');
+    if (inputs[qSansTitre]) { inputs[qSansTitre].scrollIntoView({behavior:'smooth',block:'center'}); inputs[qSansTitre].focus(); inputs[qSansTitre].style.borderColor = '#dc2626'; setTimeout(() => { inputs[qSansTitre].style.borderColor = '#e2e8f0'; }, 3000); }
+    return;
+  }
+
+  const accessCode = String(Math.floor(100000 + Math.random() * 900000));
+  const maxAttempts = Math.max(1, parseInt(document.getElementById('aeb-max-attempts')?.value)||1);
+  const showCorrige = document.getElementById('aeb-show-corrige')?.checked || false;
+
+  // Dates d'accès par date
+  const openAtRaw  = document.getElementById('aeb-open-at')?.value;
+  const closeAtRaw = document.getElementById('aeb-close-at')?.value;
+  const openAt  = openAtRaw  ? new Date(openAtRaw).getTime()  : null;
+  const closeAt = closeAtRaw ? new Date(closeAtRaw).getTime() : null;
+  // endsAt = fermeture explicite si définie, sinon durée depuis maintenant (ou depuis ouverture)
+  const startRef = openAt && openAt > Date.now() ? openAt : Date.now();
+  const endsAt   = closeAt ? closeAt : startRef + minutes * 60 * 1000;
+
+  const evalObj = {
+    id: Date.now(),
+    title, dept,
+    questions: JSON.parse(JSON.stringify(_adminEvalQuestions)),
+    points: [],
+    durationSec: minutes * 60,
+    endsAt,
+    openAt:  openAt  || null,
+    closeAt: closeAt || null,
+    targetIds: [],
+    closed: false,
+    createdAt: Date.now(),
+    accessCode,
+    maxAttempts,
+    showCorrige,
+    shuffleQ: false,
+    shuffleOpts: false,
+    fullscreen: false
+  };
+
+  try {
+    await setDoc(doc(db,'evals',String(evalObj.id)), evalObj);
+  } catch(e) { alert('❌ Erreur de sauvegarde : ' + e.message); return; }
+
+  const pub_url = `${window.location.origin}${window.location.pathname.replace('admin.html','index.html')}?eval=${accessCode}`;
+
+  closeMBg();
+  loadEvalsAdmin();
+
+  // Proposer partage immédiat
+  const choix = confirm(`✅ Évaluation "${title}" créée !\n\n🔑 Code : ${accessCode}\n\n🔗 Lien :\n${pub_url}\n\nCliquez OK pour partager via WhatsApp, Annuler pour copier le lien.`);
+  if (choix) {
+    shareEvalWhatsApp(accessCode, title);
+  } else {
+    navigator.clipboard.writeText(pub_url).then(()=>toast('🔗 Lien copié !')).catch(()=>{});
+  }
+};
+
+// =====================================================================
+// DEVOIRS — onglet 📒 (envoi de sujet + réception de photos-réponses)
+// =====================================================================
+
+// Gestion multi-images devoir
+let _devoirImgs = [''];
+window.addDevoirImg = function() {
+  _devoirImgs.push('');
+  renderDevoirImgs();
+};
+window.removeDevoirImg = function(i) {
+  _devoirImgs.splice(i, 1);
+  if (!_devoirImgs.length) _devoirImgs = [''];
+  renderDevoirImgs();
+};
+function renderDevoirImgs() {
+  const c = document.getElementById('dv-imgs-list');
+  if (!c) return;
+  c.innerHTML = _devoirImgs.map((v, i) => `
+    <div style="display:flex;align-items:center;gap:6px">
+      <span style="font-size:.72rem;color:#aaa;font-weight:700;flex-shrink:0">Page ${i+1}</span>
+      <input type="text" value="${v}" placeholder="https://i.postimg.cc/…/page${i+1}.jpg"
+        style="flex:1;border:1.5px solid ${v?'#e5e7eb':'#fca5a5'};background:${v?'#f9fafb':'#fff5f5'};font-family:'Inter',sans-serif;font-size:.82rem;padding:.5rem .7rem;border-radius:8px;outline:none;color:#111"
+        oninput="_devoirImgs[${i}]=this.value;this.style.borderColor=this.value?'#e5e7eb':'#fca5a5';this.style.background=this.value?'#f9fafb':'#fff5f5'">
+      ${_devoirImgs.length > 1 ? `<button onclick="window.removeDevoirImg(${i})" style="background:#fee2e2;border:none;border-radius:6px;padding:5px 8px;color:#dc2626;cursor:pointer;font-size:.8rem;flex-shrink:0">✕</button>` : ''}
+    </div>`).join('');
+}
+
+window.createDevoir = async function() {
+  const titre    = document.getElementById('dv-titre').value.trim();
+  const matiere  = document.getElementById('dv-matiere').value.trim();
+  const niveau   = document.getElementById('dv-niveau').value.trim();
+  const desc     = document.getElementById('dv-desc').value.trim();
+  const deadline = document.getElementById('dv-deadline').value || null;
+
+  // Récupérer les images valides — lire aussi le DOM en cas de copier-coller Android
+  const imgInputs = document.querySelectorAll('#dv-imgs-list input[type="text"]');
+  imgInputs.forEach((inp, i) => { if (_devoirImgs[i] !== undefined) _devoirImgs[i] = inp.value; });
+  const images = _devoirImgs.map(u => u.trim()).filter(u => u);
+  if (!titre || !images.length) { toast('⚠️ Titre et au moins une image obligatoires.'); return; }
+
+  const accessCode = String(Math.floor(100000 + Math.random() * 900000));
+  const devoirObj = {
+    id: Date.now(), titre, matiere, niveau,
+    imageUrl: images[0],   // compatibilité affichage miniature
+    images,                // toutes les pages
+    desc, deadline,
+    accessCode, createdAt: Date.now()
+  };
+  try {
+    await setDoc(doc(db,'devoirs',String(devoirObj.id)), devoirObj);
+  } catch(e) { toast('❌ Erreur : ' + e.message); return; }
+
+  // Réinitialiser le formulaire
+  document.getElementById('dv-titre').value='';
+  document.getElementById('dv-matiere').value='';
+  document.getElementById('dv-niveau').value='';
+  document.getElementById('dv-desc').value='';
+  document.getElementById('dv-deadline').value='';
+  _devoirImgs = [''];
+  renderDevoirImgs();
+
+  loadDevoirsAdmin();
+
+  const pub_url = `${window.location.origin}${window.location.pathname.replace('admin.html','index.html')}?devoir=${accessCode}`;
+  const choix = confirm(`✅ Devoir "${titre}" créé !\n\n${images.length} image(s) · 🔗 Lien :\n${pub_url}\n\nCliquez OK pour partager via WhatsApp, Annuler pour copier le lien.`);
+  if (choix) { shareDevoirWhatsApp(accessCode, titre); }
+  else { navigator.clipboard.writeText(pub_url).then(()=>toast('🔗 Lien copié !')).catch(()=>{}); }
+};
+
+window.shareDevoirWhatsApp = function(code, titre) {
+  const url = `${window.location.origin}${window.location.pathname.replace('admin.html','index.html')}?devoir=${code}`;
+  const msg = encodeURIComponent(`📒 *${titre}*\n\nVoici votre devoir. Cliquez sur le lien pour le consulter et envoyer votre réponse en photo :\n${url}\n\nBon courage ! 💪`);
+  window.open(`https://wa.me/?text=${msg}`, '_blank');
+};
+
+window.shareDevoirEmail = function(code, titre) {
+  const url = `${window.location.origin}${window.location.pathname.replace('admin.html','index.html')}?devoir=${code}`;
+  const sujet = encodeURIComponent(`Devoir : ${titre}`);
+  const corps = encodeURIComponent(`Bonjour,\n\nVoici le lien pour consulter le devoir "${titre}" et envoyer votre réponse en photo :\n\n${url}\n\nBon courage !\n\nEtudierGN`);
+  window.open(`mailto:?subject=${sujet}&body=${corps}`, '_blank');
+};
+
+window.copyDevoirLink = function(code) {
+  const url = `${window.location.origin}${window.location.pathname.replace('admin.html','index.html')}?devoir=${code}`;
+  navigator.clipboard.writeText(url).then(()=>toast('🔗 Lien copié !')).catch(()=>toast('Lien : '+url));
+};
+
+window.deleteDevoirAdmin = async function(id) {
+  if (!confirm('Supprimer ce devoir et toutes les réponses reçues ?')) return;
+  try {
+    const repSnap = await getDocs(collection(db,'devoirs',id,'reponses'));
+    for (const r of repSnap.docs) { await deleteDoc(doc(db,'devoirs',id,'reponses',r.id)); }
+    await deleteDoc(doc(db,'devoirs',id));
+    toast('🗑️ Devoir supprimé.');
+    loadDevoirsAdmin();
+  } catch(e) { toast('❌ Erreur : ' + e.message); }
+};
+
+window.loadDevoirsAdmin = async function() {
+  const list = document.getElementById('devoirs-admin-list');
+  if (!list) return;
+  list.innerHTML = '<div class="loading"><div class="spinner"></div>Chargement…</div>';
+  try {
+    const snap = await getDocs(collection(db,'devoirs'));
+    const devoirs = snap.docs.map(d=>d.data()).sort((a,b)=>b.createdAt-a.createdAt);
+    if (!devoirs.length) { list.innerHTML = '<p style="text-align:center;color:#aaa;padding:24px;font-size:.85rem;">Aucun devoir envoyé pour le moment.</p>'; return; }
+
+    list.innerHTML = devoirs.map(d => {
+      const deadlineStr = d.deadline ? `<div style="font-size:.72rem;color:#e67e22;margin-top:3px;">⏰ Limite : ${new Date(d.deadline).toLocaleDateString('fr-FR')}</div>` : '';
+      return `
+      <div style="background:#fff;border-radius:12px;padding:12px;margin-bottom:10px;border-left:4px solid #1d3557;box-shadow:0 1px 4px rgba(0,0,0,.06)">
+        <div style="display:flex;gap:10px;margin-bottom:8px;">
+          <img src="${aEsc(d.imageUrl)}" style="width:54px;height:54px;object-fit:cover;border-radius:8px;flex-shrink:0;background:#f2f3f5;">
+          <div style="flex:1;min-width:0">
+            <div style="font-weight:700;font-size:.92rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${aEsc(d.titre)}</div>
+            <div style="font-size:.72rem;color:#888;margin-top:2px;">${d.matiere?aEsc(d.matiere):''}${d.matiere&&d.niveau?' · ':''}${d.niveau?aEsc(d.niveau):''}</div>
+            ${deadlineStr}
+          </div>
+        </div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:6px;">
+          <button onclick="shareDevoirWhatsApp('${d.accessCode}','${aEsc(d.titre)}')" style="flex:1;background:#25d366;color:#fff;border:none;border-radius:8px;padding:8px;font-size:.76rem;font-weight:700;cursor:pointer">📱 WhatsApp</button>
+          <button onclick="shareDevoirEmail('${d.accessCode}','${aEsc(d.titre)}')" style="flex:1;background:#1a73e8;color:#fff;border:none;border-radius:8px;padding:8px;font-size:.76rem;font-weight:700;cursor:pointer">📧 Email</button>
+          <button onclick="copyDevoirLink('${d.accessCode}')" style="flex:1;background:#f1f5f9;color:#334155;border:none;border-radius:8px;padding:8px;font-size:.76rem;font-weight:700;cursor:pointer">🔗 Lien</button>
+        </div>
+        <div style="display:flex;gap:6px;">
+          <button onclick="showDevoirReponses('${d.id}','${aEsc(d.titre)}')" style="flex:1;background:#ede9fe;color:#6d28d9;border:none;border-radius:8px;padding:8px;font-size:.76rem;font-weight:700;cursor:pointer">📸 Voir les réponses</button>
+          <button onclick="deleteDevoirAdmin('${d.id}')" style="background:#fee2e2;color:#dc2626;border:none;border-radius:8px;padding:8px 12px;font-size:.76rem;font-weight:700;cursor:pointer">🗑</button>
+        </div>
+      </div>`;
+    }).join('');
+  } catch(err) { list.innerHTML = '<p style="color:#dc2626;padding:16px;text-align:center;font-size:.82rem;">❌ Erreur de chargement.</p>'; }
+};
+
+window.showDevoirReponses = async function(devoirId, titre) {
+  document.getElementById('modal-title').textContent = '📸 Réponses — ' + titre;
+  document.getElementById('modal-body').innerHTML = '<div class="loading"><div class="spinner"></div>Chargement…</div>';
+  document.getElementById('modal-bg').style.display = 'block';
+  try {
+    const snap = await getDocs(collection(db,'devoirs',devoirId,'reponses'));
+    const reps = snap.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>b.date-a.date);
+    if (!reps.length) {
+      document.getElementById('modal-body').innerHTML = '<p style="text-align:center;color:#94a3b8;padding:20px;font-size:.85rem;">Aucune réponse reçue pour l\'instant.</p>';
+      return;
+    }
+    document.getElementById('modal-body').innerHTML = reps.map(r => {
+      const contact = (r.contact||'').trim();
+      const msgNote = encodeURIComponent(`Bonjour ${r.nom||''},\n\nVoici votre note pour le devoir "${titre}" :\n\n📝 Note : ${(r.note!==undefined&&r.note!==null)?r.note:'—'}/20\n\nBon courage ! — Collection BHDS`);
+      let sendBtn = '';
+      if (r.note!==undefined && r.note!==null && contact) {
+        const isEmail = contact.includes('@');
+        if (isEmail) {
+          const subj = encodeURIComponent(`Note — ${titre}`);
+          sendBtn = `<a href="mailto:${encodeURIComponent(contact)}?subject=${subj}&body=${msgNote}" style="display:inline-block;margin-top:6px;background:#1d4ed8;color:#fff;border:none;border-radius:8px;padding:5px 12px;font-size:.72rem;font-weight:700;cursor:pointer;text-decoration:none;">📧 Envoyer par e-mail</a>`;
+        } else {
+          const phone = contact.replace(/\D/g,'');
+          sendBtn = `<a href="https://wa.me/${phone}?text=${msgNote}" target="_blank" style="display:inline-block;margin-top:6px;background:#25d366;color:#fff;border:none;border-radius:8px;padding:5px 12px;font-size:.72rem;font-weight:700;cursor:pointer;text-decoration:none;">📲 Envoyer sur WhatsApp</a>`;
+        }
+      } else if (!contact) {
+        sendBtn = `<span style="font-size:.7rem;color:#94a3b8;display:block;margin-top:4px;">Pas de contact renseigné</span>`;
+      } else {
+        sendBtn = `<span style="font-size:.7rem;color:#94a3b8;display:block;margin-top:4px;">Enregistrez une note pour pouvoir l'envoyer</span>`;
+      }
+      return `
+      <div style="border:1.5px solid #e2e8f0;border-radius:12px;padding:10px;margin-bottom:10px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+          <div style="font-weight:700;font-size:.88rem;color:#1d3557;">👤 ${aEsc(r.nom)}</div>
+          <button onclick="deleteDevoirReponse('${devoirId}','${r.id}','${titre.replace(/'/g,"\\'")}')" style="background:#fee2e2;color:#dc2626;border:none;border-radius:6px;padding:3px 8px;font-size:.68rem;cursor:pointer">🗑</button>
+        </div>
+        <div style="font-size:.7rem;color:#94a3b8;margin-bottom:8px;">${r.date?new Date(r.date).toLocaleString('fr-FR'):''}</div>
+        <a href="${r.photoData}" target="_blank"><img src="${r.photoData}" style="width:100%;border-radius:10px;display:block;"></a>
+        <div style="display:flex;align-items:center;gap:8px;margin-top:10px;">
+          <label style="font-size:.78rem;color:#475569;font-weight:600;">📝 Note :</label>
+          <input type="number" id="dv-note-${r.id}" value="${r.note!==undefined&&r.note!==null?r.note:''}" placeholder="ex: 8" style="width:70px;border:1.5px solid #e2e8f0;border-radius:8px;padding:5px 8px;font-size:.85rem;">
+          <span style="font-size:.78rem;color:#94a3b8;">/ 20</span>
+          <button onclick="saveDevoirNote('${devoirId}','${r.id}')" style="background:#004d2e;color:#FCD116;border:none;border-radius:8px;padding:5px 12px;font-size:.75rem;font-weight:700;cursor:pointer;">Enregistrer</button>
+          <span id="dv-note-saved-${r.id}" style="font-size:.72rem;color:#059669;font-weight:700;"></span>
+        </div>
+        ${sendBtn}
+      </div>`;
+    }).join('');
+  } catch(e) {
+    document.getElementById('modal-body').innerHTML = '<p style="color:#dc2626;text-align:center;padding:16px;">❌ Erreur de chargement.</p>';
+  }
+};
+
+window.saveDevoirNote = async function(devoirId, repId) {
+  const input = document.getElementById(`dv-note-${repId}`);
+  const val = input.value.trim();
+  const note = val === '' ? null : Number(val);
+  try {
+    await setDoc(doc(db,'devoirs',devoirId,'reponses',repId), { note, noteDate: Date.now() }, { merge: true });
+    toast('✅ Note enregistrée.');
+    const titreEl = document.getElementById('modal-title');
+    const titre = titreEl ? titreEl.textContent.replace('📸 Réponses — ','') : '';
+    showDevoirReponses(devoirId, titre);
+  } catch(e) { toast('❌ Erreur lors de l\'enregistrement de la note.'); }
+};
+
+window.deleteDevoirReponse = async function(devoirId, repId, titre) {
+  if (!confirm('Supprimer cette réponse ?')) return;
+  try {
+    await deleteDoc(doc(db,'devoirs',devoirId,'reponses',repId));
+    toast('🗑️ Réponse supprimée.');
+    showDevoirReponses(devoirId, titre);
+  } catch(e) { toast('❌ Erreur.'); }
+};
+
+// =====================================================================
+// PARCOURS DE FORMATION — Modules + inscriptions + progression
+// =====================================================================
+window.showParcoursSubTab = function(sub) {
+  document.getElementById('pc-sub-modules').style.display = sub==='modules' ? 'block' : 'none';
+  document.getElementById('pc-sub-eleves').style.display  = sub==='eleves'  ? 'block' : 'none';
+  document.getElementById('pc-subtab-modules').style.background = sub==='modules' ? '#1d3557' : '#fff';
+  document.getElementById('pc-subtab-modules').style.color      = sub==='modules' ? '#fff' : '#555';
+  document.getElementById('pc-subtab-eleves').style.background  = sub==='eleves'  ? '#1d3557' : '#fff';
+  document.getElementById('pc-subtab-eleves').style.color       = sub==='eleves'  ? '#fff' : '#555';
+  if (sub==='eleves') loadPcEleves();
+  if (sub==='modules') loadPcModules();
+};
+
+// ---- Gestion des cours dans le formulaire module ----
+let _pcCours = [{titre:'',url:''}];
+window.addPcCours = function() {
+  _pcCours.push({titre:'',url:''});
+  renderPcCoursList();
+};
+window.removePcCours = function(i) {
+  _pcCours.splice(i,1);
+  if (!_pcCours.length) _pcCours = [{titre:'',url:''}];
+  renderPcCoursList();
+};
+function renderPcCoursList() {
+  const c = document.getElementById('pc-mod-cours-list');
+  if (!c) return;
+  c.innerHTML = _pcCours.map((v,i) => `
+    <div style="display:flex;flex-direction:column;gap:4px;border:1.5px solid #e5e7eb;border-radius:8px;padding:7px;background:#f9fafb">
+      <div style="display:flex;align-items:center;gap:6px">
+        <span style="font-size:.7rem;color:#aaa;font-weight:700;flex-shrink:0">Cours ${i+1}</span>
+        ${_pcCours.length>1 ? `<button onclick="window.removePcCours(${i})" style="margin-left:auto;background:#fee2e2;border:none;border-radius:6px;padding:3px 8px;color:#dc2626;cursor:pointer;font-size:.75rem">✕</button>` : ''}
+      </div>
+      <input type="text" value="${(v.titre||'').replace(/"/g,'&quot;')}" placeholder="Titre du cours"
+        style="border:1.5px solid #e5e7eb;background:#fff;font-family:'Inter',sans-serif;font-size:.82rem;padding:.5rem .7rem;border-radius:8px;outline:none;color:#111"
+        oninput="_pcCours[${i}].titre=this.value">
+      <input type="text" value="${(v.url||'').replace(/"/g,'&quot;')}" placeholder="Lien du cours (PDF, vidéo, page…)"
+        style="border:1.5px solid #e5e7eb;background:#fff;font-family:'Inter',sans-serif;font-size:.82rem;padding:.5rem .7rem;border-radius:8px;outline:none;color:#111"
+        oninput="_pcCours[${i}].url=this.value">
+    </div>`).join('');
+}
+renderPcCoursList();
+
+window.resetPcModuleForm = function() {
+  document.getElementById('pc-mod-form-title').textContent = '📦 Nouveau module';
+  document.getElementById('pc-mod-editid').value = '';
+  document.getElementById('pc-mod-titre').value = '';
+  document.getElementById('pc-mod-desc').value = '';
+  document.getElementById('pc-mod-ordre').value = '';
+  _pcCours = [{titre:'',url:''}];
+  renderPcCoursList();
+};
+
+window.savePcModule = async function() {
+  const editId = document.getElementById('pc-mod-editid').value;
+  const titre  = document.getElementById('pc-mod-titre').value.trim();
+  const desc   = document.getElementById('pc-mod-desc').value.trim();
+  const ordre  = Number(document.getElementById('pc-mod-ordre').value) || 0;
+
+  const inputs = document.querySelectorAll('#pc-mod-cours-list input');
+  // resync from DOM (2 inputs per cours: titre, url)
+  for (let i=0, j=0; i<_pcCours.length; i++, j+=2) {
+    if (inputs[j]) _pcCours[i].titre = inputs[j].value.trim();
+    if (inputs[j+1]) _pcCours[i].url = inputs[j+1].value.trim();
+  }
+  const coursValides = _pcCours.filter(c => c.titre && c.url);
+
+  if (!titre || !ordre || !coursValides.length) { toast('⚠️ Titre, ordre et au moins un cours (titre + lien) obligatoires.'); return; }
+
+  const moduleId = editId || String(Date.now());
+  const moduleObj = { id: moduleId, titre, description: desc, ordre, cours: coursValides, createdAt: editId ? undefined : Date.now() };
+  try {
+    if (editId) {
+      await updateDoc(doc(db,'modules',editId), { titre, description: desc, ordre, cours: coursValides });
+      toast('✅ Module mis à jour.');
+    } else {
+      await setDoc(doc(db,'modules',moduleId), moduleObj);
+      toast('✅ Module créé.');
+    }
+  } catch(e) { toast('❌ Erreur : ' + e.message); return; }
+
+  resetPcModuleForm();
+  loadPcModules();
+};
+
+window.editPcModule = async function(id) {
+  try {
+    const snap = await getDocs(collection(db,'modules'));
+    const m = snap.docs.find(d=>d.id===id);
+    if (!m) return;
+    const d = m.data();
+    document.getElementById('pc-mod-form-title').textContent = '✏️ Modifier le module';
+    document.getElementById('pc-mod-editid').value = id;
+    document.getElementById('pc-mod-titre').value = d.titre || '';
+    document.getElementById('pc-mod-desc').value = d.description || '';
+    document.getElementById('pc-mod-ordre').value = d.ordre || '';
+    _pcCours = (d.cours && d.cours.length) ? d.cours.map(c=>({titre:c.titre,url:c.url})) : [{titre:'',url:''}];
+    renderPcCoursList();
+    window.scrollTo({top:0, behavior:'smooth'});
+  } catch(e) { toast('❌ Erreur de chargement.'); }
+};
+
+window.deletePcModule = async function(id, titre) {
+  if (!confirm(`Supprimer le module "${titre}" ? Les élèves perdront leur progression sur ce module.`)) return;
+  try {
+    await deleteDoc(doc(db,'modules',id));
+    toast('🗑️ Module supprimé.');
+    loadPcModules();
+  } catch(e) { toast('❌ Erreur.'); }
+};
+
+window.loadPcModules = async function() {
+  const list = document.getElementById('pc-modules-list');
+  if (!list) return;
+  list.innerHTML = '<div class="loading"><div class="spinner"></div>Chargement…</div>';
+  try {
+    const snap = await getDocs(collection(db,'modules'));
+    const modules = snap.docs.map(d=>d.data()).sort((a,b)=>(a.ordre||0)-(b.ordre||0));
+    if (!modules.length) { list.innerHTML = '<p style="text-align:center;color:#aaa;padding:24px;font-size:.85rem;">Aucun module créé pour le moment.</p>'; return; }
+    list.innerHTML = modules.map(m => `
+      <div style="background:#fff;border-radius:12px;padding:12px;margin-bottom:10px;border-left:4px solid #1d3557;box-shadow:0 1px 4px rgba(0,0,0,.06)">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px">
+          <div style="flex:1;min-width:0">
+            <div style="font-size:.68rem;font-weight:700;color:#1d3557;background:#e8f0fe;display:inline-block;padding:1px 7px;border-radius:4px;margin-bottom:4px;">ORDRE ${m.ordre}</div>
+            <div style="font-weight:700;font-size:.92rem;">${aEsc(m.titre)}</div>
+            ${m.description ? `<div style="font-size:.76rem;color:#888;margin-top:2px">${aEsc(m.description)}</div>` : ''}
+            <div style="font-size:.72rem;color:#555;margin-top:6px">📖 ${m.cours.length} cours :</div>
+            <ul style="margin:4px 0 0 18px;padding:0;font-size:.74rem;color:#555">
+              ${m.cours.map(c=>`<li>${aEsc(c.titre)}</li>`).join('')}
+            </ul>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:6px;flex-shrink:0">
+            <button onclick="editPcModule('${m.id}')" style="background:#e8f0fe;color:#1d3557;border:none;border-radius:6px;padding:5px 9px;font-size:.72rem;font-weight:700;cursor:pointer">✏️</button>
+            <button onclick="deletePcModule('${m.id}','${(m.titre||'').replace(/'/g,"\\'")}')" style="background:#fee2e2;color:#dc2626;border:none;border-radius:6px;padding:5px 9px;font-size:.72rem;font-weight:700;cursor:pointer">🗑</button>
+          </div>
+        </div>
+      </div>`).join('');
+  } catch(e) {
+    list.innerHTML = '<p style="text-align:center;color:#dc2626;padding:24px;font-size:.85rem;">❌ Erreur de chargement.</p>';
+  }
+};
+
+// ---- Inscriptions élèves ----
+function pcToken() {
+  const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  let t = '';
+  for (let i=0;i<8;i++) t += chars[Math.floor(Math.random()*chars.length)];
+  return t;
+}
+
+window.createInscription = async function() {
+  const nom   = document.getElementById('pc-el-nom').value.trim();
+  const tel   = document.getElementById('pc-el-tel').value.trim();
+  const email = document.getElementById('pc-el-email').value.trim();
+  if (!nom) { toast('⚠️ Le nom de l\'élève est obligatoire.'); return; }
+  if (!tel && !email) { toast('⚠️ Renseignez un téléphone WhatsApp ou un e-mail.'); return; }
+
+  const token = pcToken();
+  const obj = { token, nom, tel: tel||null, email: email||null, progression: {}, createdAt: Date.now() };
+  try {
+    await setDoc(doc(db,'inscriptions',token), obj);
+  } catch(e) { toast('❌ Erreur : ' + e.message); return; }
+
+  document.getElementById('pc-el-nom').value='';
+  document.getElementById('pc-el-tel').value='';
+  document.getElementById('pc-el-email').value='';
+  loadPcEleves();
+
+  const url = `${window.location.origin}${window.location.pathname.replace('admin.html','index.html')}?parcours=${token}`;
+  const msgWA = encodeURIComponent(`🎓 *Bonjour ${nom} !*\n\nVous êtes inscrit(e) au parcours de formation EtudierGN. Suivez vos cours et votre progression via ce lien personnel :\n${url}\n\nBon apprentissage ! 📚`);
+  const msgMail = encodeURIComponent(`Bonjour ${nom},\n\nVous êtes inscrit(e) au parcours de formation EtudierGN. Suivez vos cours et votre progression via ce lien personnel :\n\n${url}\n\nBon apprentissage !\n\nEtudierGN`);
+
+  if (tel) {
+    const phone = tel.replace(/\D/g,'');
+    if (confirm(`✅ ${nom} inscrit(e) !\n\nCliquez OK pour envoyer le lien sur WhatsApp.`)) {
+      window.open(`https://wa.me/${phone}?text=${msgWA}`, '_blank');
+    } else {
+      navigator.clipboard.writeText(url).then(()=>toast('🔗 Lien copié !')).catch(()=>{});
+    }
+  } else if (email) {
+    if (confirm(`✅ ${nom} inscrit(e) !\n\nCliquez OK pour envoyer le lien par e-mail.`)) {
+      window.open(`mailto:${encodeURIComponent(email)}?subject=${encodeURIComponent('Votre accès au parcours EtudierGN')}&body=${msgMail}`, '_blank');
+    } else {
+      navigator.clipboard.writeText(url).then(()=>toast('🔗 Lien copié !')).catch(()=>{});
+    }
+  }
+};
+
+window.sendPcLinkWhatsApp = function(token, nom, tel) {
+  const url = `${window.location.origin}${window.location.pathname.replace('admin.html','index.html')}?parcours=${token}`;
+  const phone = (tel||'').replace(/\D/g,'');
+  const msg = encodeURIComponent(`🎓 *Bonjour ${nom} !*\n\nVoici votre lien personnel pour suivre votre parcours de formation EtudierGN :\n${url}\n\nBon apprentissage ! 📚`);
+  window.open(`https://wa.me/${phone}?text=${msg}`, '_blank');
+};
+window.sendPcLinkEmail = function(token, nom, email) {
+  const url = `${window.location.origin}${window.location.pathname.replace('admin.html','index.html')}?parcours=${token}`;
+  const msg = encodeURIComponent(`Bonjour ${nom},\n\nVoici votre lien personnel pour suivre votre parcours de formation EtudierGN :\n\n${url}\n\nBon apprentissage !\n\nEtudierGN`);
+  window.open(`mailto:${encodeURIComponent(email)}?subject=${encodeURIComponent('Votre accès au parcours EtudierGN')}&body=${msg}`, '_blank');
+};
+window.copyPcLink = function(token) {
+  const url = `${window.location.origin}${window.location.pathname.replace('admin.html','index.html')}?parcours=${token}`;
+  navigator.clipboard.writeText(url).then(()=>toast('🔗 Lien copié !')).catch(()=>toast('Lien : '+url));
+};
+window.deleteInscription = async function(token, nom) {
+  if (!confirm(`Supprimer l'inscription de "${nom}" ? Toute sa progression sera perdue.`)) return;
+  try {
+    await deleteDoc(doc(db,'inscriptions',token));
+    toast('🗑️ Inscription supprimée.');
+    loadPcEleves();
+  } catch(e) { toast('❌ Erreur.'); }
+};
+
+window.loadPcEleves = async function() {
+  const list = document.getElementById('pc-eleves-list');
+  if (!list) return;
+  list.innerHTML = '<div class="loading"><div class="spinner"></div>Chargement…</div>';
+  try {
+    const [modSnap, insSnap] = await Promise.all([
+      getDocs(collection(db,'modules')),
+      getDocs(collection(db,'inscriptions'))
+    ]);
+    const modules = modSnap.docs.map(d=>d.data()).sort((a,b)=>(a.ordre||0)-(b.ordre||0));
+    const totalCours = modules.reduce((s,m)=>s+(m.cours?m.cours.length:0),0);
+    const eleves = insSnap.docs.map(d=>d.data()).sort((a,b)=>b.createdAt-a.createdAt);
+
+    let totalCompleted = 0, totalCertifs = 0;
+
+    if (!eleves.length) {
+      list.innerHTML = '<p style="text-align:center;color:#aaa;padding:24px;font-size:.85rem;">Aucun élève inscrit pour le moment.</p>';
+    } else {
+      list.innerHTML = eleves.map(e => {
+        const prog = e.progression || {};
+        const doneCount = Object.values(prog).filter(Boolean).length;
+        totalCompleted += doneCount;
+        const pct = totalCours ? Math.round((doneCount/totalCours)*100) : 0;
+        const isComplete = totalCours>0 && doneCount>=totalCours;
+        if (isComplete) totalCertifs++;
+        const contact = e.tel ? `📲 ${aEsc(e.tel)}` : (e.email ? `📧 ${aEsc(e.email)}` : '');
+        const sendBtn = e.tel
+          ? `<button onclick="sendPcLinkWhatsApp('${e.token}','${(e.nom||'').replace(/'/g,"\\'")}','${e.tel}')" style="background:#25d366;color:#fff;border:none;border-radius:7px;padding:5px 10px;font-size:.7rem;font-weight:700;cursor:pointer">📲 Renvoyer</button>`
+          : (e.email ? `<button onclick="sendPcLinkEmail('${e.token}','${(e.nom||'').replace(/'/g,"\\'")}','${e.email}')" style="background:#1d4ed8;color:#fff;border:none;border-radius:7px;padding:5px 10px;font-size:.7rem;font-weight:700;cursor:pointer">📧 Renvoyer</button>` : '');
+        return `
+        <div style="background:#fff;border-radius:12px;padding:12px;margin-bottom:10px;border-left:4px solid ${isComplete?'#2e7d32':'#1d3557'};box-shadow:0 1px 4px rgba(0,0,0,.06)">
+          <div style="display:flex;justify-content:space-between;align-items:center;gap:8px">
+            <div style="flex:1;min-width:0">
+              <div style="font-weight:700;font-size:.9rem">${isComplete?'🎓 ':''}${aEsc(e.nom)}</div>
+              <div style="font-size:.72rem;color:#888;margin-top:1px">${contact}</div>
+            </div>
+            <button onclick="deleteInscription('${e.token}','${(e.nom||'').replace(/'/g,"\\'")}')" style="background:#fee2e2;color:#dc2626;border:none;border-radius:6px;padding:4px 8px;font-size:.7rem;cursor:pointer;flex-shrink:0">🗑</button>
+          </div>
+          <div style="margin-top:8px;background:#f2f3f5;border-radius:6px;height:8px;overflow:hidden">
+            <div style="background:${isComplete?'#2e7d32':'#1d3557'};height:100%;width:${pct}%"></div>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-top:5px">
+            <span style="font-size:.72rem;color:#555">${doneCount}/${totalCours||'–'} cours · ${pct}%${isComplete?' · Certifié 🏅':''}</span>
+            <div style="display:flex;gap:5px">
+              <button onclick="copyPcLink('${e.token}')" style="background:#f2f3f5;color:#555;border:none;border-radius:7px;padding:5px 9px;font-size:.7rem;font-weight:700;cursor:pointer">🔗</button>
+              ${sendBtn}
+            </div>
+          </div>
+        </div>`;
+      }).join('');
+    }
+
+    document.getElementById('pc-s-total').textContent = eleves.length;
+    document.getElementById('pc-s-cours').textContent = totalCompleted;
+    document.getElementById('pc-s-certif').textContent = totalCertifs;
+  } catch(e) {
+    list.innerHTML = '<p style="text-align:center;color:#dc2626;padding:24px;font-size:.85rem;">❌ Erreur de chargement.</p>';
+  }
+};
+
+</script>
+</body>
+</html>
