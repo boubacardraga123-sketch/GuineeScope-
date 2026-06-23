@@ -1150,9 +1150,10 @@ window.shareFacebook = function() {
   const titre = fbBtn._lastTitre || '';
   const desc = fbBtn._lastDesc || '';
   const siteUrl = 'https://boubacardraga123-sketch.github.io/GuineeScope-/';
-  // Compatible mobile (Facebook Lite inclus)
-  const shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(siteUrl)}`;
-  window.location.href = shareUrl;
+  const texte = `📚 ${titre}${desc ? '\n\n' + desc : ''}\n\n🔗 ${siteUrl}`;
+  // Ouvre la page de création de publication Facebook avec texte pré-rempli
+  const shareUrl = `https://www.facebook.com/dialog/feed?app_id=966242223397117&display=popup&quote=${encodeURIComponent(texte)}&link=${encodeURIComponent(siteUrl)}&redirect_uri=${encodeURIComponent(siteUrl)}`;
+  window.open(shareUrl, '_blank');
 };
 
 window.delItem = async function(id) {
